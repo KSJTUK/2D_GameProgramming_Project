@@ -54,9 +54,9 @@ frame = 0
 # dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
 animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Win": (0, 111, [26, 35, 33, 39], 28, 4),
-             }
+             "Taunt_back": (0, 144, [18, 24, 18, 31, 26, 28], 38, 6)}
 
-cur_animation = "Win"
+cur_animation = "Taunt_back"
 
 frame_start_x = animation[cur_animation][0]
 
