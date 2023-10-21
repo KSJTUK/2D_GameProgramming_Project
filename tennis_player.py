@@ -10,11 +10,15 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
 
-running = True
-
 open_canvas()
 
+running = True
+character = load_image('tennis_character_micki.png')
+frame = 0
+
 while running:
-	handle_events()
+    handle_events()
+    character.clip_draw(0, 50, 50, 50, 100, 100)
+    update_canvas()
 
 close_canvas()
