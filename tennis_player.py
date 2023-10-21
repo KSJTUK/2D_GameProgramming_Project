@@ -48,8 +48,12 @@ frame = 0
 
 # 애니메이션들의 시작위치는 대부분 0이나 0이 아닌 애니메이션 존재
 # dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
-animation = {"Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5)}
-frame_start_x = animation["Lose"][0]
+animation = {"Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5),
+             "Win": (0, 108, [26, 35, 33, 39], 34, 4)}
+
+cur_animation = "Win"
+
+frame_start_x = animation[cur_animation][0]
 
 # 캐릭터의 임시 위치
 test_position = (400, 300)
@@ -59,7 +63,7 @@ while running:
 
     handle_events()
 
-    draw_character_animation_in_dict("Lose")
+    draw_character_animation_in_dict(cur_animation)
 
     update_canvas()
 
