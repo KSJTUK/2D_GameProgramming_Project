@@ -1,5 +1,6 @@
 from pico2d import *
 
+
 def handle_events():
     global running
 
@@ -9,6 +10,21 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
+
+
+# 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
+def draw_character_animation_in_dict(animation_name):
+    global frame_start_x, frame
+    if (frame == 0):
+        frame_start_x = 0
+
+    character.clip_draw(frame_start_x, animation[animation_name][1],
+                        animation[animation_name][2][frame], animation[animation_name][3],
+                        400, 300)
+
+    frame_start_x += animation[animation_name][2][frame]
+    frame = (frame + 1) % animation[animation_name][4]
+
 
 open_canvas()
 
@@ -32,7 +48,7 @@ frame = 0
 
 # 애니메이션들의 시작위치는 대부분 0이나 0이 아닌 애니메이션 존재
 # dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
-animation = { "Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5)}
+animation = {"Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5)}
 frame_start_x = animation["Lose"][0]
 
 # 캐릭터의 임시 위치
@@ -43,14 +59,7 @@ while running:
 
     handle_events()
 
-    if (frame == 0):
-        frame_start_x = 0
-
-    character.clip_draw(frame_start_x, animation['Lose'][1], animation["Lose"][2][frame], animation["Lose"][3], 400, 300)
-    frame_start_x += animation["Lose"][2][frame]
-    frame = (frame + 1) % animation['Lose'][4]
-
-
+    draw_character_animation_in_dict("Lose")
 
     update_canvas()
 
