@@ -18,9 +18,13 @@ def draw_character_animation_in_dict(animation_name):
     if (frame == 0):
         frame_start_x = 0
 
-    character.clip_draw(frame_start_x, animation[animation_name][1],
-                        animation[animation_name][2][frame], animation[animation_name][3],
-                        400, 300)
+    width, height = animation[animation_name][2][frame], animation[animation_name][3]
+    character_w, character_h = width * 3, height * 3
+    # 캐릭터 크기를 키우기 위해 clip_composite_draw사용
+    # 크기 비율은 3배로 늘림
+    character.clip_composite_draw(frame_start_x, animation[animation_name][1],
+                        width, height,
+                        0, ' ', 400, 300, character_w, character_h)
 
     frame_start_x += animation[animation_name][2][frame]
     frame = (frame + 1) % animation[animation_name][4]
@@ -48,8 +52,9 @@ frame = 0
 
 # 애니메이션들의 시작위치는 대부분 0이나 0이 아닌 애니메이션 존재
 # dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
-animation = {"Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5),
-             "Win": (0, 108, [26, 35, 33, 39], 34, 4)}
+animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
+             "Win": (0, 111, [26, 35, 33, 39], 28, 4),
+             }
 
 cur_animation = "Win"
 
