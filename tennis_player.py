@@ -55,9 +55,11 @@ frame = 0
 animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Win": (0, 111, [26, 35, 33, 39], 28, 4),
              "Taunt_back": (0, 144, [18, 24, 18, 31, 26, 28], 38, 6),
-             "Taunt_front": (161, 144, [18, 24, 18, 31, 26, 28], 38, 6)}
+             "Taunt_front": (161, 144, [18, 24, 18, 31, 26, 28], 38, 6),
+             "Diving_left_back": (0, 252, [24, 55, 44, 38, 25], 24, 5),
+             "Diving_left_front": (223, 252, [25, 54, 48, 37, 30], 24, 5)}
 
-cur_animation = "Taunt_front"
+cur_animation = "Diving_left_front"
 
 frame_start_x = animation[cur_animation][0]
 
