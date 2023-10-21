@@ -16,7 +16,7 @@ def handle_events():
 def draw_character_animation_in_dict(animation_name):
     global frame_start_x, frame
     if (frame == 0):
-        frame_start_x = 0
+        frame_start_x = animation[animation_name][0]
 
     width, height = animation[animation_name][2][frame], animation[animation_name][3]
     character_w, character_h = width * 3, height * 3
@@ -54,9 +54,10 @@ frame = 0
 # dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
 animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Win": (0, 111, [26, 35, 33, 39], 28, 4),
-             "Taunt_back": (0, 144, [18, 24, 18, 31, 26, 28], 38, 6)}
+             "Taunt_back": (0, 144, [18, 24, 18, 31, 26, 28], 38, 6),
+             "Taunt_front": (161, 144, [18, 24, 18, 31, 26, 28], 38, 6)}
 
-cur_animation = "Taunt_back"
+cur_animation = "Taunt_front"
 
 frame_start_x = animation[cur_animation][0]
 
