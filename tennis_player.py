@@ -62,9 +62,11 @@ animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Diving_right_front": (223, 283, [36, 57, 46, 39, 32], 31, 5),
              "Hit_left_back": (0, 318, [23, 39, 20, 28, 20], 34, 5),
              "Hit_left_front": (223, 318, [23, 39, 20, 28, 20], 34, 5),
-             "Hit_right_back": (0, 359, [28, 42, 19, 34, 23], 33, 5)}
+             "Hit_right_back": (0, 359, [28, 42, 19, 34, 23], 33, 5),
+             "Hit_right_front": (223, 359, [27, 42, 19, 36, 24], 33, 5)
+             }
 
-cur_animation = "Hit_right_back"
+cur_animation = "Hit_right_front"
 
 frame_start_x = animation[cur_animation][0]
 
