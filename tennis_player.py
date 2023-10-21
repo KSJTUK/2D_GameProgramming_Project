@@ -31,14 +31,24 @@ frame = 0
 # 프레임 정보를 찾는데 이용한 사이트: http://www.spritecow.com/
 
 # 애니메이션들의 시작위치는 대부분 0이나 0이 아닌 애니메이션 존재
-frame_start_x = 0
+# dictionary = { animation_name: tuple(frame_start_x, frame_start_y, frame_height, farme_count)
+animation = { "Lose": (0, 76, [29, 32, 25, 32, 26], 32, 5)}
+frame_start_x = animation["Lose"][0]
+
+# 캐릭터의 임시 위치
+test_position = (400, 300)
 
 while running:
     clear_canvas()
 
     handle_events()
 
-    frame = (frame + 1) % 4
+    if (frame == 0):
+        frame_start_x = 0
+
+    character.clip_draw(frame_start_x, animation['Lose'][1], animation["Lose"][2][frame], animation["Lose"][3], 400, 300)
+    frame_start_x += animation["Lose"][2][frame]
+    frame = (frame + 1) % animation['Lose'][4]
 
 
 
