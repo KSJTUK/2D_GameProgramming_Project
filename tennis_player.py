@@ -72,9 +72,11 @@ animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Run_left_down": (0, 468, [33, 38, 23, 29, 24, 34], 29, 6),
              "Run_left": (0, 433, [29, 38, 31, 39, 35, 34], 30, 6),
              "Run_left_up": (0, 397, [20, 26, 27, 38, 31, 25], 31, 6),
+             "Idle_back": (0, 681, [20, 25, 18, 25, 19], 28, 5),
+             "Idle_front": (157, 681, [20, 25, 18, 25, 19], 28, 5),
              }
 
-cur_animation = "Run_left_up"
+cur_animation = "Idle_front"
 
 frame_start_x = animation[cur_animation][0]
 
