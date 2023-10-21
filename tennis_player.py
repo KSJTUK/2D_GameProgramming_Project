@@ -75,10 +75,12 @@ animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Idle_back": (0, 681, [20, 25, 18, 25, 19], 28, 5),
              "Idle_front": (157, 681, [20, 25, 18, 25, 19], 28, 5),
              "High_hit_back": (0, 714, [25, 26, 24, 39, 25], 46, 5),
-             "High_hit_front": (157, 714, [23, 26, 25, 38, 25], 46, 5)
+             "High_hit_front": (157, 714, [23, 26, 25, 38, 25], 46, 5),
+             "Preparing_serve_back": (0, 765, [27, 38, 18, 31], 35, 4),
+             "Preparing_serve_front": (157, 765, [27, 37, 17, 29], 35, 4),
              }
 
-cur_animation = "High_hit_front"
+cur_animation = "Preparing_serve_front"
 
 frame_start_x = animation[cur_animation][0]
 
