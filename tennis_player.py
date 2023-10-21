@@ -63,10 +63,18 @@ animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Hit_left_back": (0, 318, [23, 39, 20, 28, 20], 34, 5),
              "Hit_left_front": (223, 318, [23, 39, 20, 28, 20], 34, 5),
              "Hit_right_back": (0, 359, [28, 42, 19, 34, 23], 33, 5),
-             "Hit_right_front": (223, 359, [27, 42, 19, 36, 24], 33, 5)
+             "Hit_right_front": (223, 359, [27, 42, 19, 36, 24], 33, 5),
+             "Run_up": (0, 642, [25, 27, 21, 28, 21, 27], 32, 6),
+             "Run_right_up": (0, 606, [33, 38, 22, 29, 23, 34], 31, 6),
+             "Run_right": (0, 571, [29, 39, 30, 39, 33, 35], 30, 6),
+             "Run_right_down": (0, 537, [20, 27, 28, 39, 30, 26], 29, 6),
+             "Run_down": (0, 502, [26, 28, 21, 28, 21, 27], 30, 6),
+             "Run_left_down": (0, 468, [33, 38, 23, 29, 24, 34], 29, 6),
+             "Run_left": (0, 433, [29, 38, 31, 39, 35, 34], 30, 6),
+             "Run_left_up": (0, 397, [20, 26, 27, 38, 31, 25], 31, 6),
              }
 
-cur_animation = "Hit_right_front"
+cur_animation = "Run_left_up"
 
 frame_start_x = animation[cur_animation][0]
 
@@ -82,6 +90,6 @@ while running:
 
     update_canvas()
 
-    delay(1)
+    delay(0.3)
 
 close_canvas()
