@@ -23,8 +23,8 @@ def draw_character_animation_in_dict(animation_name):
     # 캐릭터 크기를 키우기 위해 clip_composite_draw사용
     # 크기 비율은 3배로 늘림
     character.clip_composite_draw(frame_start_x, animation[animation_name][1],
-                        width, height,
-                        0, ' ', 400, 300, character_w, character_h)
+                                  width, height,
+                                  0, ' ', 400, 300, character_w, character_h)
 
     frame_start_x += animation[animation_name][2][frame]
     frame = (frame + 1) % animation[animation_name][4]
@@ -74,9 +74,11 @@ animation = {"Lose": (0, 78, [29, 32, 25, 32, 26], 28, 5),
              "Run_left_up": (0, 397, [20, 26, 27, 38, 31, 25], 31, 6),
              "Idle_back": (0, 681, [20, 25, 18, 25, 19], 28, 5),
              "Idle_front": (157, 681, [20, 25, 18, 25, 19], 28, 5),
+             "High_hit_back": (0, 714, [25, 26, 24, 39, 25], 46, 5),
+             "High_hit_front": (157, 714, [23, 26, 25, 38, 25], 46, 5)
              }
 
-cur_animation = "Idle_front"
+cur_animation = "High_hit_front"
 
 frame_start_x = animation[cur_animation][0]
 
