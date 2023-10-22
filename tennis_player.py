@@ -60,6 +60,10 @@ test_position = (400, 300)
 # court's l, b, 0: 0,   1, 432, 296, 1: 433,   1
 #               2: 0, 298, 432, 592, 3: 433, 296
 # width = 432(431 if 1 or 3), height = 296
+# width = 431 - (num % 2)
+# height = 296
+# left = 433 * (num % 2)
+# bottom = 1 + 297 * (num // 2)
 tennis_courts = load_image('tennis_courts.png')
 
 while running:
