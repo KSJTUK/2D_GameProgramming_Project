@@ -22,9 +22,6 @@ running = True
 character = tennis_character.Character()
 court = tennis_court.TennisCourt(0)
 
-# 캐릭터의 임시 위치
-test_position = (400, 300)
-
 while running:
     clear_canvas()
 
