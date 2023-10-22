@@ -2,6 +2,8 @@ from pico2d import *
 
 from animation_info import micky_animation
 
+import tennis_court
+
 
 def handle_events():
     global running
@@ -54,25 +56,17 @@ cur_animation = "Preparing_serve_front"
 
 frame_start_x = micky_animation[cur_animation][0]
 
+court = tennis_court.TennisCourt(0)
+
 # 캐릭터의 임시 위치
 test_position = (400, 300)
-
-# width = 431 - (num % 2)
-# height = 296
-# left = 433 * (num % 2)
-# bottom = 1 + 297 * (num // 2)
-tennis_courts = load_image('tennis_courts.png')
-tennis_court_num = 3
-court_w, court_h = 431 - (tennis_court_num % 2), 296
-court_l, court_b = 433 * (tennis_court_num % 2), 1 + 297 * (tennis_court_num // 2)
 
 while running:
     clear_canvas()
 
     handle_events()
 
-    tennis_courts.clip_composite_draw(court_l, court_b, court_w, court_h, 0, ' ', 400, 300, 800, 600)
-
+    court.draw()
     # draw_character_animation_in_dict(cur_animation)
 
     update_canvas()
