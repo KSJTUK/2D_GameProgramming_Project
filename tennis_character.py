@@ -22,18 +22,21 @@ class Character:
         self.frame = 0
         self.frame_start_x = 0
 
-    # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
-    def draw(self):
+    # 캐릭터 애니메이션 프레임 업데이트
+    def update(self):
+        self.frame_start_x += micky_animation[self.animation][2][self.frame]
+        self.frame = (self.frame + 1) % micky_animation[self.animation][4]
+
         if (self.frame == 0):
             self.frame_start_x = micky_animation[self.animation][0]
 
+    # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
+    def draw(self):
         width, height = micky_animation[self.animation][2][self.frame], micky_animation[self.animation][3]
         character_w, character_h = width * 3, height * 3
+
         # 캐릭터 크기를 키우기 위해 clip_composite_draw사용
         # 크기 비율은 3배로 늘림
         self.image.clip_composite_draw(self.frame_start_x, micky_animation[self.animation][1],
                                        width, height,
                                        0, ' ', 400, 300, character_w, character_h)
-
-        self.frame_start_x += micky_animation[self.animation][2][self.frame]
-        self.frame = (self.frame + 1) % micky_animation[self.animation][4]

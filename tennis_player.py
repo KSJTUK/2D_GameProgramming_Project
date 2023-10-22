@@ -34,6 +34,7 @@ while running:
     character.draw()
 
     update_canvas()
+    character.update()
 
     delay(0.3)
 

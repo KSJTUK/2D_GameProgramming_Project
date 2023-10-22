@@ -12,6 +12,9 @@ class TennisCourt:
         self.w, self.h = 431 - (self.number % 2), 296
         self.image_l, self.image_b = 433 * (self.number % 2), 1 + 297 * (self.number // 2)
 
+    def update(self):
+        pass
+
     def draw(self):
         self.image.clip_composite_draw(self.image_l, self.image_b, self.w, self.h,
                                        0, ' ', 400, 300, 800, 600)
