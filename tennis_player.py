@@ -57,28 +57,26 @@ frame_start_x = micky_animation[cur_animation][0]
 # 캐릭터의 임시 위치
 test_position = (400, 300)
 
-# court's l, b, 0: 0,   1, 432, 296, 1: 433,   1
-#               2: 0, 298, 432, 592, 3: 433, 296
-# width = 432(431 if 1 or 3), height = 296
 # width = 431 - (num % 2)
 # height = 296
 # left = 433 * (num % 2)
 # bottom = 1 + 297 * (num // 2)
 tennis_courts = load_image('tennis_courts.png')
+tennis_court_num = 3
+court_w, court_h = 431 - (tennis_court_num % 2), 296
+court_l, court_b = 433 * (tennis_court_num % 2), 1 + 297 * (tennis_court_num // 2)
 
 while running:
     clear_canvas()
 
     handle_events()
 
-    tennis_courts.clip_composite_draw(0, 1, 432, 296, 0, ' ', 400, 300, 800, 600) # 0
-    # tennis_courts.clip_composite_draw(433, 1, 432, 296, 0, ' ', 400, 300, 800, 600) # 1
-    # tennis_courts.clip_composite_draw(0, 298, 431, 296, 0, ' ', 400, 300, 800, 600) # 2
-    # tennis_courts.clip_composite_draw(433, 298, 431, 296, 0, ' ', 400, 300, 800, 600) # 3
-    draw_character_animation_in_dict(cur_animation)
+    tennis_courts.clip_composite_draw(court_l, court_b, court_w, court_h, 0, ' ', 400, 300, 800, 600)
+
+    # draw_character_animation_in_dict(cur_animation)
 
     update_canvas()
 
-    delay(0.3)
+    # delay(0.3)
 
 close_canvas()
