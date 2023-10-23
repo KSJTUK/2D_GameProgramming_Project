@@ -1,5 +1,5 @@
 from animation_info import *
-from pico2d import load_image
+from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
 
 
 # 애니메이션 정보 찾기
@@ -29,6 +29,9 @@ class Character:
 
         if (self.frame == 0):
             self.frame_start_x = micky_animation[self.animation][0]
+
+    def handle_event(self, event):
+        pass
 
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
     def draw(self):
