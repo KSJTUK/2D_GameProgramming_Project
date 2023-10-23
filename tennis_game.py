@@ -5,14 +5,17 @@ import tennis_court
 
 
 def handle_events():
-    global running
+    global running, character
 
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             running = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                running = False
+            else:
+                character.handle_event(event)
 
 
 open_canvas()
@@ -32,5 +35,7 @@ while running:
 
     update_canvas()
     character.update()
+
+    delay(0.01)
 
 close_canvas()

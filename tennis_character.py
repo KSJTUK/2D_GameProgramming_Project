@@ -17,13 +17,17 @@ from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
 class Character:
     def __init__(self):
         self.image = load_image('tennis_character_micki.png')
-        self.x, y = 400, 300
+        self.x, self.y = 400, 300
         self.animation = "Idle_back"
         self.frame = 0
         self.frame_start_x = 0
+        self.dir_x, self.dir_y = 0, 0
 
     # 캐릭터 애니메이션 프레임 업데이트
     def update(self):
+        self.x += self.dir_x
+
+        # 프레임 업데이트 코드
         self.frame_start_x += micky_animation[self.animation][2][self.frame]
         self.frame = (self.frame + 1) % micky_animation[self.animation][4]
 
@@ -31,7 +35,11 @@ class Character:
             self.frame_start_x = micky_animation[self.animation][0]
 
     def handle_event(self, event):
-        pass
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_RIGHT:
+                self.dir_x = 1
+            elif event.key == SDLK_LEFT:
+                self.dir_x = -1
 
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
     def draw(self):
@@ -42,4 +50,4 @@ class Character:
         # 크기 비율은 3배로 늘림
         self.image.clip_composite_draw(self.frame_start_x, micky_animation[self.animation][1],
                                        width, height,
-                                       0, ' ', 400, 300, character_w, character_h)
+                                       0, ' ', self.x, self.y, character_w, character_h)
