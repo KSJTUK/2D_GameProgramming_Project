@@ -3,6 +3,24 @@ from check_event_funtions import *
 from pico2d import load_image
 
 
+class Diving:
+    @staticmethod
+    def enter(character, event):
+        print('Entered Diving state')
+
+    @staticmethod
+    def do(character):
+        pass
+
+    @staticmethod
+    def exit(character, event):
+        pass
+
+    @staticmethod
+    def draw(character):
+        pass
+
+
 class Hit:
     @staticmethod
     def enter(character, event):
@@ -129,8 +147,9 @@ class CharacterSatateMachine:
             Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                  space_down: Hit},
-            Hit: {animation_end_and_keydown: Run, animation_end: Idle}  # animation_end: Idle
+                  space_down: Hit, key_down_v: Diving},
+            Hit: {animation_end_and_keydown: Run, animation_end: Idle},
+            Diving: { } # animation_end: Idle, keydown and animation_end: Run
         }
 
     def start(self):

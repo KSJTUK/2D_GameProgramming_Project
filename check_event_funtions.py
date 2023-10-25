@@ -1,5 +1,5 @@
-from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN,\
-    SDLK_SPACE
+from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN, \
+    SDLK_SPACE, SDLK_v
 
 left_arrow_downed = False
 right_arrow_downed = False
@@ -113,11 +113,18 @@ def not_downed(e):
     else:
         return False
 
+
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
+
+def key_down_v(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_v
+
+
 def animation_end(e):
     return e[0] == 'ANIMATION_END'
+
 
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
