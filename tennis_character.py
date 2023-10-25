@@ -6,7 +6,16 @@ from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
 class Run:
     @staticmethod
     def enter(character, event):
-        pass
+        if arrow_right_down(event) or arrow_left_up(event): # 오른쪽으로 움직임
+            character.dir_x, character.face_x = 1, '_right'
+        elif arrow_left_down(event) or arrow_right_up(event):
+            character.dir_x, character.face_x = -1, '_left'
+
+        # 위 아래 체크는 아직 안하므로 face_y는 '' 유지
+        character.dir_y, character.face_y = 0, ''
+
+        character.animation = 'Run' + character.face_x + character.face_y
+        print(character.animation)
 
     @staticmethod
     def do(character):
@@ -26,7 +35,7 @@ class Run:
 class Idle:
     @staticmethod
     def enter(character, event):
-        print("Idle Entered: ", event[0])
+        pass
 
     @staticmethod
     def do(character):
@@ -38,7 +47,7 @@ class Idle:
 
     @staticmethod
     def exit(character, event):
-        print("Idle Exit: ", event[0])
+        pass
 
     @staticmethod
     def draw(character):
@@ -59,7 +68,8 @@ class CharacterSatateMachine:
         self.cur_state = Idle
         self.transition_state_dic = {
             # 함수 작동 체크용으로 임시로 넣은 데이터들
-            Idle: {arrow_right_down: Idle, arrow_left_down: Idle, arrow_left_up: Idle, arrow_right_up: Idle},
+            Idle: {arrow_right_down: Run, arrow_left_down: Run, arrow_left_up: Run, arrow_right_up: Run},
+            Run: {arrow_right_down: Idle, arrow_left_down: Idle, arrow_left_up: Idle, arrow_right_up: Idle},
         }
 
     def start(self):
@@ -102,6 +112,10 @@ class Character:
         self.frame = 0
         self.frame_start_x = 0
         self.dir_x, self.dir_y = 0, 0
+
+        # 캐릭터가 바라보는 방향을 문자열로 지정
+        # 애니메이션에 문자열을 더해주는 방식으로 사용할 예정
+        self.face_x, self.face_y = '', '_back'
 
         # 캐릭터의 상태기계 생성
         self.state_machine = CharacterSatateMachine(self)
