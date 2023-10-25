@@ -115,3 +115,6 @@ def not_downed(e):
 
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+def animation_end(e):
+    return e[0] == 'ANIMATION_END'
