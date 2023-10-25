@@ -1,17 +1,19 @@
 from animation_info import *
+from check_event_funtions import *
 from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
+
 
 class Run:
     @staticmethod
     def enter(character, event):
-        print("Run Entered")
+        pass
 
     @staticmethod
     def do(character):
         pass
 
     @staticmethod
-    def exit(character):
+    def exit(character, event):
         pass
 
     @staticmethod
@@ -24,7 +26,7 @@ class Run:
 class Idle:
     @staticmethod
     def enter(character, event):
-        print("Idle Entered")
+        print("Idle Entered: ", event[0])
 
     @staticmethod
     def do(character):
@@ -35,8 +37,8 @@ class Idle:
             character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
-    def exit(character):
-        pass
+    def exit(character, event):
+        print("Idle Exit: ", event[0])
 
     @staticmethod
     def draw(character):
@@ -56,7 +58,8 @@ class CharacterSatateMachine:
         self.character = character
         self.cur_state = Idle
         self.transition_state_dic = {
-            None
+            # 함수 작동 체크용으로 임시로 넣은 데이터들
+            Idle: {arrow_right_down: Idle, arrow_left_down: Idle, arrow_left_up: Idle, arrow_right_up: Idle},
         }
 
     def start(self):
@@ -67,7 +70,13 @@ class CharacterSatateMachine:
 
     def handle_event(self, e):
         for check_event, next_state in self.transition_state_dic[self.cur_state].items():
-            pass
+            if check_event(e):
+                self.cur_state.exit(self.character, e)
+                self.cur_state = next_state
+                self.cur_state.enter(self.character, e)
+                return True
+
+        return False
 
     def draw(self):
         self.cur_state.draw(self.character)
@@ -103,8 +112,7 @@ class Character:
         self.state_machine.update()
 
     def handle_event(self, event):
-        # self.state_machine.handle_event('INPUT', event)
-        pass
+        self.state_machine.handle_event(('INPUT', event))
 
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
     def draw(self):
