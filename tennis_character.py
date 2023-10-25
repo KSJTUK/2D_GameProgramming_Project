@@ -3,6 +3,24 @@ from check_event_funtions import *
 from pico2d import load_image
 
 
+class Hit:
+    @staticmethod
+    def enter(chracter, event):
+        pass
+
+    @staticmethod
+    def do(character):
+        pass
+
+    @staticmethod
+    def exit(character, event):
+        pass
+
+    @staticmethod
+    def draw(character, event):
+        pass
+
+
 class Run:
     @staticmethod
     def enter(character, event):
