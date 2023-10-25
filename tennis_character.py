@@ -13,8 +13,12 @@ class Run:
         else:
             character.dir_x, character.face_x = 0, ''
 
-        # 위 아래 체크는 아직 안하므로 face_y는 '' 유지
-        character.dir_y, character.face_y = 0, ''
+        if up_arrow_down(event) or down_arrow_up(event):  # 위로 움직임
+            character.dir_y, character.face_y = 1, '_back'
+        elif down_arrow_down(event) or up_arrow_up(event):
+            character.dir_y, character.face_y = -1, '_front'
+        else:
+            character.dir_y, character.face_y = 0, ''
 
         character.animation = 'Run' + character.face_x + character.face_y
 
@@ -55,11 +59,10 @@ class Idle:
     @staticmethod
     def enter(character, event):
         # 이전 상태가 Run에서 들어왔다면 움직임 관련 변수 모두 초기화
-        # Idle애니메이션은 위 아래 두 방향밖에 존재 X -> face_y만 검사
         character.dir_x, character.face_x = 0, ''
-        character.dir_y, character.face_y = 0, '_back'
+        character.dir_y = 0
 
-        character.animation = 'Idle' + character.face_y
+        character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
@@ -94,9 +97,9 @@ class CharacterSatateMachine:
         self.cur_state = Idle
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
-                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_down: Run},
+                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
             Run: {right_arrow_down: Idle, left_arrow_down: Idle, left_arrow_up: Idle, right_arrow_up: Idle,
-                  up_arrow_down: Idle, down_arrow_down: Idle, up_arrow_up: Idle, down_arrow_down: Idle},
+                  up_arrow_down: Idle, down_arrow_down: Idle, up_arrow_up: Idle, down_arrow_up: Idle},
         }
 
     def start(self):
