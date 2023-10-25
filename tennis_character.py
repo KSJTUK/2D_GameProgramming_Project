@@ -6,23 +6,22 @@ from pico2d import load_image
 class Run:
     @staticmethod
     def enter(character, event):
-        right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(),\
-            is_up_arrow_downed(), is_down_arrow_downed()
+        # 각 방향키가 눌려있는지 확인
+        right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(), is_up_arrow_downed(), is_down_arrow_downed()
 
-        if right:  # 오른쪽으로 움직임
-            character.dir_x, character.face_x = 1, '_right'
-        elif left:
-            character.dir_x, character.face_x = -1, '_left'
-        elif not(right or left):
+        if right and left: # 왼쪽키와 오른쪽키 동시 입력
             character.dir_x, character.face_x = 0, ''
+        elif right:  # 오른쪽키 입력
+            character.dir_x, character.face_x = 1, '_right'
+        elif left: # 왼쪽키 입력
+            character.dir_x, character.face_x = -1, '_left'
 
-        if up:  # 위로 움직임
+        if up and down: # 위키와 아래키 동시 입력
+            character.dir_y, character.face_y = 0, ''
+        elif up:  # 위키 입력
             character.dir_y, character.face_y = 1, '_back'
-        elif down:
+        elif down: # 아래키 입력
             character.dir_y, character.face_y = -1, '_front'
-        else:
-            if not(up or down):
-                character.dir_y, character.face_y = 0, ''
 
         character.animation = 'Run' + character.face_x + character.face_y
 
@@ -68,12 +67,16 @@ class Idle:
         character.dir_x, character.face_x = 0, ''
         character.dir_y = 0
 
+        # face_y의 문자열을 따라가되 빈 문자열이면 default인 Idle_back으로 애니메이션을 정함
         character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
+        
+        # 프레임 초기화
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
     def do(character):
+        # 프레임 업데이트
         character.frame_start_x += micky_animation[character.animation][2][character.frame]
         character.frame = (character.frame + 1) % micky_animation[character.animation][4]
 
@@ -103,7 +106,7 @@ class CharacterSatateMachine:
         self.cur_state = Idle
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
-                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
+                   down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
             Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
