@@ -23,6 +23,7 @@ class Hit:
 
         if character.frame == 0:
             character.frame_start_x = micky_animation[character.animation][0]
+            character.state_machine.handle_event(('ANIMATION_END', 0))
 
     @staticmethod
     def exit(character, event):
