@@ -6,9 +6,9 @@ from pico2d import load_image
 class Run:
     @staticmethod
     def enter(character, event):
-        if arrow_right_down(event) or arrow_left_up(event):  # 오른쪽으로 움직임
+        if right_arrow_down(event) or left_arrow_up(event):  # 오른쪽으로 움직임
             character.dir_x, character.face_x = 1, '_right'
-        elif arrow_left_down(event) or arrow_right_up(event):
+        elif left_arrow_down(event) or right_arrow_up(event):
             character.dir_x, character.face_x = -1, '_left'
         else:
             character.dir_x, character.face_x = 0, ''
@@ -93,8 +93,9 @@ class CharacterSatateMachine:
         self.character = character
         self.cur_state = Idle
         self.transition_state_dic = {
-            Idle: {arrow_right_down: Run, arrow_left_down: Run, arrow_left_up: Run, arrow_right_up: Run},
-            Run: {arrow_right_down: Idle, arrow_left_down: Idle, arrow_left_up: Idle, arrow_right_up: Idle},
+            Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
+                   },
+            Run: {right_arrow_down: Idle, left_arrow_down: Idle, left_arrow_up: Idle, right_arrow_up: Idle},
         }
 
     def start(self):
