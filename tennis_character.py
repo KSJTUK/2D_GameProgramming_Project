@@ -28,7 +28,7 @@ class Diving:
 
     @staticmethod
     def draw(character):
-        pass
+        character_default_draw_animation(character)
 
 
 class Hit:
@@ -169,7 +169,7 @@ class CharacterSatateMachine:
         self.cur_state.do(self.character)
 
     def handle_event(self, e):
-        # 키다운/업으로 인해 상태가 전이 되지 않는 애니메이션이 키다운/업으로 인해 다른 애니메이션에 영향을 끼치지 않기위해 먼저 검사 
+        # 키다운/업으로 인해 상태가 전이 되지 않는 애니메이션이 키다운/업으로 인해 다른 애니메이션에 영향을 끼치지 않기위해 먼저 검사
         check_arrow_all(e) # 먼저 방향키가 눌렸는지 확인 해준다(이후에 발생할 오류들을 예방하기 위함)
         
         for check_event, next_state in self.transition_state_dic[self.cur_state].items():
