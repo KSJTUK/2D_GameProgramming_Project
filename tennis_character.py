@@ -1,6 +1,26 @@
 from animation_info import *
 from pico2d import load_image
+
+
 # , SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
+
+
+class Run:
+    @staticmethod
+    def enter(character, event):
+        print("Run Entered")
+
+    @staticmethod
+    def do(character):
+        pass
+
+    @staticmethod
+    def exit(character):
+        pass
+
+    @staticmethod
+    def draw(character):
+        pass
 
 
 # 상태의 enter, exit 함수들은 어떤 이유에서 나가고 들어오는지를 판단하기위해
