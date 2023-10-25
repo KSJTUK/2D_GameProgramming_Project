@@ -31,15 +31,7 @@ class Hit:
 
     @staticmethod
     def draw(character):
-        width, height = (micky_animation[character.animation][2][character.frame],
-                         micky_animation[character.animation][3])
-
-        # 캐릭터 크기를 이미지 비율에 맞게 확대
-        character_w, character_h = width * character.scale[0], height * character.scale[1]
-
-        character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
-                                            width, height, 0, ' ',
-                                            character.x, character.y, character_w, character_h)
+        character_default_draw_animation(character)
 
 
 class Run:
@@ -86,15 +78,7 @@ class Run:
 
     @staticmethod
     def draw(character):
-        width, height = (micky_animation[character.animation][2][character.frame],
-                         micky_animation[character.animation][3])
-
-        # 캐릭터 크기를 이미지 비율에 맞게 확대
-        character_w, character_h = width * character.scale[0], height * character.scale[1]
-
-        character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
-                                            width, height, 0, ' ',
-                                            character.x, character.y, character_w, character_h)
+        character_default_draw_animation(character)
 
 
 # 상태의 enter, exit 함수들은 어떤 이유에서 나가고 들어오는지를 판단하기위해
@@ -130,16 +114,7 @@ class Idle:
 
     @staticmethod
     def draw(character):
-        # 이미지 너비, 높이 받기
-        width, height = (micky_animation[character.animation][2][character.frame],
-                         micky_animation[character.animation][3])
-
-        # 캐릭터 크기를 이미지 비율에 맞게 확대
-        character_w, character_h = width * character.scale[0], height * character.scale[1]
-
-        character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
-                                            width, height, 0, ' ',
-                                            character.x, character.y, character_w, character_h)
+        character_default_draw_animation(character)
 
 
 # 캐릭터의 상태 기계
@@ -155,7 +130,7 @@ class CharacterSatateMachine:
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                   space_down: Hit},
-            Hit: {animation_end: Idle} # animation_end: Idle
+            Hit: {animation_end: Idle}  # animation_end: Idle
         }
 
     def start(self):
@@ -219,3 +194,16 @@ class Character:
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
     def draw(self):
         self.state_machine.draw()
+
+
+# 변경없이 계속 중복되던 draw기능 함수화
+def character_default_draw_animation(character):
+    width, height = (micky_animation[character.animation][2][character.frame],
+                     micky_animation[character.animation][3])
+
+    # 캐릭터 크기를 이미지 비율에 맞게 확대
+    character_w, character_h = width * character.scale[0], height * character.scale[1]
+
+    character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
+                                        width, height, 0, ' ',
+                                        character.x, character.y, character_w, character_h)
