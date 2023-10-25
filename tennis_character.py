@@ -6,19 +6,23 @@ from pico2d import load_image
 class Run:
     @staticmethod
     def enter(character, event):
-        if right_arrow_down(event) or left_arrow_up(event):  # 오른쪽으로 움직임
+        right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(),\
+            is_up_arrow_downed(), is_down_arrow_downed()
+
+        if right:  # 오른쪽으로 움직임
             character.dir_x, character.face_x = 1, '_right'
-        elif left_arrow_down(event) or right_arrow_up(event):
+        elif left:
             character.dir_x, character.face_x = -1, '_left'
-        else:
+        elif not(right or left):
             character.dir_x, character.face_x = 0, ''
 
-        if up_arrow_down(event) or down_arrow_up(event):  # 위로 움직임
+        if up:  # 위로 움직임
             character.dir_y, character.face_y = 1, '_back'
-        elif down_arrow_down(event) or up_arrow_up(event):
+        elif down:
             character.dir_y, character.face_y = -1, '_front'
         else:
-            character.dir_y, character.face_y = 0, ''
+            if not(up or down):
+                character.dir_y, character.face_y = 0, ''
 
         character.animation = 'Run' + character.face_x + character.face_y
 
@@ -59,6 +63,8 @@ class Idle:
     @staticmethod
     def enter(character, event):
         # 이전 상태가 Run에서 들어왔다면 움직임 관련 변수 모두 초기화
+        character.running = False
+
         character.dir_x, character.face_x = 0, ''
         character.dir_y = 0
 
@@ -98,8 +104,9 @@ class CharacterSatateMachine:
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
-            Run: {right_arrow_down: Idle, left_arrow_down: Idle, left_arrow_up: Idle, right_arrow_up: Idle,
-                  up_arrow_down: Idle, down_arrow_down: Idle, up_arrow_up: Idle, down_arrow_up: Idle},
+            Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
+                  right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
+                  up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
         }
 
     def start(self):
