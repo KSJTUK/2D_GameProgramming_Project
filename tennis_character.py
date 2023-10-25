@@ -6,7 +6,7 @@ from pico2d import load_image
 class Hit:
     @staticmethod
     def enter(chracter, event):
-        pass
+        print('Entered Hit')
 
     @staticmethod
     def do(character):
@@ -17,7 +17,7 @@ class Hit:
         pass
 
     @staticmethod
-    def draw(character, event):
+    def draw(character):
         pass
 
 
@@ -128,10 +128,13 @@ class CharacterSatateMachine:
         self.cur_state = Idle
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
-                   down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
+                   down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
+                   space_down: Hit},
             Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
-                  up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run},
+                  up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
+                  space_down: Hit},
+            Hit: { } # animation_end: Idle
         }
 
     def start(self):
