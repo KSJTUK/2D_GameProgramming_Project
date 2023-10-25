@@ -1,9 +1,5 @@
 from animation_info import *
-from pico2d import load_image
-
-
-# , SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
-
+from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
 
 class Run:
     @staticmethod
