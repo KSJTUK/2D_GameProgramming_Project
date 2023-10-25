@@ -2,6 +2,30 @@ from animation_info import *
 from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT
 
 
+class Idle:
+    @staticmethod
+    def enter(character):
+        pass
+
+    @staticmethod
+    def do(character):
+        pass
+
+    @staticmethod
+    def exit(character):
+        pass
+
+    @staticmethod
+    def draw(character):
+        pass
+
+# 캐릭터의 상태 기계
+class CharacterSatateMachine:
+    def __init__(self, character):
+        self.character = character
+        self.cur_state = None
+
+
 # 애니메이션 정보 찾기
 
 # 현재 애니메이션은 프레임마다 정보가 다름
