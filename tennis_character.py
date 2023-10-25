@@ -14,6 +14,9 @@ class Diving:
 
     @staticmethod
     def do(character):
+        character.x += character.dir_x * character.speed * 3
+        character.y += character.dir_y * character.speed * 3
+
         # 프레임 업데이트
         character.frame_start_x += micky_animation[character.animation][2][character.frame]
         character.frame = (character.frame + 1) % micky_animation[character.animation][4]
