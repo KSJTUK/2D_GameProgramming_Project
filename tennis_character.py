@@ -94,8 +94,9 @@ class CharacterSatateMachine:
         self.cur_state = Idle
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
-                   },
-            Run: {right_arrow_down: Idle, left_arrow_down: Idle, left_arrow_up: Idle, right_arrow_up: Idle},
+                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_down: Run},
+            Run: {right_arrow_down: Idle, left_arrow_down: Idle, left_arrow_up: Idle, right_arrow_up: Idle,
+                  up_arrow_down: Idle, down_arrow_down: Idle, up_arrow_up: Idle, down_arrow_down: Idle},
         }
 
     def start(self):
