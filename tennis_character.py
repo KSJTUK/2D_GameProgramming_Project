@@ -130,7 +130,7 @@ class CharacterSatateMachine:
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                   space_down: Hit},
-            Hit: {animation_end: Idle}  # animation_end: Idle
+            Hit: {animation_end_and_keydown: Run, animation_end: Idle}  # animation_end: Idle
         }
 
     def start(self):

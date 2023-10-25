@@ -118,3 +118,6 @@ def space_down(e):
 
 def animation_end(e):
     return e[0] == 'ANIMATION_END'
+
+def animation_end_and_keydown(e):
+    return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
