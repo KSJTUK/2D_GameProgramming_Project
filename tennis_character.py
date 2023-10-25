@@ -9,14 +9,14 @@ class Run:
         # 각 방향키가 눌려있는지 확인
         right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(), is_up_arrow_downed(), is_down_arrow_downed()
 
-        if right and left: # 왼쪽키와 오른쪽키 동시 입력
+        if (right and left) or (not right and not left): # 왼쪽키와 오른쪽키 동시 입력 또는 둘다 입력 X
             character.dir_x, character.face_x = 0, ''
         elif right:  # 오른쪽키 입력
             character.dir_x, character.face_x = 1, '_right'
         elif left: # 왼쪽키 입력
             character.dir_x, character.face_x = -1, '_left'
 
-        if up and down: # 위키와 아래키 동시 입력
+        if (up and down) or (not up and not down): # 위키와 아래키 동시 입력 또는 둘다 입력 X
             character.dir_y, character.face_y = 0, ''
         elif up:  # 위키 입력
             character.dir_y, character.face_y = 1, '_back'
