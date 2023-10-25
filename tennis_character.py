@@ -5,12 +5,24 @@ from pico2d import load_image
 
 class Hit:
     @staticmethod
-    def enter(chracter, event):
-        print('Entered Hit')
+    def enter(character, event):
+        character.dir_x, character.dir_y = 0, 0
+        # 지금은 Run 상태에서의 캐릭터의 방향을 따라가지만 나중에는 공의 위치에 따라 변경해야함
+        # 공의 움직임 구현할 때 같이 구현 할것
+        character.animation = 'Hit' + character.face_x if character.face_x != '' else 'Hit_right'
+        character.animation = character.animation + character.face_y if character.face_y != '' else character.animation + '_back'
+
+        character.frame = 0
+        character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
     def do(character):
-        pass
+        # 프레임 업데이트
+        character.frame_start_x += micky_animation[character.animation][2][character.frame]
+        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+
+        if character.frame == 0:
+            character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
     def exit(character, event):
@@ -18,7 +30,15 @@ class Hit:
 
     @staticmethod
     def draw(character):
-        pass
+        width, height = (micky_animation[character.animation][2][character.frame],
+                         micky_animation[character.animation][3])
+
+        # 캐릭터 크기를 이미지 비율에 맞게 확대
+        character_w, character_h = width * character.scale[0], height * character.scale[1]
+
+        character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
+                                            width, height, 0, ' ',
+                                            character.x, character.y, character_w, character_h)
 
 
 class Run:
