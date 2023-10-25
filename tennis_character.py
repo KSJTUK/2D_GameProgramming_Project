@@ -9,18 +9,18 @@ class Run:
         # 각 방향키가 눌려있는지 확인
         right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(), is_up_arrow_downed(), is_down_arrow_downed()
 
-        if (right and left) or (not right and not left): # 왼쪽키와 오른쪽키 동시 입력 또는 둘다 입력 X
+        if (right and left) or (not right and not left):  # 왼쪽키와 오른쪽키 동시 입력 또는 둘다 입력 X
             character.dir_x, character.face_x = 0, ''
         elif right:  # 오른쪽키 입력
             character.dir_x, character.face_x = 1, '_right'
-        elif left: # 왼쪽키 입력
+        elif left:  # 왼쪽키 입력
             character.dir_x, character.face_x = -1, '_left'
 
-        if (up and down) or (not up and not down): # 위키와 아래키 동시 입력 또는 둘다 입력 X
+        if (up and down) or (not up and not down):  # 위키와 아래키 동시 입력 또는 둘다 입력 X
             character.dir_y, character.face_y = 0, ''
         elif up:  # 위키 입력
             character.dir_y, character.face_y = 1, '_back'
-        elif down: # 아래키 입력
+        elif down:  # 아래키 입력
             character.dir_y, character.face_y = -1, '_front'
 
         character.animation = 'Run' + character.face_x + character.face_y
@@ -31,8 +31,8 @@ class Run:
     @staticmethod
     def do(character):
         # 캐릭터 위치 이동
-        character.x += character.dir_x * 1
-        character.y += character.dir_y * 1
+        character.x += character.dir_x * character.speed
+        character.y += character.dir_y * character.speed
 
         # 프레임 업데이트
         character.frame_start_x += micky_animation[character.animation][2][character.frame]
@@ -49,7 +49,9 @@ class Run:
     def draw(character):
         width, height = (micky_animation[character.animation][2][character.frame],
                          micky_animation[character.animation][3])
-        character_w, character_h = width * 3, height * 3  # 캐릭터 크기를 이미지 비율에 맞게 확대
+
+        # 캐릭터 크기를 이미지 비율에 맞게 확대
+        character_w, character_h = width * character.scale[0], height * character.scale[1]
 
         character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
                                             width, height, 0, ' ',
@@ -69,7 +71,7 @@ class Idle:
 
         # face_y의 문자열을 따라가되 빈 문자열이면 default인 Idle_back으로 애니메이션을 정함
         character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
-        
+
         # 프레임 초기화
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
@@ -92,7 +94,9 @@ class Idle:
         # 이미지 너비, 높이 받기
         width, height = (micky_animation[character.animation][2][character.frame],
                          micky_animation[character.animation][3])
-        character_w, character_h = width * 3, height * 3  # 캐릭터 크기를 이미지 비율에 맞게 확대
+
+        # 캐릭터 크기를 이미지 비율에 맞게 확대
+        character_w, character_h = width * character.scale[0], height * character.scale[1]
 
         character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
                                             width, height, 0, ' ',
@@ -152,6 +156,8 @@ class Character:
         self.frame = 0
         self.frame_start_x = 0
         self.dir_x, self.dir_y = 0, 0
+        self.scale = (2, 2)
+        self.speed = 5
 
         # 캐릭터가 바라보는 방향을 문자열로 지정
         # 애니메이션에 문자열을 더해주는 방식으로 사용할 예정
