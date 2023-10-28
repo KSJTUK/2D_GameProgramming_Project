@@ -3,6 +3,24 @@ from check_event_funtions import *
 from pico2d import load_image
 
 
+class PreparingServe:
+    @staticmethod
+    def enter(character, event):
+        pass
+
+    @staticmethod
+    def do(character):
+        pass
+
+    @staticmethod
+    def exit(character, event):
+        pass
+
+    @staticmethod
+    def draw(character):
+        character_default_draw_animation(character)
+
+
 class Diving:
     @staticmethod
     def enter(character, event):
