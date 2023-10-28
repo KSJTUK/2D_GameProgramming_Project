@@ -162,7 +162,7 @@ class CharacterSatateMachine:
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                   space_down: Hit, key_down_v: Diving},
             Hit: {animation_end_and_keydown: Run, animation_end: Idle},
-            Diving: { animation_end_and_keydown: Run, animation_end: Idle} # animation_end: Idle, keydown and animation_end: Run
+            Diving: {animation_end_and_keydown: Run, animation_end: Idle} # animation_end: Idle, keydown and animation_end: Run
         }
 
     def start(self):
@@ -208,8 +208,9 @@ class Character:
         self.frame = 0
         self.frame_start_x = 0
         self.dir_x, self.dir_y = 0, 0
-        self.scale = (2, 2)
+        self.scale = 2
         self.speed = 5
+        self.diving_move_angle = 0
 
         # 캐릭터가 바라보는 방향을 문자열로 지정
         # 애니메이션에 문자열을 더해주는 방식으로 사용할 예정
@@ -237,7 +238,7 @@ def character_default_draw_animation(character):
                      micky_animation[character.animation][3])
 
     # 캐릭터 크기를 이미지 비율에 맞게 확대
-    character_w, character_h = width * character.scale[0], height * character.scale[1]
+    character_w, character_h = width * character.scale, height * character.scale
 
     character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
                                         width, height, 0, ' ',
