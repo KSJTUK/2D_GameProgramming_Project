@@ -7,6 +7,8 @@ class Ready:
     @staticmethod
     def enter(character, event):
         character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
+        character.face_x = ''
+        character.dir_x, character.dir_y = 0, 0
 
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
@@ -38,7 +40,13 @@ class HighHit:
 
     @staticmethod
     def do(character):
-        pass
+        # 프레임 업데이트
+        character.frame_start_x += micky_animation[character.animation][2][character.frame]
+        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+
+        if character.frame == 0:
+            character.frame_start_x = micky_animation[character.animation][0]
+            character.state_machine.handle_event(('ANIMATION_END', 0))
 
     @staticmethod
     def exit(character, event):
@@ -52,11 +60,17 @@ class HighHit:
 class PreparingServe:
     @staticmethod
     def enter(character, event):
-        print('Enter PreparingServe')
+        character.animation = 'Preparing_serve' + character.face_y if character.face_y != '' else 'Preparing_serve_back'
+
+        character.frame = 0
+        character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
     def do(character):
-        pass
+        # 프레임 업데이트
+        if character.frame < micky_animation[character.animation][4] - 1:
+            character.frame_start_x += micky_animation[character.animation][2][character.frame]
+            character.frame = character.frame + 1
 
     @staticmethod
     def exit(character, event):
