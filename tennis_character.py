@@ -1,7 +1,7 @@
 from animation_info import *
 from check_event_funtions import *
 from pico2d import load_image
-
+from math import pi, radians, sin, cos
 
 class Ready:
     @staticmethod
@@ -38,11 +38,21 @@ class HighHit:
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
+        # 애니메이션이 더 자연스러워 보이기위해 초기 y값을 더해줌
+        character.jump_angle = 0
+        character.start_y = character.y
+        character.y += 5 * character.scale
+
     @staticmethod
     def do(character):
         # 프레임 업데이트
+        frame_size = micky_animation[character.animation][4]
         character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+        character.frame = (character.frame + 1) % frame_size
+
+        # 캐릭터 애니메이션에 따라 점프
+        character.jump_angle += 360 // frame_size
+        character.y += 15 * character.scale * sin(radians(character.jump_angle))
 
         if character.frame == 0:
             character.frame_start_x = micky_animation[character.animation][0]
@@ -50,7 +60,8 @@ class HighHit:
 
     @staticmethod
     def exit(character, event):
-        pass
+        character.y = character.start_y
+        character.jump_angle = 0
 
     @staticmethod
     def draw(character):
@@ -90,14 +101,22 @@ class Diving:
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
+        character.start_y = character.y
+        character.jump_angle = 0
+
     @staticmethod
     def do(character):
-        character.x += character.dir_x * character.speed * 3
-        character.y += character.dir_y * character.speed * 3
+        character.x += character.dir_x * character.speed * 5
+        character.y += character.dir_y * character.speed * 5
 
         # 프레임 업데이트
+        frame_size = micky_animation[character.animation][4]
         character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+        character.frame = (character.frame + 1) % frame_size
+
+        # 캐릭터 애니메이션에 따라 점프
+        character.jump_angle += 360 // frame_size
+        character.y += 10 * character.scale * sin(radians(character.jump_angle))
 
         if character.frame == 0:
             character.frame_start_x = micky_animation[character.animation][0]
@@ -105,7 +124,8 @@ class Diving:
 
     @staticmethod
     def exit(character, event):
-        pass
+        character.y = character.start_y
+        character.jump_angle = 0
 
     @staticmethod
     def draw(character):
@@ -291,7 +311,10 @@ class Character:
         self.dir_x, self.dir_y = 0, 0
         self.scale = 2
         self.speed = 5
-        self.diving_move_angle = 0
+
+        # 점프동작이 섞여있는 애니메이션을 위한 변수들
+        self.start_y = self.y
+        self.jump_angle = 0
 
         # 캐릭터가 바라보는 방향을 문자열로 지정
         # 애니메이션에 문자열을 더해주는 방식으로 사용할 예정
