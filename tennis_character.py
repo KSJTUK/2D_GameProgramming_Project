@@ -3,10 +3,35 @@ from check_event_funtions import *
 from pico2d import load_image
 
 
+class Ready:
+    @staticmethod
+    def enter(character, event):
+        character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
+
+        character.frame = 0
+        character.frame_start_x = micky_animation[character.animation][0]
+
+    @staticmethod
+    def do(character):
+        # 프레임 업데이트
+        character.frame_start_x += micky_animation[character.animation][2][character.frame]
+        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+
+        if character.frame == 0:
+            character.frame_start_x = micky_animation[character.animation][0]
+
+    @staticmethod
+    def exit(character, event):
+        pass
+
+    @staticmethod
+    def draw(character):
+        character_default_draw_animation(character)
+
 class HighHit:
     @staticmethod
     def enter(character, event):
-        character.animation = "High_hit" + character.face_y if character.face_y is not '' else "High_hit_back"
+        character.animation = "High_hit" + character.face_y if character.face_y != '' else "High_hit_back"
 
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
@@ -27,7 +52,7 @@ class HighHit:
 class PreparingServe:
     @staticmethod
     def enter(character, event):
-        pass
+        print('Enter PreparingServe')
 
     @staticmethod
     def do(character):
@@ -191,8 +216,9 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, character):
         self.character = character
-        self.cur_state = Idle
+        self.cur_state = Ready
         self.transition_state_dic = {
+            Ready: {space_down: PreparingServe},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                    space_down: Hit}, # court_start_end_space_down:
@@ -202,8 +228,8 @@ class CharacterSatateMachine:
                   space_down: Hit, key_down_v: Diving},
             Hit: {animation_end_and_keydown: Run, animation_end: Idle},
             Diving: {animation_end_and_keydown: Run, animation_end: Idle},
-            # PreparingServe: {time_out: Idle, space_down: HighHit},
-            # HighHit: {animation_end_and_keydown: Run, animation_end: Idle}
+            PreparingServe: {space_down: HighHit},
+            HighHit: {animation_end_and_keydown: Run, animation_end: Idle}
         }
 
     def start(self):

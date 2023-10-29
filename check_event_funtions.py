@@ -1,10 +1,32 @@
 from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN, \
     SDLK_SPACE, SDLK_v
 
+# 새로운 코트가 시작했음을 알려줄 변수
+# 임시로 이곳에 선언하고 저장
+# 초기값은 True
+new_court_start = True
+
 left_arrow_downed = False
 right_arrow_downed = False
 up_arrow_downed = False
 down_arrow_downed = False
+
+
+# new_court_start 변수를 설정할 함수
+# 이 함수도 마찬가리로 임시로 이곳에 선언
+def court_start():
+    global new_court_start
+    new_court_start = True
+
+def court_end():
+    global new_court_start
+    new_court_start = False
+
+
+# 위 변수들이 변화했는지는 다른 파일에서 감지하지 못하므로
+# 함수로 이 변수들의 상태를 알아볼 수 있도록 함
+def is_new_court_start():
+    return new_court_start
 
 
 def is_right_arrow_downed():
@@ -128,3 +150,9 @@ def animation_end(e):
 
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
+
+def court_start(e):
+    global new_court_start
+    if e[0] == 'NEW_COURT_START':
+        new_court_start = True
+        return True
