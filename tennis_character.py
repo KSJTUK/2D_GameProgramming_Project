@@ -6,7 +6,10 @@ from pico2d import load_image
 class HighHit:
     @staticmethod
     def enter(character, event):
-        pass
+        character.animation = "High_hit" + character.face_y if character.face_y is not '' else "High_hit_back"
+
+        character.frame = 0
+        character.frame_start_x = micky_animation[character.animation][0]
 
     @staticmethod
     def do(character):
@@ -15,7 +18,7 @@ class HighHit:
     @staticmethod
     def exit(character, event):
         pass
-    
+
     @staticmethod
     def draw(character):
         character_default_draw_animation(character)
@@ -192,13 +195,15 @@ class CharacterSatateMachine:
         self.transition_state_dic = {
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                   space_down: Hit},
+                   space_down: Hit}, # court_start_end_space_down:
             Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                   space_down: Hit, key_down_v: Diving},
             Hit: {animation_end_and_keydown: Run, animation_end: Idle},
-            Diving: {animation_end_and_keydown: Run, animation_end: Idle} # animation_end: Idle, keydown and animation_end: Run
+            Diving: {animation_end_and_keydown: Run, animation_end: Idle},
+            # PreparingServe: {time_out: Idle, space_down: HighHit},
+            # HighHit: {animation_end_and_keydown: Run, animation_end: Idle}
         }
 
     def start(self):
@@ -209,8 +214,8 @@ class CharacterSatateMachine:
 
     def handle_event(self, e):
         # 키다운/업으로 인해 상태가 전이 되지 않는 애니메이션이 키다운/업으로 인해 다른 애니메이션에 영향을 끼치지 않기위해 먼저 검사
-        check_arrow_all(e) # 먼저 방향키가 눌렸는지 확인 해준다(이후에 발생할 오류들을 예방하기 위함)
-        
+        check_arrow_all(e)  # 먼저 방향키가 눌렸는지 확인 해준다(이후에 발생할 오류들을 예방하기 위함)
+
         for check_event, next_state in self.transition_state_dic[self.cur_state].items():
             if check_event(e):
                 self.cur_state.exit(self.character, e)
