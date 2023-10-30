@@ -3,6 +3,7 @@ from check_event_funtions import *
 from pico2d import load_image
 from math import pi, radians, sin, cos
 
+
 class Ready:
     @staticmethod
     def enter(character, event):
@@ -29,6 +30,7 @@ class Ready:
     @staticmethod
     def draw(character):
         character_default_draw_animation(character)
+
 
 class HighHit:
     @staticmethod
@@ -115,17 +117,19 @@ class Diving:
         character.frame = (character.frame + 1) % frame_size
 
         # 캐릭터 애니메이션에 따라 점프
-        character.jump_angle += 360 // frame_size
-        character.y += 10 * character.scale * sin(radians(character.jump_angle))
+        if character.face_y == '':
+            character.jump_angle += 360 // frame_size
+            character.y += 10 * character.scale * sin(radians(character.jump_angle))
 
         if character.frame == 0:
             character.frame_start_x = micky_animation[character.animation][0]
             character.state_machine.handle_event(('ANIMATION_END', 0))
+            character.y = character.start_y
+            character.jump_angle = 0
 
     @staticmethod
     def exit(character, event):
-        character.y = character.start_y
-        character.jump_angle = 0
+        pass
 
     @staticmethod
     def draw(character):
@@ -195,11 +199,7 @@ class Run:
         character.y += character.dir_y * character.speed
 
         # 프레임 업데이트
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
-
-        if character.frame == 0:
-            character.frame_start_x = micky_animation[character.animation][0]
+        character_default_frame_update(character)
 
     @staticmethod
     def exit(character, event):
@@ -230,12 +230,7 @@ class Idle:
 
     @staticmethod
     def do(character):
-        # 프레임 업데이트
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
-
-        if character.frame == 0:
-            character.frame_start_x = micky_animation[character.animation][0]
+        character_default_frame_update(character)
 
     @staticmethod
     def exit(character, event):
@@ -255,7 +250,7 @@ class CharacterSatateMachine:
             Ready: {space_down: PreparingServe},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                   space_down: Hit}, # court_start_end_space_down:
+                   space_down: Hit},  # court_start_end_space_down:
             Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
@@ -334,6 +329,15 @@ class Character:
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
     def draw(self):
         self.state_machine.draw()
+
+
+def character_default_frame_update(character):
+    # 프레임 업데이트
+    character.frame_start_x += micky_animation[character.animation][2][character.frame]
+    character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+
+    if character.frame == 0:
+        character.frame_start_x = micky_animation[character.animation][0]
 
 
 # 변경없이 계속 중복되던 draw기능 함수화

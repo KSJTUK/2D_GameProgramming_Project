@@ -12,7 +12,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                running = False
+            running = False
         else:
             character.handle_event(event)
 

@@ -18,6 +18,7 @@ def court_start():
     global new_court_start
     new_court_start = True
 
+
 def court_end():
     global new_court_start
     new_court_start = False
@@ -150,6 +151,7 @@ def animation_end(e):
 
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
+
 
 def court_start(e):
     global new_court_start
