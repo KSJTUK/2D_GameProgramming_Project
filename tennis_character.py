@@ -11,7 +11,6 @@ RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
-
 class Ready:
     @staticmethod
     def enter(character, event):
@@ -155,7 +154,7 @@ class Diving:
             # 캐릭터 애니메이션에 따라 점프
             if character.face_y == '':
                 character.jump_angle += 360 // character.frame_per_action
-                character.y += 10 * character.scale * sin(radians(character.jump_angle))
+                character.y += 10 * character.character_height * sin(radians(character.jump_angle))
                 print(character.start_y, character.y)
 
     @staticmethod
@@ -366,6 +365,11 @@ class Character:
         self.state_machine = CharacterSatateMachine(self)
         self.state_machine.start()
 
+        # 캐릭터 IDLE 크기를 기준으로 캐릭터의 크기를 정하게 함
+        # 즉 캐릭터의 키가 n미터 이면 IDLE상태의 height값이 n미터가 되도록 하게 함
+        self.defualt_height = micky_animation['Idle_back'][3]
+        self.pixel_per_meter = game_framework.PIXEL_PER_METER
+
     # 캐릭터 애니메이션 프레임 업데이트
     def update(self):
         self.state_machine.update()
@@ -415,10 +419,13 @@ def character_default_frame_update(character):
 def character_default_draw_animation(character):
     width, height = (micky_animation[character.animation][2][int(character.frame)],
                      micky_animation[character.animation][3])
-
-    pixel_per_meter = game_framework.PIXEL_PER_METER
+    
+    # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
+    # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
+    # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함 
     aspect = width / height
-    character_h = character.character_height * pixel_per_meter
+    h = height / character.defualt_height
+    character_h = character.character_height * character.pixel_per_meter * h
     character_w = character_h * aspect
 
 
