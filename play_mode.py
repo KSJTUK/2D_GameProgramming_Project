@@ -5,6 +5,8 @@ import game_framework
 import game_world
 from tennis_court import TennisCourt
 from tennis_character import Character
+# test
+from ball import Ball
 
 def handle_events():
     events = get_events()
@@ -29,6 +31,9 @@ def init():
 
     character = Character()
     game_world.add_object(character, 1)
+
+    ball = Ball(400, 10, 0, 1)
+    game_world.add_object(ball, 1)
 
 
 def finish():

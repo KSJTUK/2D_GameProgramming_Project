@@ -1,5 +1,7 @@
+import game_world
 from animation_info import *
 from check_event_funtions import *
+from ball import Ball
 from pico2d import load_image
 from math import pi, radians, sin, cos
 
@@ -382,6 +384,10 @@ class Character:
         action_per_time = 1.0 / time_per_action
         self.frame_per_action = information[4]
         self.frame_per_time = action_per_time * self.frame_per_action
+
+    def throw_ball(self):
+        ball = Ball(self.x, self.y, self.dir_x, self.dir_y)
+        game_world.add_object(ball, 1)
 
 
 def character_default_frame_update(character):
