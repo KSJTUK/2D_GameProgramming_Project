@@ -1,5 +1,6 @@
 from pico2d import load_image
 
+
 # width = 431 - (num % 2)
 # height = 296
 # left = 433 * (num % 2)

@@ -1,6 +1,7 @@
 from pico2d import load_image
 import game_framework
 
+
 class Ball:
     image = None
 

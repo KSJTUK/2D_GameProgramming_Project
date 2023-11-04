@@ -11,6 +11,7 @@ RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
+
 class Ready:
     @staticmethod
     def enter(character, event):
@@ -422,7 +423,7 @@ def character_default_frame_update(character):
 def character_default_draw_animation(character):
     width, height = (micky_animation[character.animation][2][int(character.frame)],
                      micky_animation[character.animation][3])
-    
+
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
     # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
     # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함
@@ -430,7 +431,6 @@ def character_default_draw_animation(character):
     h = height / character.defualt_height
     character_h = character.character_height * character.pixel_per_meter * h
     character_w = character_h * aspect
-
 
     # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
     # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함

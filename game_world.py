@@ -16,5 +16,6 @@ def render():
         for object in layer:
             object.render()
 
+
 def clear():
     game_objects.clear()

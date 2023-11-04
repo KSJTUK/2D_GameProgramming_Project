@@ -1,8 +1,10 @@
 import time
+
 # fill here
 
 # 픽셀당 크기는 2센치로 설정
 PIXEL_PER_METER = 10.0 / 0.2
+
 
 def change_mode(mode):
     global stack
@@ -50,7 +52,6 @@ def run(start_mode):
     global frame_time
     frame_time = 0.0
     current_time = time.time()
-
 
     # fill here
     while running:
