@@ -393,9 +393,9 @@ class Character:
         self.frame_per_action = self.information[4]
         self.frame_per_time = action_per_time * self.frame_per_action
 
-    def throw_ball(self):
-        ball = Ball(self.x, self.y, self.dir_x, self.dir_y)
-        game_world.add_object(ball, 1)
+    # def throw_ball(self):
+    #     ball = Ball(self.x, self.y, self.dir_x, self.dir_y, 0, 300)
+    #     game_world.add_object(ball, 1)
 
 
 def character_default_frame_update(character):

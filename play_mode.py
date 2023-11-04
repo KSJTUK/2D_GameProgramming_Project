@@ -34,7 +34,7 @@ def init():
     character = Character()
     game_world.add_object(character, 1)
 
-    ball = Ball(400, 10, 0, 1)
+    ball = Ball(400, 10, 0, 60)
     game_world.add_object(ball, 1)
 
 
