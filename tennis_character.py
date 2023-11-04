@@ -20,14 +20,12 @@ class Ready:
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
+        character.calculation_action_time()
+
     @staticmethod
     def do(character):
         # 프레임 업데이트
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
-
-        if character.frame == 0:
-            character.frame_start_x = micky_animation[character.animation][0]
+        character_default_frame_update(character)
 
     @staticmethod
     def exit(character, event):
@@ -51,20 +49,26 @@ class HighHit:
         character.start_y = character.y
         character.y += 5 * character.scale
 
+        character.calculation_action_time()
+
     @staticmethod
     def do(character):
-        # 프레임 업데이트
-        frame_size = micky_animation[character.animation][4]
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % frame_size
-
         # 캐릭터 애니메이션에 따라 점프
-        character.jump_angle += 360 // frame_size
+        character.jump_angle += 360 // character.frame_per_action
         character.y += 15 * character.scale * sin(radians(character.jump_angle))
 
-        if character.frame == 0:
+        # 프레임 업데이트
+        prev_frame = int(character.frame)
+        character.frame = (character.frame + character.frame_per_time * game_framework.frame_time)
+
+        if int(character.frame) - prev_frame > 1:
+            character.frame_start_x += micky_animation[character.animation][2][int(character.frame)]
+
+        if character.frame >= character.frame_per_action:
             character.frame_start_x = micky_animation[character.animation][0]
             character.state_machine.handle_event(('ANIMATION_END', 0))
+
+        character.frame = character.frame % character.frame_per_action
 
     @staticmethod
     def exit(character, event):
@@ -84,12 +88,17 @@ class PreparingServe:
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
+        character.calculation_action_time()
+
     @staticmethod
     def do(character):
         # 프레임 업데이트
-        if character.frame < micky_animation[character.animation][4] - 1:
-            character.frame_start_x += micky_animation[character.animation][2][character.frame]
-            character.frame = character.frame + 1
+        if character.frame < character.frame_per_action - 1:
+            prev_frame = int(character.frame)
+            character.frame = (character.frame + character.frame_per_time * game_framework.frame_time)
+
+            if int(character.frame) - prev_frame > 1:
+                character.frame_start_x += micky_animation[character.animation][2][int(character.frame)]
 
     @staticmethod
     def exit(character, event):
@@ -112,26 +121,32 @@ class Diving:
         character.start_y = character.y
         character.jump_angle = 0
 
+        character.calculation_action_time()
+
     @staticmethod
     def do(character):
         character.x += character.dir_x * (RUN_SPEED_PPS * 2.0) * game_framework.frame_time
         character.y += character.dir_y * (RUN_SPEED_PPS * 2.0) * game_framework.frame_time
 
-        # 프레임 업데이트
-        frame_size = micky_animation[character.animation][4]
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % frame_size
-
         # 캐릭터 애니메이션에 따라 점프
         if character.face_y == '':
-            character.jump_angle += 360 // frame_size
+            character.jump_angle += 360 // character.frame_per_action
             character.y += 10 * character.scale * sin(radians(character.jump_angle))
 
-        if character.frame == 0:
+        # 프레임 업데이트
+        prev_frame = int(character.frame)
+        character.frame = (character.frame + character.frame_per_time * game_framework.frame_time)
+
+        if int(character.frame) - prev_frame > 1:
+            character.frame_start_x += micky_animation[character.animation][2][int(character.frame)]
+
+        if character.frame >= character.frame_per_action:
             character.frame_start_x = micky_animation[character.animation][0]
             character.state_machine.handle_event(('ANIMATION_END', 0))
             character.y = character.start_y
             character.jump_angle = 0
+
+        character.frame = character.frame % character.frame_per_action
 
     @staticmethod
     def exit(character, event):
@@ -154,15 +169,22 @@ class Hit:
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
 
+        character.calculation_action_time()
+
     @staticmethod
     def do(character):
         # 프레임 업데이트
-        character.frame_start_x += micky_animation[character.animation][2][character.frame]
-        character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+        prev_frame = int(character.frame)
+        character.frame = (character.frame + character.frame_per_time * game_framework.frame_time)
 
-        if character.frame == 0:
+        if int(character.frame) - prev_frame > 1:
+            character.frame_start_x += micky_animation[character.animation][2][int(character.frame)]
+
+        if character.frame >= character.frame_per_action:
             character.frame_start_x = micky_animation[character.animation][0]
             character.state_machine.handle_event(('ANIMATION_END', 0))
+
+        character.frame = character.frame % character.frame_per_action
 
     @staticmethod
     def exit(character, event):
@@ -197,6 +219,8 @@ class Run:
 
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
+
+        character.calculation_action_time()
 
     @staticmethod
     def do(character):
@@ -233,6 +257,8 @@ class Idle:
         # 프레임 초기화
         character.frame = 0
         character.frame_start_x = micky_animation[character.animation][0]
+
+        character.calculation_action_time()
 
     @staticmethod
     def do(character):
@@ -307,11 +333,13 @@ class Character:
         self.image = load_image('tennis_character_micki.png')
         self.x, self.y = 400, 300
         self.animation = "Idle_back"
-        self.frame = 0
+        self.frame = 0.0
         self.frame_start_x = 0
         self.dir_x, self.dir_y = 0, 0
         self.scale = 2
         self.speed = 5
+
+        self.prev_frame_int = -1
 
         # 점프동작이 섞여있는 애니메이션을 위한 변수들
         self.start_y = self.y
@@ -336,24 +364,45 @@ class Character:
     def render(self):
         self.state_machine.render()
 
+    def calculation_action_time(self):
+        information = micky_animation[self.animation]
+        time_per_action = information[5]
+        action_per_time = 1.0 / time_per_action
+        self.frame_per_action = information[4]
+        self.frame_per_time = action_per_time * self.frame_per_action
+
+
 
 def character_default_frame_update(character):
     # 프레임 업데이트
-    character.frame_start_x += micky_animation[character.animation][2][character.frame]
-    character.frame = (character.frame + 1) % micky_animation[character.animation][4]
+    # 더이상 프레임을 1씩 더하는게 아니므로
+    # 프레임이 업데이트 될때만 즉 int기준 이전 프레임과 현재 프레임이 1차이가 날 때만
+    # 그리는 프레임을 옆으로 이동해야함
+    # 다만 이렇게 하면 0번 인덱스를 더하지 않게 됨
+    # 그러니 프레임의 정수부를 기억해두고 달라질 때마다 만 업데이트 (첫 값은 -1로 설정)
 
-    if character.frame == 0:
+    prev_frame = int(character.frame % character.frame_per_action)
+    character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                       % character.frame_per_action)
+
+    if prev_frame - int(character.frame) == character.frame_per_action - 1:
         character.frame_start_x = micky_animation[character.animation][0]
+        character.prev_frame_int = -1
 
-
+    if character.prev_frame_int != int(character.frame):
+        character.prev_frame_int = int(character.frame)
+        character.frame_start_x += micky_animation[character.animation][2][int(character.frame)]
+        
 # 변경없이 계속 중복되던 draw기능 함수화
 def character_default_draw_animation(character):
-    width, height = (micky_animation[character.animation][2][character.frame],
+    width, height = (micky_animation[character.animation][2][int(character.frame)],
                      micky_animation[character.animation][3])
 
     # 캐릭터 크기를 이미지 비율에 맞게 확대
     character_w, character_h = width * character.scale, height * character.scale
 
-    character.image.clip_composite_draw(character.frame_start_x, micky_animation[character.animation][1],
+    # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
+    # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
+    character.image.clip_composite_draw(character.frame_start_x - width, micky_animation[character.animation][1],
                                         width, height, 0, ' ',
                                         character.x, character.y, character_w, character_h)

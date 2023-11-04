@@ -56,11 +56,11 @@ def run(start_mode):
         stack[-1].render()
         # fill here
 
-        # # 시간 출력용
         frame_time = time.time() - current_time
         frame_rate = 1.0 / frame_time
         current_time += frame_time
-        print(f'delta time: {frame_time}, fps: {frame_rate}')
+        # # 시간 출력용
+        # print(f'delta time: {frame_time}, fps: {frame_rate}')
 
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
