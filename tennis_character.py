@@ -28,7 +28,7 @@ class Ready:
         pass
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -66,7 +66,7 @@ class HighHit:
         character.jump_angle = 0
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -90,7 +90,7 @@ class PreparingServe:
         pass
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -132,7 +132,7 @@ class Diving:
         pass
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -206,7 +206,7 @@ class Run:
         pass
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -237,7 +237,7 @@ class Idle:
         pass
 
     @staticmethod
-    def draw(character):
+    def render(character):
         character_default_draw_animation(character)
 
 
@@ -280,8 +280,8 @@ class CharacterSatateMachine:
 
         return False
 
-    def draw(self):
-        self.cur_state.draw(self.character)
+    def render(self):
+        self.cur_state.render(self.character)
 
 
 # 애니메이션 정보 찾기
@@ -327,8 +327,8 @@ class Character:
         self.state_machine.handle_event(('INPUT', event))
 
     # 딕셔너리 내에 저장된 애니메이션 정보를 토대로 그려줄 함수 구현
-    def draw(self):
-        self.state_machine.draw()
+    def render(self):
+        self.state_machine.render()
 
 
 def character_default_frame_update(character):

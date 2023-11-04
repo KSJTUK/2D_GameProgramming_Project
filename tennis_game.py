@@ -2,10 +2,12 @@ from pico2d import *
 
 import tennis_character
 import tennis_court
+import game_world
 
 
 def handle_events():
-    global running, character
+    global running
+    global character
 
     events = get_events()
     for event in events:
@@ -21,19 +23,27 @@ open_canvas()
 
 running = True
 
-character = tennis_character.Character()
-court = tennis_court.TennisCourt(0)
+def reset_world():
+    global character
+
+    character = tennis_character.Character()
+    court = tennis_court.TennisCourt(0)
+
+    game_world.add_object(court, 0)
+    game_world.add_object(character, 1)
+
+reset_world()
 
 while running:
     clear_canvas()
 
     handle_events()
 
-    court.draw()
-    character.draw()
+    game_world.update()
+
+    game_world.render()
 
     update_canvas()
-    character.update()
 
     delay(0.1)
 

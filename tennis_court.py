@@ -15,6 +15,6 @@ class TennisCourt:
     def update(self):
         pass
 
-    def draw(self):
+    def render(self):
         self.image.clip_composite_draw(self.image_l, self.image_b, self.w, self.h,
                                        0, ' ', 400, 300, 800, 600)
