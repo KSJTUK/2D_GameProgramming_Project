@@ -1,5 +1,6 @@
 from pico2d import load_image
 import game_framework
+import game_world
 
 
 class Ball:
@@ -27,6 +28,10 @@ class Ball:
 
         self.move_speed_y -= kmph_to_pps((9.8 * game_framework.frame_time) / 2.0)
         print(self.move_speed_y)
+
+        if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
+            print(f'remove object: {self}')
+            game_world.remove_object(self)
 
     def render(self):
         pixel_per_meter = game_framework.PIXEL_PER_METER

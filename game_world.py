@@ -17,5 +17,14 @@ def render():
             object.render()
 
 
+def remove_object(object):
+    for layer in game_objects:
+        if object in layer:
+            layer.remove(object)
+            return
+    # 지우려는 오브젝트가 월드내에 없다면 경고 발생
+    raise ValueError('Try to delete Not exist object')
+
 def clear():
-    game_objects.clear()
+    for layer in game_objects:
+        layer.clear()

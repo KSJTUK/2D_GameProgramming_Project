@@ -4,6 +4,7 @@ import time
 
 # 픽셀당 크기는 2센치로 설정
 PIXEL_PER_METER = 10.0 / 0.2
+CANVAS_W, CANVAS_H = 800, 600
 
 
 def change_mode(mode):
