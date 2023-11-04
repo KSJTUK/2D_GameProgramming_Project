@@ -341,8 +341,11 @@ class CharacterSatateMachine:
 # frame_start_x, animation_start_y, frame_width[frame], frame_height, x, y
 
 class Character:
+    image = None
+
     def __init__(self):
-        self.image = load_image('tennis_character_micki.png')
+        if Character.image == None:
+            Character.image = load_image('tennis_character_micki.png')
         self.x, self.y = 400, 300
         self.animation = "Idle_back"
         self.frame = 0.0
@@ -422,7 +425,7 @@ def character_default_draw_animation(character):
     
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
     # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
-    # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함 
+    # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함
     aspect = width / height
     h = height / character.defualt_height
     character_h = character.character_height * character.pixel_per_meter * h
