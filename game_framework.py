@@ -1,6 +1,9 @@
 import time
 # fill here
 
+# 픽셀당 크기는 2센치로 설정
+PIXEL_PER_METER = 10.0 / 0.2
+
 def change_mode(mode):
     global stack
     if (len(stack) > 0):

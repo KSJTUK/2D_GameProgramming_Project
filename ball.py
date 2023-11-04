@@ -1,5 +1,5 @@
 from pico2d import load_image
-
+import game_framework
 
 class Ball:
     image = None
@@ -10,6 +10,9 @@ class Ball:
         self.move_direction_x = direction_x
         self.move_direction_y = direction_y
         self.move_power = 0
+
+        self.w_meter, self.h_meter = 0.2, 0.2
+
         if Ball.image == None:
             Ball.image = load_image('tennis_ball.png')
 
@@ -22,6 +25,7 @@ class Ball:
         self.y += self.move_direction_y
 
     def render(self):
+        pixel_per_meter = game_framework.PIXEL_PER_METER
         Ball.image.clip_composite_draw(0, 0, 128, 128,
                                        0, '', self.x, self.y,
-                                       100, 100)
+                                       self.w_meter * pixel_per_meter, self.h_meter * pixel_per_meter)

@@ -5,12 +5,11 @@ from ball import Ball
 from pico2d import load_image
 from math import pi, radians, sin, cos
 
-import tennis_court
 import game_framework
 
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
-RUN_SPEED_PPS = RUN_SPEED_MPS * tennis_court.PIXEL_PER_METER[0]
+RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
 
 class Ready:
@@ -52,7 +51,7 @@ class HighHit:
         # 애니메이션이 더 자연스러워 보이기위해 초기 y값을 더해줌
         character.jump_angle = 0
         character.start_y = character.y
-        character.y += 5 * character.scale
+        character.y += 5 * character.character_height
 
         character.calculation_action_time()
 
@@ -74,7 +73,7 @@ class HighHit:
             # 추가 코드또한 프레임이 업데이트 될때만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
             character.jump_angle += 360 // character.frame_per_action
-            character.y += 15 * character.scale * sin(radians(character.jump_angle))
+            character.y += 15 * character.character_height * sin(radians(character.jump_angle))
 
     @staticmethod
     def exit(character, event):
@@ -350,8 +349,8 @@ class Character:
         self.frame = 0.0
         self.frame_start_x = 0
         self.dir_x, self.dir_y = 0, 0
-        self.scale = 2
-        self.speed = 5
+
+        self.character_height = 1.5
 
         self.prev_frame_int = -1
 
@@ -417,8 +416,11 @@ def character_default_draw_animation(character):
     width, height = (micky_animation[character.animation][2][int(character.frame)],
                      micky_animation[character.animation][3])
 
-    # 캐릭터 크기를 이미지 비율에 맞게 확대
-    character_w, character_h = width * character.scale, height * character.scale
+    pixel_per_meter = game_framework.PIXEL_PER_METER
+    aspect = width / height
+    character_h = character.character_height * pixel_per_meter
+    character_w = character_h * aspect
+
 
     # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
     # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
