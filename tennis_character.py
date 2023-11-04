@@ -96,6 +96,9 @@ class PreparingServe:
 
         character.calculation_action_time()
 
+        # 공 생성하고 던지기
+        character.throw_ball()
+
     @staticmethod
     def do(character):
         # 프레임 업데이트
@@ -393,9 +396,9 @@ class Character:
         self.frame_per_action = self.information[4]
         self.frame_per_time = action_per_time * self.frame_per_action
 
-    # def throw_ball(self):
-    #     ball = Ball(self.x, self.y, self.dir_x, self.dir_y, 0, 300)
-    #     game_world.add_object(ball, 1)
+    def throw_ball(self):
+        ball = Ball(self.x, self.y, 0, 50)
+        game_world.add_object(ball, 1)
 
 
 def character_default_frame_update(character):
