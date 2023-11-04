@@ -350,27 +350,25 @@ class Character:
     def __init__(self):
         if Character.image == None:
             Character.image = load_image('tennis_character_micki.png')
-        self.x, self.y = 400, 300
-        self.animation = "Idle_back"
-        self.information = micky_animation[self.animation]
-        self.frame = 0.0
-        self.frame_start_x = 0
-        self.dir_x, self.dir_y = 0, 0
-
-        self.character_height = 1.5
-
-        self.prev_frame_int = -1
+        self.x, self.y = 400, 300  # 캐릭터 위치
+        self.animation = "Idle_back"  # 캐릭터 기본 애니메이션
+        self.information = micky_animation[self.animation]  # 캐릭터 애니메이션 정보
+        self.frame = 0.0  # 캐릭터 애니메이션 프레임
+        self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
+        self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
+        self.character_height = 1.5  # 캐릭터 크기
+        self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
 
         # 점프동작이 섞여있는 애니메이션을 위한 변수들
-        self.start_y = self.y
-        self.jump_angle = 0
+        self.start_y = self.y  # 캐릭터의 y 위치
+        self.jump_angle = 0  # 점프를 위한 변수
 
         # 캐릭터가 바라보는 방향을 문자열로 지정
         # 애니메이션에 문자열을 더해주는 방식으로 사용할 예정
-        self.face_x, self.face_y = '', '_back'
+        self.face_x, self.face_y = '', '_back'  # 캐릭터가 바라보는 방향
 
         # 캐릭터의 상태기계 생성
-        self.state_machine = CharacterSatateMachine(self)
+        self.state_machine = CharacterSatateMachine(self)  # 캐릭터 상태 기계
         self.state_machine.start()
 
         # 캐릭터 IDLE 크기를 기준으로 캐릭터의 크기를 정하게 함

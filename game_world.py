@@ -25,6 +25,7 @@ def remove_object(object):
     # 지우려는 오브젝트가 월드내에 없다면 경고 발생
     raise ValueError('Try to delete Not exist object')
 
+
 def clear():
     for layer in game_objects:
         layer.clear()

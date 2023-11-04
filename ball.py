@@ -44,6 +44,7 @@ def kmph_to_pps(kmph_speed):
     mps = (kmph_speed * 1000.0 / 60.0) / 60.0
     return mps * game_framework.PIXEL_PER_METER
 
+
 def pps_to_kmph(pps_speed):
     mps = pps_speed / game_framework.PIXEL_PER_METER
     mpm = mps * 60.0
