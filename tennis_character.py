@@ -3,6 +3,12 @@ from check_event_funtions import *
 from pico2d import load_image
 from math import pi, radians, sin, cos
 
+import tennis_court
+import game_framework
+
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
+RUN_SPEED_PPS = RUN_SPEED_MPS * tennis_court.PIXEL_PER_METER[0]
 
 class Ready:
     @staticmethod
@@ -108,8 +114,8 @@ class Diving:
 
     @staticmethod
     def do(character):
-        character.x += character.dir_x * character.speed * 5
-        character.y += character.dir_y * character.speed * 5
+        character.x += character.dir_x * (RUN_SPEED_PPS * 2.0) * game_framework.frame_time
+        character.y += character.dir_y * (RUN_SPEED_PPS * 2.0) * game_framework.frame_time
 
         # 프레임 업데이트
         frame_size = micky_animation[character.animation][4]
@@ -174,18 +180,18 @@ class Run:
         right, left, up, down = is_right_arrow_downed(), is_left_arrow_downed(), is_up_arrow_downed(), is_down_arrow_downed()
 
         if (right and left) or (not right and not left):  # 왼쪽키와 오른쪽키 동시 입력 또는 둘다 입력 X
-            character.dir_x, character.face_x = 0, ''
+            character.dir_x, character.face_x = 0.0, ''
         elif right:  # 오른쪽키 입력
-            character.dir_x, character.face_x = 1, '_right'
+            character.dir_x, character.face_x = 1.0, '_right'
         elif left:  # 왼쪽키 입력
-            character.dir_x, character.face_x = -1, '_left'
+            character.dir_x, character.face_x = -1.0, '_left'
 
         if (up and down) or (not up and not down):  # 위키와 아래키 동시 입력 또는 둘다 입력 X
-            character.dir_y, character.face_y = 0, ''
+            character.dir_y, character.face_y = 0.0, ''
         elif up:  # 위키 입력
-            character.dir_y, character.face_y = 1, '_back'
+            character.dir_y, character.face_y = 1.0, '_back'
         elif down:  # 아래키 입력
-            character.dir_y, character.face_y = -1, '_front'
+            character.dir_y, character.face_y = -1.0, '_front'
 
         character.animation = 'Run' + character.face_x + character.face_y
 
@@ -195,8 +201,8 @@ class Run:
     @staticmethod
     def do(character):
         # 캐릭터 위치 이동
-        character.x += character.dir_x * character.speed
-        character.y += character.dir_y * character.speed
+        character.x += character.dir_x * RUN_SPEED_PPS * game_framework.frame_time
+        character.y += character.dir_y * RUN_SPEED_PPS * game_framework.frame_time
 
         # 프레임 업데이트
         character_default_frame_update(character)
