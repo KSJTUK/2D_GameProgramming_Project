@@ -1,3 +1,4 @@
+import pico2d
 from pico2d import load_image
 import game_framework
 import game_world
@@ -42,13 +43,20 @@ class Ball:
                                        0, '', self.x, self.y,
                                        self.width, self.height)
 
+        # 디버그용
+        pico2d.draw_rectangle(*self.get_bb())
+
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
 
     def handle_collision(self, groub, other):
         if groub == 'character:ball':
-            print(f'COLLISION ball: {groub}')
+            # print(f'COLLISION ball: {groub}')
+            pass
+        if groub == 'character:serve_ball':
+            game_world.remove_object(self)
+
 
 
 def kmph_to_pps(kmph_speed):

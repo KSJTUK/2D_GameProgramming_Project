@@ -158,3 +158,6 @@ def court_start(e):
     if e[0] == 'NEW_COURT_START':
         new_court_start = True
         return True
+
+def collision_character_serveball(e):
+    return e[0] == 'character:serve_ball'

@@ -1,3 +1,5 @@
+import pico2d
+
 import game_world
 from animation_info import *
 from check_event_funtions import *
@@ -39,7 +41,7 @@ class Ready:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 
@@ -89,7 +91,7 @@ class HighHit:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 
@@ -118,6 +120,8 @@ class PreparingServe:
             if character.prev_frame_int != int(character.frame):
                 character.prev_frame_int = int(character.frame)
                 character.frame_start_x += character.information[2][int(character.frame)]
+        else:
+            game_world.add_collision_pair('character:serve_ball', character, None)
 
     @staticmethod
     def exit(character, event):
@@ -128,8 +132,9 @@ class PreparingServe:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
-        pass
+    def handle_collision(character, groub, other):
+        game_world.remove_collision_object(character)
+        character.state_machine.handle_event((groub, 0))
 
 
 class Diving:
@@ -182,7 +187,7 @@ class Diving:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 class Hit:
@@ -224,7 +229,7 @@ class Hit:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 
@@ -274,7 +279,7 @@ class Run:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 
@@ -312,7 +317,7 @@ class Idle:
         character_default_draw_animation(character)
 
     @staticmethod
-    def handle_collision(character):
+    def handle_collision(character, groub, other):
         pass
 
 
@@ -332,7 +337,7 @@ class CharacterSatateMachine:
                   space_down: Hit, key_down_v: Diving},
             Hit: {animation_end_and_keydown: Run, animation_end: Idle},
             Diving: {animation_end_and_keydown: Run, animation_end: Idle},
-            PreparingServe: {space_down: HighHit},
+            PreparingServe: {space_down: HighHit, collision_character_serveball: Ready},
             HighHit: {animation_end_and_keydown: Run, animation_end: Idle}
         }
 
@@ -358,8 +363,8 @@ class CharacterSatateMachine:
     def render(self):
         self.cur_state.render(self.character)
 
-    def handle_collision(self):
-        self.cur_state.handle_collision(self.character)
+    def handle_collision(self, groub, other):
+        self.cur_state.handle_collision(self.character, groub, other)
 
 
 # 애니메이션 정보 찾기
@@ -386,7 +391,7 @@ class Character:
         self.frame = 0.0  # 캐릭터 애니메이션 프레임
         self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
-        self.character_height = 1.5  # 캐릭터 크기
+        self.character_height = 1  # 캐릭터 크기
         self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
 
         self.width, self.height = 0, 0
@@ -429,13 +434,14 @@ class Character:
     def throw_ball(self):
         ball = Ball(self.x, self.y, 0, 50)
         game_world.add_object(ball, 1)
+        game_world.add_collision_pair('character:serve_ball', None, ball)
 
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
 
     def handle_collision(self, groub, other):
-        self.state_machine.handle_collision()
+        self.state_machine.handle_collision(groub, other)
 
 
 def character_default_frame_update(character):
@@ -447,12 +453,13 @@ def character_default_frame_update(character):
     # 그러니 프레임의 정수부를 기억해두고 달라질 때마다 만 업데이트 (첫 값은 -1로 설정)
 
     prev_frame = int(character.frame % character.frame_per_action)
-    character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                       % character.frame_per_action)
 
     # 프레임이 점프되는걸 방지하기 위한 작업
     if game_framework.frame_time > 1.0:
-        character.frame = prev_frame + 1
+        character.frame = (prev_frame + 1) % character.frame_per_action
+    else:
+        character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                       % character.frame_per_action)
 
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
     if prev_frame - int(character.frame) == character.frame_per_action - 1:
@@ -482,3 +489,6 @@ def character_default_draw_animation(character):
     character.image.clip_composite_draw(character.frame_start_x - width, character.information[1],
                                         width, height, 0, ' ',
                                         character.x, character.y, character.width, character.height)
+
+    # 디버그용
+    pico2d.draw_rectangle(*character.get_bb())
