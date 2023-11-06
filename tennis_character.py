@@ -99,7 +99,7 @@ class HighHit:
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'character:serve_ball':
             game_world.remove_collision_object(character)
-            character.throw_ball('character:ball', 10, 0, 50)
+            character.throw_ball('character:ball', 10, 10, 50)
 
 
 
@@ -117,7 +117,7 @@ class PreparingServe:
         character.calculation_action_time()
 
         # 공 생성하고 던지기
-        character.throw_ball('character:serve_ball')
+        character.throw_ball('character:serve_ball', 0, 0, 100)
 
     @staticmethod
     def do(character):
@@ -493,13 +493,14 @@ def character_default_draw_animation(character):
     width, height = (character.information[2][int(character.frame)],
                      character.information[3])
 
+    scale = 1.0 - character.y / 100.0 * 0.05
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
     # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
     # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함
     aspect = width / height
     h = height / character.defualt_height
-    character.height = character.character_height * character.pixel_per_meter * h
-    character.width = character.height * aspect
+    character.height = character.character_height * character.pixel_per_meter * h * scale
+    character.width = character.height * aspect * scale
 
     # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
     # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
