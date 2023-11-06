@@ -54,7 +54,6 @@ class Ball:
 
     def handle_collision(self, groub, other):
         if groub == 'character:ball':
-            # print(f'COLLISION ball: {groub}')
             pass
         if groub == 'character:serve_ball':
             game_world.remove_object(self)
