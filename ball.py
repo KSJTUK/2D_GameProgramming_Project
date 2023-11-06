@@ -18,6 +18,8 @@ class Ball:
         self.w_meter, self.h_meter = 0.4, 0.4
         self.width, self.height = 0, 0
 
+        self.bound_count = 0
+
         if Ball.image == None:
             Ball.image = load_image('tennis_ball.png')
 
@@ -36,6 +38,9 @@ class Ball:
 
         self.move_speed_z -= kmph_to_pps((9.8 * game_framework.frame_time) / 2.0)
         if self.z < 0.0:
+            self.bound_count += 1
+            print(f'bound count: {self.bound_count}')
+            self.z = 0.0
             self.move_speed_z = abs(self.move_speed_z / 1.5)
             self.move_speed_x = abs(self.move_speed_x / 1.5)
 
