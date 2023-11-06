@@ -1,4 +1,5 @@
 from pico2d import load_image
+import game_framework
 
 
 # width = 431 - (num % 2)
@@ -18,4 +19,5 @@ class TennisCourt:
 
     def render(self):
         self.image.clip_composite_draw(self.image_l, self.image_b, self.w, self.h,
-                                       0, ' ', 400, 300, 800, 600)
+                                       0, ' ', game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2,
+                                       game_framework.CANVAS_W, game_framework.CANVAS_H)

@@ -21,6 +21,8 @@ class Ready:
         character.face_x = ''
         character.dir_x, character.dir_y = 0, 0
 
+        character.information = micky_animation[character.animation]
+
         character.frame = 0
         character.frame_start_x = character.information[0]
         character.prev_frame_int = -1
@@ -49,6 +51,8 @@ class HighHit:
     @staticmethod
     def enter(character, event):
         character.animation = "High_hit" + character.face_y if character.face_y != '' else "High_hit_back"
+
+        character.information = micky_animation[character.animation]
 
         character.frame = 0
         character.frame_start_x = character.information[0]
@@ -100,6 +104,8 @@ class PreparingServe:
     def enter(character, event):
         character.animation = 'Preparing_serve' + character.face_y if character.face_y != '' else 'Preparing_serve_back'
 
+        character.information = micky_animation[character.animation]
+
         character.frame = 0
         character.frame_start_x = character.information[0]
         character.prev_frame_int = -1
@@ -142,6 +148,8 @@ class Diving:
     def enter(character, event):
         character.animation = 'Diving' + character.face_x if character.face_x != '' else 'Hit_right'
         character.animation = character.animation + character.face_y if character.face_y != '' else character.animation + '_back'
+
+        character.information = micky_animation[character.animation]
 
         character.frame = 0
         character.frame_start_x = character.information[0]
@@ -199,6 +207,8 @@ class Hit:
         character.animation = 'Hit' + character.face_x if character.face_x != '' else 'Hit_right'
         character.animation = character.animation + character.face_y if character.face_y != '' else character.animation + '_back'
 
+        character.information = micky_animation[character.animation]
+
         character.frame = 0
         character.frame_start_x = character.information[0]
         character.prev_frame_int = -1
@@ -255,6 +265,8 @@ class Run:
 
         character.animation = 'Run' + character.face_x + character.face_y
 
+        character.information = micky_animation[character.animation]
+
         character.frame = 0
         character.frame_start_x = character.information[0]
         character.prev_frame_int = -1
@@ -289,15 +301,16 @@ class Idle:
     @staticmethod
     def enter(character, event):
         # 이전 상태가 Run에서 들어왔다면 움직임 관련 변수 모두 초기화
-        character.running = False
+        # character.running = False
 
-        character.dir_x, character.face_x = 0, ''
-        character.dir_y = 0
+        character.dir_x, character.dir_y = 0, 0
 
         # face_y의 문자열을 따라가되 빈 문자열이면 default인 Idle_back으로 애니메이션을 정함
         character.animation = 'Idle' + character.face_y if character.face_y != '' else 'Idle_back'
 
         # 프레임 초기화
+        character.information = micky_animation[character.animation]
+
         character.frame = 0
         character.frame_start_x = character.information[0]
         character.prev_frame_int = -1
@@ -391,7 +404,7 @@ class Character:
         self.frame = 0.0  # 캐릭터 애니메이션 프레임
         self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
-        self.character_height = 1  # 캐릭터 크기
+        self.character_height = 1.6  # 캐릭터 크기
         self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
 
         self.width, self.height = 0, 0
