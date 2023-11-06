@@ -35,7 +35,6 @@ class Ball:
         # print(self.move_speed_y)
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
-            print(f'remove object: {self}')
             game_world.remove_object(self)
 
     def render(self):
@@ -45,6 +44,9 @@ class Ball:
 
         # 디버그용
         pico2d.draw_rectangle(*self.get_bb())
+
+    def hit_ball(self, power_x, power_y):
+        self.move_speed_x, self.move_speed_y = power_x, power_y
 
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2

@@ -96,7 +96,11 @@ class HighHit:
 
     @staticmethod
     def handle_collision(character, groub, other):
-        pass
+        # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
+        if groub == 'character:serve_ball':
+            game_world.remove_collision_object(character)
+            character.throw_ball('character:ball', 50, 50)
+
 
 
 class PreparingServe:
@@ -113,7 +117,7 @@ class PreparingServe:
         character.calculation_action_time()
 
         # 공 생성하고 던지기
-        character.throw_ball()
+        character.throw_ball('character:serve_ball')
 
     @staticmethod
     def do(character):
@@ -444,10 +448,10 @@ class Character:
         self.frame_per_action = self.information[4]
         self.frame_per_time = action_per_time * self.frame_per_action
 
-    def throw_ball(self):
-        ball = Ball(self.x, self.y, 0, 50)
+    def throw_ball(self, groub, power_x=0, power_y=50):
+        ball = Ball(self.x, self.y, power_x, power_y)
         game_world.add_object(ball, 1)
-        game_world.add_collision_pair('character:serve_ball', None, ball)
+        game_world.add_collision_pair(groub, None, ball)
 
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2
