@@ -38,6 +38,10 @@ class Ready:
     def render(character):
         character_default_draw_animation(character)
 
+    @staticmethod
+    def handle_collision(character):
+        pass
+
 
 class HighHit:
     @staticmethod
@@ -84,6 +88,10 @@ class HighHit:
     def render(character):
         character_default_draw_animation(character)
 
+    @staticmethod
+    def handle_collision(character):
+        pass
+
 
 class PreparingServe:
     @staticmethod
@@ -118,6 +126,10 @@ class PreparingServe:
     @staticmethod
     def render(character):
         character_default_draw_animation(character)
+
+    @staticmethod
+    def handle_collision(character):
+        pass
 
 
 class Diving:
@@ -169,6 +181,9 @@ class Diving:
     def render(character):
         character_default_draw_animation(character)
 
+    @staticmethod
+    def handle_collision(character):
+        pass
 
 class Hit:
     @staticmethod
@@ -207,6 +222,10 @@ class Hit:
     @staticmethod
     def render(character):
         character_default_draw_animation(character)
+
+    @staticmethod
+    def handle_collision(character):
+        pass
 
 
 class Run:
@@ -254,6 +273,10 @@ class Run:
     def render(character):
         character_default_draw_animation(character)
 
+    @staticmethod
+    def handle_collision(character):
+        pass
+
 
 # 상태의 enter, exit 함수들은 어떤 이유에서 나가고 들어오는지를 판단하기위해
 # 이벤트를 받음
@@ -287,6 +310,10 @@ class Idle:
     @staticmethod
     def render(character):
         character_default_draw_animation(character)
+
+    @staticmethod
+    def handle_collision(character):
+        pass
 
 
 # 캐릭터의 상태 기계
@@ -330,6 +357,9 @@ class CharacterSatateMachine:
 
     def render(self):
         self.cur_state.render(self.character)
+
+    def handle_collision(self):
+        self.cur_state.handle_collision(self.character)
 
 
 # 애니메이션 정보 찾기
@@ -405,8 +435,7 @@ class Character:
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
 
     def handle_collision(self, groub, other):
-        if groub == 'character:ball':
-            print(f'COLLISION character: {groub}')
+        self.state_machine.handle_collision()
 
 
 def character_default_frame_update(character):
