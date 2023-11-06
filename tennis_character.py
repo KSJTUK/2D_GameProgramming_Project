@@ -359,6 +359,8 @@ class Character:
         self.character_height = 1.5  # 캐릭터 크기
         self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
 
+        self.width, self.height = 0, 0
+
         # 점프동작이 섞여있는 애니메이션을 위한 변수들
         self.start_y = self.y  # 캐릭터의 y 위치
         self.jump_angle = 0  # 점프를 위한 변수
@@ -398,6 +400,14 @@ class Character:
         ball = Ball(self.x, self.y, 0, 50)
         game_world.add_object(ball, 1)
 
+    def get_bb(self):
+        half_w, half_h = self.width / 2, self.height / 2
+        return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
+
+    def handle_collision(self, groub, other):
+        if groub == 'character:ball':
+            print(f'COLLISION character: {groub}')
+
 
 def character_default_frame_update(character):
     # 프레임 업데이트
@@ -411,9 +421,9 @@ def character_default_frame_update(character):
     character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
                        % character.frame_per_action)
 
-    # # 프레임이 점프되는걸 방지하기 위한 작업
-    # if game_framework.frame_time > 1.0:
-    #     character.frame = prev_frame + 1
+    # 프레임이 점프되는걸 방지하기 위한 작업
+    if game_framework.frame_time > 1.0:
+        character.frame = prev_frame + 1
 
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
     if prev_frame - int(character.frame) == character.frame_per_action - 1:
@@ -435,11 +445,11 @@ def character_default_draw_animation(character):
     # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함
     aspect = width / height
     h = height / character.defualt_height
-    character_h = character.character_height * character.pixel_per_meter * h
-    character_w = character_h * aspect
+    character.height = character.character_height * character.pixel_per_meter * h
+    character.width = character.height * aspect
 
     # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
     # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
     character.image.clip_composite_draw(character.frame_start_x - width, character.information[1],
                                         width, height, 0, ' ',
-                                        character.x, character.y, character_w, character_h)
+                                        character.x, character.y, character.width, character.height)

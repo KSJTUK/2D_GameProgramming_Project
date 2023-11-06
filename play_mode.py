@@ -37,6 +37,9 @@ def init():
     ball = Ball(400, 10, 0, 60)
     game_world.add_object(ball, 1)
 
+    game_world.add_collision_pair('character:ball', character, ball)
+    pass
+
 
 def finish():
     game_world.clear()
@@ -45,6 +48,7 @@ def finish():
 def update():
     game_world.update()
     # delay(0.5)
+    game_world.handle_collision()
 
 
 def render():
