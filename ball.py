@@ -8,31 +8,36 @@ class Ball:
     image = None
 
     # direction -> tuple로 받을 예정
-    def __init__(self, x, y, speed_x, speed_y):
-        self.x, self.y = x, y
-        self.move_speed_x, self.move_speed_y = speed_x, speed_y
+    def __init__(self, x, y, z, speed_x, speed_y, speed_z):
+        self.x, self.y, self.z = x, y, z
+        self.move_speed_x, self.move_speed_y, self.move_speed_z = speed_x, speed_y, speed_z
 
-        self.pps_speed_x, self.pps_speed_y = kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y)
+        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
+            kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
 
-        self.w_meter, self.h_meter = 0.3, 0.3
+        self.w_meter, self.h_meter = 0.4, 0.4
         self.width, self.height = 0, 0
 
         if Ball.image == None:
             Ball.image = load_image('tennis_ball.png')
 
-    def hit_ball(self, power_x, power_y):
-        self.move_speed_x, self.move_speed_y = power_x, power_y
+    def hit_ball(self, power_x, power_y, power_z):
+        self.move_speed_x, self.move_speed_y, self.move_speed_z = power_x, power_y, power_z
 
     def update(self):
-        self.pps_speed_x, self.pps_speed_y = kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y)
+        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
+            kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
         self.x += self.pps_speed_x * game_framework.frame_time
-        self.y += self.pps_speed_y * game_framework.frame_time
+        self.z += self.pps_speed_z * game_framework.frame_time
+        self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
 
         pixel_per_meter = game_framework.PIXEL_PER_METER
         self.width, self.height = self.w_meter * pixel_per_meter, self.h_meter * pixel_per_meter
 
-        self.move_speed_y -= kmph_to_pps((9.8 * game_framework.frame_time) / 2.0)
-        # print(self.move_speed_y)
+        self.move_speed_z -= kmph_to_pps((9.8 * game_framework.frame_time) / 2.0)
+        if self.z < 0.0:
+            self.move_speed_z = abs(self.move_speed_z / 1.5)
+            self.move_speed_x = abs(self.move_speed_x / 1.5)
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
             game_world.remove_object(self)

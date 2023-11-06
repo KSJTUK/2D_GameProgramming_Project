@@ -99,7 +99,7 @@ class HighHit:
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'character:serve_ball':
             game_world.remove_collision_object(character)
-            character.throw_ball('character:ball', 50, 50)
+            character.throw_ball('character:ball', 10, 0, 50)
 
 
 
@@ -448,8 +448,8 @@ class Character:
         self.frame_per_action = self.information[4]
         self.frame_per_time = action_per_time * self.frame_per_action
 
-    def throw_ball(self, groub, power_x=0, power_y=50):
-        ball = Ball(self.x, self.y, power_x, power_y)
+    def throw_ball(self, groub, power_x=0, power_y=0, power_z=50):
+        ball = Ball(self.x, self.y, 0,  power_x, power_y, power_z)
         game_world.add_object(ball, 1)
         game_world.add_collision_pair(groub, None, ball)
 
