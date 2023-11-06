@@ -411,6 +411,10 @@ def character_default_frame_update(character):
     character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
                        % character.frame_per_action)
 
+    # # 프레임이 점프되는걸 방지하기 위한 작업
+    # if game_framework.frame_time > 1.0:
+    #     character.frame = prev_frame + 1
+
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
     if prev_frame - int(character.frame) == character.frame_per_action - 1:
         character.frame_start_x = character.information[0]
