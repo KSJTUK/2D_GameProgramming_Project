@@ -34,7 +34,7 @@ class Ball:
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
         self.x += self.pps_speed_x * scale * game_framework.frame_time
         self.z += self.pps_speed_z * scale * game_framework.frame_time
-        self.y += self.pps_speed_y * scale * game_framework.frame_time + (self.pps_speed_z * scale * game_framework.frame_time) / 4.0
+        self.y += self.pps_speed_y * scale * game_framework.frame_time + (self.pps_speed_z * scale * game_framework.frame_time) / 3.0
 
 
         pixel_per_meter = game_framework.PIXEL_PER_METER
@@ -59,9 +59,6 @@ class Ball:
 
         # 디버그용
         pico2d.draw_rectangle(*self.get_bb())
-
-    def hit_ball(self, power_x, power_y):
-        self.move_speed_x, self.move_speed_y = power_x, power_y
 
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2
