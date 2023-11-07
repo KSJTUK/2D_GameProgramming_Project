@@ -69,16 +69,22 @@ class HighHit:
     def do(character):
         # 프레임 업데이트
         prev_frame = int(character.frame % character.frame_per_action)
-        character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                           % character.frame_per_action)
 
-        if prev_frame - int(character.frame) == character.frame_per_action - 1:
+        # 프레임이 점프되는걸 방지하기 위한 작업
+        if game_framework.frame_time * character.frame_per_time > 1.0:
+            character.frame = (prev_frame + 1) % character.frame_per_action
+        else:
+            character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                               % character.frame_per_action)
+
+        delta_frame = int(character.frame) - prev_frame
+        # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
+        if abs(delta_frame) == character.frame_per_action - 1:
             character.frame_start_x = character.information[0]
-            character.prev_frame_int = -1
             character.state_machine.handle_event(('ANIMATION_END', 0))
-        elif character.prev_frame_int != int(character.frame):
-            character.prev_frame_int = int(character.frame)
-            character.frame_start_x += character.information[2][int(character.frame)]
+        # 아니라면 계속 업데이트
+        elif delta_frame == 1:
+            character.frame_start_x += character.information[2][int(character.frame - 1)]
 
             # 추가 코드또한 프레임이 업데이트 될때만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
@@ -99,7 +105,7 @@ class HighHit:
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'character:serve_ball':
             game_world.remove_collision_object(character)
-            character.throw_ball('character:ball', 30, 30, 60)
+            character.throw_ball('character:ball', 10, 50, 30)
 
 
 
@@ -121,17 +127,24 @@ class PreparingServe:
 
     @staticmethod
     def do(character):
-        # 프레임 업데이트
         # 애니메이션의 끝에 다다르면 더이상 실행하지 않도록 함
         if int(character.frame) < character.frame_per_action - 1:
             prev_frame = int(character.frame % character.frame_per_action)
-            character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                               % character.frame_per_action)
-            if character.prev_frame_int != int(character.frame):
-                character.prev_frame_int = int(character.frame)
-                character.frame_start_x += character.information[2][int(character.frame)]
+
+            # 프레임이 점프되는걸 방지하기 위한 작업
+            if game_framework.frame_time * character.frame_per_time > 1.0:
+                character.frame = (prev_frame + 1) % character.frame_per_action
+            else:
+                character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                                   % character.frame_per_action)
+
+            delta_frame = int(character.frame) - prev_frame
+
+            if delta_frame == 1:
+                character.frame_start_x += character.information[2][int(character.frame - 1)]
         else:
             game_world.add_collision_pair('character:serve_ball', character, None)
+
 
     @staticmethod
     def exit(character, event):
@@ -171,17 +184,22 @@ class Diving:
 
         # 프레임 업데이트
         prev_frame = int(character.frame % character.frame_per_action)
-        character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                           % character.frame_per_action)
 
-        if prev_frame - int(character.frame) == character.frame_per_action - 1:
+        # 프레임이 점프되는걸 방지하기 위한 작업
+        if game_framework.frame_time * character.frame_per_time > 1.0:
+            character.frame = (prev_frame + 1) % character.frame_per_action
+        else:
+            character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                               % character.frame_per_action)
+
+        delta_frame = int(character.frame) - prev_frame
+        # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
+        if abs(delta_frame) == character.frame_per_action - 1:
             character.frame_start_x = character.information[0]
-            character.prev_frame_int = -1
             character.state_machine.handle_event(('ANIMATION_END', 0))
-            character.jump_angle = 0
-        elif character.prev_frame_int != int(character.frame):
-            character.prev_frame_int = int(character.frame)
-            character.frame_start_x += character.information[2][int(character.frame)]
+        # 아니라면 계속 업데이트
+        elif delta_frame == 1:
+            character.frame_start_x += character.information[2][int(character.frame - 1)]
 
             # 추가 코드 또한 프레임이 업데이트 될 떄만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
@@ -223,16 +241,22 @@ class Hit:
     def do(character):
         # 프레임 업데이트
         prev_frame = int(character.frame % character.frame_per_action)
-        character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                           % character.frame_per_action)
 
-        if prev_frame - int(character.frame) == character.frame_per_action - 1:
+        # 프레임이 점프되는걸 방지하기 위한 작업
+        if game_framework.frame_time * character.frame_per_time > 1.0:
+            character.frame = (prev_frame + 1) % character.frame_per_action
+        else:
+            character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
+                               % character.frame_per_action)
+
+        delta_frame = int(character.frame) - prev_frame
+        # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
+        if abs(delta_frame) == character.frame_per_action - 1:
             character.frame_start_x = character.information[0]
-            character.prev_frame_int = -1
             character.state_machine.handle_event(('ANIMATION_END', 0))
-        elif character.prev_frame_int != int(character.frame):
-            character.prev_frame_int = int(character.frame)
-            character.frame_start_x += character.information[2][int(character.frame)]
+        # 아니라면 계속 업데이트
+        elif delta_frame == 1:
+            character.frame_start_x += character.information[2][int(character.frame - 1)]
 
     @staticmethod
     def exit(character, event):
@@ -479,26 +503,29 @@ def character_default_frame_update(character):
     prev_frame = int(character.frame % character.frame_per_action)
 
     # 프레임이 점프되는걸 방지하기 위한 작업
-    if game_framework.frame_time > 1.0:
+    if game_framework.frame_time * character.frame_per_time > 1.0:
         character.frame = (prev_frame + 1) % character.frame_per_action
     else:
         character.frame = ((character.frame + character.frame_per_time * game_framework.frame_time)
-                       % character.frame_per_action)
+                           % character.frame_per_action)
 
+    delta_frame =  int(character.frame) - prev_frame
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
-    if prev_frame - int(character.frame) == character.frame_per_action - 1:
+    if abs(delta_frame) == character.frame_per_action - 1:
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
+        print(f'frame: {character.frame}, start_x: {character.frame_start_x}')
     # 아니라면 계속 업데이트
-    elif character.prev_frame_int != int(character.frame):
-        character.prev_frame_int = int(character.frame)
-        character.frame_start_x += character.information[2][int(character.frame)]
+    elif delta_frame == 1:
+        character.frame_start_x += character.information[2][int(character.frame - 1)]
+        print(f'frame: {character.frame}, start_x: {character.frame_start_x}')
 
 
 # 변경없이 계속 중복되던 draw기능 함수화
 def character_default_draw_animation(character):
     width, height = (character.information[2][int(character.frame)],
                      character.information[3])
+
+    print(f'width: {width}, height: {height}')
 
     scale = 1.0 - character.y / 100.0 * 0.05
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
@@ -511,7 +538,7 @@ def character_default_draw_animation(character):
 
     # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
     # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
-    character.image.clip_composite_draw(character.frame_start_x - width, character.information[1],
+    character.image.clip_composite_draw(character.frame_start_x, character.information[1],
                                         width, height, 0, ' ',
                                         character.x, character.y, character.width, character.height)
 

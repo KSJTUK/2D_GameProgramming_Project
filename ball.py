@@ -21,6 +21,7 @@ class Ball:
         self.bound_count = 0
 
         game_world.add_collision_pair('ball:wall', self, None)
+        game_world.add_collision_pair('ball:net', self, None)
 
         if Ball.image == None:
             Ball.image = load_image('tennis_ball.png')
