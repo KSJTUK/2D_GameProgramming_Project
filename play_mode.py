@@ -35,6 +35,9 @@ def init():
     character = Character()
     game_world.add_object(character, 1)
 
+    ball2 = Ball(800, 600, 0, 0, -10, 50)
+    game_world.add_object(ball2, 1)
+
     net = TennisNet()
     game_world.add_object(net, 1)
     game_world.add_collision_pair('ball:net', None, net)

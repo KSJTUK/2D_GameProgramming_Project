@@ -23,6 +23,6 @@ class TennisNet:
     def handle_collision(self, groub, other):
         if groub == 'ball:net':
             other.y -= 1.0
-            move_powers = other.move_speed_x / 1.5, -other.move_speed_y / 1.3, -abs(other.move_speed_z / 10.0)
+            move_powers = other.move_speed_x / 1.5, -other.move_speed_y / 1.3, 1.0
             print(move_powers)
             other.hit_ball(*move_powers)

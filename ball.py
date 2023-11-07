@@ -32,6 +32,9 @@ class Ball:
 
         self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
+
+        y_dir = 1.0 if self.move_speed_y >= 0.0 else -1.0
+
         self.x += self.pps_speed_x * scale * game_framework.frame_time
         self.z += self.pps_speed_z * scale * game_framework.frame_time
         self.y += self.pps_speed_y * scale * game_framework.frame_time + (self.pps_speed_z * scale * game_framework.frame_time) / 3.0
@@ -46,8 +49,8 @@ class Ball:
             print(f'bound count: {self.bound_count}')
             self.z = 0.0
             self.move_speed_z = abs(self.move_speed_z / 1.3)
-            self.move_speed_y = abs(self.move_speed_y / 2.0)
-            self.move_speed_x = abs(self.move_speed_x / 2.0)
+            self.move_speed_y = self.move_speed_y / 2.0
+            self.move_speed_x = self.move_speed_x / 2.0
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
             game_world.remove_object(self)
