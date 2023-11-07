@@ -55,11 +55,16 @@ def clear():
 def collide_aabb(object1, object2):
     left_a, bottom_a, right_a, top_a = object1.get_bb()
     left_b, bottom_b, right_b, top_b = object2.get_bb()
+    z_a, z_b = object1.get_z(), object2.get_z()
 
     if left_a > right_b: return False
     if right_a < left_b: return False
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
+    if z_a >= 0.0 or z_b >= 0.0:
+        if z_a > z_b: return False
+
+    print(f'COLLISION {object1}, {object2}')
 
     return True
 

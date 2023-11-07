@@ -5,6 +5,7 @@ import game_framework
 import game_world
 from tennis_court import TennisCourt
 from tennis_character import Character
+from tennis_net import TennisNet
 # test
 from ball import Ball
 
@@ -33,6 +34,10 @@ def init():
 
     character = Character()
     game_world.add_object(character, 1)
+
+    net = TennisNet()
+    game_world.add_object(net, 1)
+    game_world.add_collision_pair('ball:net', None, net)
 
     game_world.add_collision_pair('character:ball', character, None)
 

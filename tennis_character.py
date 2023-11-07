@@ -402,7 +402,7 @@ class Character:
     def __init__(self):
         if Character.image == None:
             Character.image = load_image('tennis_character_micki.png')
-        self.x, self.y = 400, 300  # 캐릭터 위치
+        self.x, self.y = 400, 100  # 캐릭터 위치
         self.animation = "Idle_back"  # 캐릭터 기본 애니메이션
         self.information = micky_animation[self.animation]  # 캐릭터 애니메이션 정보
         self.frame = 0.0  # 캐릭터 애니메이션 프레임
@@ -410,6 +410,8 @@ class Character:
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
         self.character_height = 1.6  # 캐릭터 크기
         self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
+
+        self.z = -1
 
         self.width, self.height = 0, 0
 
@@ -452,10 +454,15 @@ class Character:
         ball = Ball(self.x, self.y, 0,  power_x, power_y, power_z)
         game_world.add_object(ball, 1)
         game_world.add_collision_pair(groub, None, ball)
+        if groub == 'character:ball':
+            game_world.add_collision_pair('ball:net', ball, None)
 
     def get_bb(self):
         half_w, half_h = self.width / 2, self.height / 2
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
+
+    def get_z(self):
+        return self.z
 
     def handle_collision(self, groub, other):
         self.state_machine.handle_collision(groub, other)

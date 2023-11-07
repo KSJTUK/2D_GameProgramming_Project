@@ -16,7 +16,7 @@ class Ball:
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
 
         self.scale = 1.0
-        self.w_meter, self.h_meter = 0.6, 0.6
+        self.w_meter, self.h_meter = 0.4, 0.4
         self.width, self.height = 0, 0
 
         self.bound_count = 0
@@ -67,11 +67,16 @@ class Ball:
         half_w, half_h = self.width / 2, self.height / 2
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
 
+    def get_z(self):
+        return self.z
+
     def handle_collision(self, groub, other):
         if groub == 'character:ball':
             pass
         if groub == 'character:serve_ball':
             game_world.remove_object(self)
+        if groub == 'ball:net':
+            print(f'COLLISION {groub}')
 
 
 
