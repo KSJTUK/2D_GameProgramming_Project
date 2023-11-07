@@ -25,7 +25,6 @@ class Ready:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.calculation_action_time()
 
@@ -56,7 +55,6 @@ class HighHit:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         # 애니메이션이 더 자연스러워 보이기위해 초기 y값을 더해줌
         character.jump_angle = 0
@@ -118,7 +116,6 @@ class PreparingServe:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.calculation_action_time()
 
@@ -170,7 +167,6 @@ class Diving:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.start_y = character.y
         character.jump_angle = 0
@@ -206,7 +202,6 @@ class Diving:
             if character.face_y == '':
                 character.jump_angle += 360 // character.frame_per_action
                 character.y += 10 * character.character_height * sin(radians(character.jump_angle))
-                print(character.start_y, character.y)
 
     @staticmethod
     def exit(character, event):
@@ -233,7 +228,6 @@ class Hit:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.calculation_action_time()
 
@@ -297,7 +291,6 @@ class Run:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.calculation_action_time()
 
@@ -341,7 +334,6 @@ class Idle:
 
         character.frame = 0
         character.frame_start_x = character.information[0]
-        character.prev_frame_int = -1
 
         character.calculation_action_time()
 
@@ -433,7 +425,6 @@ class Character:
         self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
         self.character_height = 1.6  # 캐릭터 크기
-        self.prev_frame_int = -1  # 프레임 업데이트에 쓰일 변수
 
         self.z = -1
 
@@ -513,11 +504,9 @@ def character_default_frame_update(character):
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
     if abs(delta_frame) == character.frame_per_action - 1:
         character.frame_start_x = character.information[0]
-        print(f'frame: {character.frame}, start_x: {character.frame_start_x}')
     # 아니라면 계속 업데이트
     elif delta_frame == 1:
         character.frame_start_x += character.information[2][int(character.frame - 1)]
-        print(f'frame: {character.frame}, start_x: {character.frame_start_x}')
 
 
 # 변경없이 계속 중복되던 draw기능 함수화
@@ -525,7 +514,6 @@ def character_default_draw_animation(character):
     width, height = (character.information[2][int(character.frame)],
                      character.information[3])
 
-    print(f'width: {width}, height: {height}')
 
     scale = 1.0 - character.y / 100.0 * 0.05
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
