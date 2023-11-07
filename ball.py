@@ -7,7 +7,6 @@ import game_world
 class Ball:
     image = None
 
-    # direction -> tuple로 받을 예정
     def __init__(self, x, y, z, speed_x, speed_y, speed_z):
         self.x, self.y, self.z = x, y, z
         self.move_speed_x, self.move_speed_y, self.move_speed_z = speed_x, speed_y, speed_z
@@ -21,6 +20,8 @@ class Ball:
 
         self.bound_count = 0
 
+        game_world.add_collision_pair('ball:wall', self, None)
+
         if Ball.image == None:
             Ball.image = load_image('tennis_ball.png')
 
@@ -33,17 +34,15 @@ class Ball:
         self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
 
-        y_dir = 1.0 if self.move_speed_y >= 0.0 else -1.0
-
         self.x += self.pps_speed_x * scale * game_framework.frame_time
         self.z += self.pps_speed_z * scale * game_framework.frame_time
-        self.y += self.pps_speed_y * scale * game_framework.frame_time + (self.pps_speed_z * scale * game_framework.frame_time) / 3.0
+        self.y += self.pps_speed_y * scale * game_framework.frame_time + self.pps_speed_z * scale * game_framework.frame_time
 
 
         pixel_per_meter = game_framework.PIXEL_PER_METER
-        self.width, self.height = self.w_meter * scale * self.scale * pixel_per_meter, self.h_meter * scale * pixel_per_meter
+        self.width, self.height = self.w_meter * scale  * pixel_per_meter, self.h_meter * scale * pixel_per_meter
 
-        self.move_speed_z -= kmph_to_pps((9.8 * game_framework.frame_time) / 2.0)
+        self.move_speed_z -= kmph_to_pps(9.8 * game_framework.frame_time)
         if self.z < 0.0:
             self.bound_count += 1
             print(f'bound count: {self.bound_count}')

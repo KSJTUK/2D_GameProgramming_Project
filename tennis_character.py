@@ -99,7 +99,7 @@ class HighHit:
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'character:serve_ball':
             game_world.remove_collision_object(character)
-            character.throw_ball('character:ball', 10, 10, 50)
+            character.throw_ball('character:ball', 30, 30, 60)
 
 
 
@@ -117,7 +117,7 @@ class PreparingServe:
         character.calculation_action_time()
 
         # 공 생성하고 던지기
-        character.throw_ball('character:serve_ball', 0, 0, 100)
+        character.throw_ball('character:serve_ball', 0, 0, 60)
 
     @staticmethod
     def do(character):

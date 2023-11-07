@@ -5,7 +5,7 @@ import game_framework
 import game_world
 from tennis_court import TennisCourt
 from tennis_character import Character
-from tennis_net import TennisNet
+from tennis_net import TennisNet, Wall
 # test
 from ball import Ball
 
@@ -35,8 +35,14 @@ def init():
     character = Character()
     game_world.add_object(character, 1)
 
+    # 반대방향 테스트용 공
     ball2 = Ball(800, 600, 0, 0, -10, 50)
     game_world.add_object(ball2, 1)
+
+    # 테스트용 벽
+    wall = Wall()
+    game_world.add_object(wall, 3)
+    game_world.add_collision_pair('ball:wall', None, wall)
 
     net = TennisNet()
     game_world.add_object(net, 1)
