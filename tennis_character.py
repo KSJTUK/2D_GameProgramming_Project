@@ -255,9 +255,9 @@ class Hit:
     @staticmethod
     def handle_collision(character, groub, other):
         if groub == 'character:ball':
-            dir_x, dir_y = character.x - (game_framework.CANVAS_W // 2), -(character.y - (game_framework.CANVAS_H // 2))
-            dir_x, dir_y = dir_x / abs(dir_x), dir_y / abs(dir_y)
-            other.hit_ball(dir_x * 20, dir_y * 20, 40)
+            dist_from_center = (game_framework.CANVAS_W // 2) - character.x, (game_framework.CANVAS_H // 2) - character.y
+            hit_dir = dist_from_center[0] / abs(dist_from_center[0]), dist_from_center[1] / abs(dist_from_center[1])
+            other.hit_ball(hit_dir[0] * 20, hit_dir[1] * 20, 40)
 
 class Run:
     @staticmethod
