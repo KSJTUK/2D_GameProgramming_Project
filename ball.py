@@ -34,35 +34,40 @@ class Ball:
     def update(self):
         scale = 1.0
 
-        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
-            kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
-
-        self.x += self.pps_speed_x * scale * game_framework.frame_time
-        self.z += self.pps_speed_z * scale * game_framework.frame_time
-        self.y += self.pps_speed_y * scale * game_framework.frame_time + self.pps_speed_z * scale * game_framework.frame_time
-
+        self.move()
 
         pixel_per_meter = game_framework.PIXEL_PER_METER
         self.width, self.height = self.w_meter * scale  * pixel_per_meter, self.h_meter * scale * pixel_per_meter
 
-        if abs(self.move_speed_z) > sys.float_info.epsilon:
-            self.move_speed_z -= kmph_to_pps(9.8 * game_framework.frame_time)
-
+        self.gravity()
 
         if self.z < 0.0:
-            self.bound_count += 1
-            self.z = 0.0
-            self.move_speed_z = abs(self.move_speed_z / 1.5)
-            if self.move_speed_z < 1.3: self.move_speed_z = 0.0
-
-            self.move_speed_y = self.move_speed_y / 2.0
-            if abs(self.move_speed_y) < sys.float_info.epsilon: self.move_speed_y = 0.0
-
-            self.move_speed_x = self.move_speed_x / 2.0
-            if abs(self.move_speed_x) < sys.float_info.epsilon: self.move_speed_x = 0.0
+            self.bounding()
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
             game_world.remove_object(self)
+
+    def gravity(self):
+        if abs(self.move_speed_z) > sys.float_info.epsilon:
+            self.move_speed_z -= kmph_to_pps(9.8 * game_framework.frame_time)
+
+    def move(self):
+        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z = \
+            kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
+
+        self.x += self.pps_speed_x * game_framework.frame_time
+        self.z += self.pps_speed_z * game_framework.frame_time
+        self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
+
+    def bounding(self):
+        self.bound_count += 1
+        self.z = 0.0
+        self.move_speed_z = abs(self.move_speed_z / 1.5)
+        if self.move_speed_z < 1.3: self.move_speed_z = 0.0
+        self.move_speed_y = self.move_speed_y / 2.0
+        if abs(self.move_speed_y) < sys.float_info.epsilon: self.move_speed_y = 0.0
+        self.move_speed_x = self.move_speed_x / 2.0
+        if abs(self.move_speed_x) < sys.float_info.epsilon: self.move_speed_x = 0.0
 
     def render(self):
         Ball.image.clip_composite_draw(0, 0, 128, 128,
