@@ -36,13 +36,14 @@ def init():
     game_world.add_object(character, 1)
 
     # 반대방향 테스트용 공
-    ball2 = Ball(800, 600, 0, 0, -10, 50)
-    game_world.add_object(ball2, 1)
+    test_ball = Ball(800, 600, 0,  -10, -30, 50)
+    game_world.add_object(test_ball, 1)
+    game_world.add_collision_pair('character:ball', None, test_ball)
 
-    # 테스트용 벽
-    wall = Wall()
-    game_world.add_object(wall, 3)
-    game_world.add_collision_pair('ball:wall', None, wall)
+    # # 테스트용 벽
+    # wall = Wall()
+    # game_world.add_object(wall, 3)
+    # game_world.add_collision_pair('ball:wall', None, wall)
 
     net = TennisNet()
     game_world.add_object(net, 1)

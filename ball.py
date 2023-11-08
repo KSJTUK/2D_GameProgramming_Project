@@ -22,7 +22,7 @@ class Ball:
 
         self.bound_count = 0
 
-        game_world.add_collision_pair('ball:wall', self, None)
+        # game_world.add_collision_pair('ball:wall', self, None)
         game_world.add_collision_pair('ball:net', self, None)
 
         if Ball.image == None:
@@ -34,13 +34,11 @@ class Ball:
     def update(self):
         scale = 1.0
 
-        self.move()
-
         pixel_per_meter = game_framework.PIXEL_PER_METER
-        self.width, self.height = self.w_meter * scale  * pixel_per_meter, self.h_meter * scale * pixel_per_meter
+        self.width, self.height = self.w_meter * scale * pixel_per_meter, self.h_meter * scale * pixel_per_meter
 
+        self.move()
         self.gravity()
-
         if self.z < 0.0:
             self.bounding()
 

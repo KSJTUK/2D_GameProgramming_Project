@@ -255,9 +255,9 @@ class Hit:
     @staticmethod
     def handle_collision(character, groub, other):
         if groub == 'character:ball':
-            dir_x, dir_y = character.x - (game_framework.CANVAS_W // 2), character.y - (game_framework.CANVAS_H // 2)
+            dir_x, dir_y = character.x - (game_framework.CANVAS_W // 2), -(character.y - (game_framework.CANVAS_H // 2))
             dir_x, dir_y = dir_x / abs(dir_x), dir_y / abs(dir_y)
-
+            other.hit_ball(dir_x * 20, dir_y * 20, 40)
 
 class Run:
     @staticmethod
@@ -352,7 +352,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, character):
         self.character = character
-        self.cur_state = Ready
+        self.cur_state = Idle
         self.transition_state_dic = {
             Ready: {space_down: PreparingServe},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
