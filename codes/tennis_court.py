@@ -9,7 +9,7 @@ import game_framework
 
 class TennisCourt:
     def __init__(self, court_number):
-        self.image = load_image('tennis_courts.png')
+        self.image = load_image('./../resources/tennis_courts.png')
         self.number = court_number
         self.w, self.h = 431 - (self.number % 2), 296
         self.image_l, self.image_b = 433 * (self.number % 2), 1 + 297 * (self.number // 2)
