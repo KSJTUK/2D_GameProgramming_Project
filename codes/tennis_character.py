@@ -479,9 +479,9 @@ class Character:
         if groub == 'character:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
-    def get_bb(self):
-        half_w, half_h = self.width / 2, self.height / 2
-        return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
+    def get_bounding_box(self):
+        half_width, half_height = self.width / 2, self.height / 2
+        return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
         return self.z
@@ -526,4 +526,4 @@ def character_default_draw_animation(character):
                                         character.x, character.y, character.width, character.height)
 
     # 디버그용
-    pico2d.draw_rectangle(*character.get_bb())
+    pico2d.draw_rectangle(*character.get_bounding_box())

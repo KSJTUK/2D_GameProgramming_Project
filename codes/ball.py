@@ -15,14 +15,11 @@ class Ball:
         self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
 
-        self.scale = 1.0
         self.w_meter, self.h_meter = 0.4, 0.4
         self.width, self.height = 0, 0
-        self.cant_bound = False
 
         self.bound_count = 0
 
-        # game_world.add_collision_pair('ball:wall', self, None)
         game_world.add_collision_pair('ball:net', self, None)
 
         if Ball.image == None:
@@ -32,10 +29,8 @@ class Ball:
         self.move_speed_x, self.move_speed_y, self.move_speed_z = power_x, power_y, power_z
 
     def update(self):
-        scale = 1.0
-
         pixel_per_meter = game_framework.PIXEL_PER_METER
-        self.width, self.height = self.w_meter * scale * pixel_per_meter, self.h_meter * scale * pixel_per_meter
+        self.width, self.height = self.w_meter  * pixel_per_meter, self.h_meter * pixel_per_meter
 
         self.move()
         self.gravity()
@@ -58,13 +53,16 @@ class Ball:
         self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
 
     def bounding(self):
+        bound_coefficient = 1.5
+        cant_bound_speed_z = 1.3
+
         self.bound_count += 1
         self.z = 0.0
-        self.move_speed_z = abs(self.move_speed_z / 1.5)
-        if self.move_speed_z < 1.3: self.move_speed_z = 0.0
-        self.move_speed_y = self.move_speed_y / 2.0
+        self.move_speed_z = abs(self.move_speed_z / bound_coefficient)
+        if self.move_speed_z < cant_bound_speed_z: self.move_speed_z = 0.0
+        self.move_speed_y = self.move_speed_y / bound_coefficient
         if abs(self.move_speed_y) < sys.float_info.epsilon: self.move_speed_y = 0.0
-        self.move_speed_x = self.move_speed_x / 2.0
+        self.move_speed_x = self.move_speed_x / bound_coefficient
         if abs(self.move_speed_x) < sys.float_info.epsilon: self.move_speed_x = 0.0
 
     def render(self):
@@ -73,10 +71,10 @@ class Ball:
                                        self.width, self.height)
 
         # 디버그용
-        pico2d.draw_rectangle(*self.get_bb())
+        pico2d.draw_rectangle(*self.get_bounding_box())
 
-    def get_bb(self):
-        half_w, half_h = self.width / 2, self.height / 2
+    def get_bounding_box(self):
+        half_w, half_h = self.width // 2, self.height // 2
         return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
 
     def get_z(self):
