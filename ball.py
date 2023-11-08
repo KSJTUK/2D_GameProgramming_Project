@@ -53,8 +53,7 @@ class Ball:
             self.bound_count += 1
             self.z = 0.0
             self.move_speed_z = abs(self.move_speed_z / 1.5)
-            if self.move_speed_z < 1.5: self.move_speed_z = 0.0
-            print(f'x: {self.move_speed_x}, y: {self.move_speed_y}, z: {self.move_speed_z}')
+            if self.move_speed_z < 1.3: self.move_speed_z = 0.0
 
             self.move_speed_y = self.move_speed_y / 2.0
             if abs(self.move_speed_y) < sys.float_info.epsilon: self.move_speed_y = 0.0

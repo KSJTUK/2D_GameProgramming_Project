@@ -358,7 +358,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, character):
         self.character = character
-        self.cur_state = Ready
+        self.cur_state = Idle
         self.transition_state_dic = {
             Ready: {space_down: PreparingServe},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
@@ -485,12 +485,6 @@ class Character:
 
 def character_default_frame_update(character):
     # 프레임 업데이트
-    # 더이상 프레임을 1씩 더하는게 아니므로
-    # 프레임이 업데이트 될때만 즉 int기준 이전 프레임과 현재 프레임이 1차이가 날 때만
-    # 그리는 프레임을 옆으로 이동해야함
-    # 다만 이렇게 하면 0번 인덱스를 더하지 않게 됨
-    # 그러니 프레임의 정수부를 기억해두고 달라질 때마다 만 업데이트 (첫 값은 -1로 설정)
-
     prev_frame = int(character.frame % character.frame_per_action)
 
     # 프레임이 점프되는걸 방지하기 위한 작업
@@ -524,8 +518,6 @@ def character_default_draw_animation(character):
     character.height = character.character_height * character.pixel_per_meter * h * scale
     character.width = character.height * aspect * scale
 
-    # 업데이트 함수를 변경하면서 character.frame_start_x가 frame의 끝자리(right)로 가버리며 더이상 frame_start가 아니게 되어버림
-    # 따라서 frame_start_x에서 width를 뺀 값으로 left를 정함
     character.image.clip_composite_draw(character.frame_start_x, character.information[1],
                                         width, height, 0, ' ',
                                         character.x, character.y, character.width, character.height)
