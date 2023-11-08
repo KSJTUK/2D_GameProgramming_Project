@@ -1,4 +1,5 @@
 import pico2d
+import random
 
 import game_world
 from animation_info import *
@@ -255,13 +256,21 @@ class Hit:
     @staticmethod
     def handle_collision(character, groub, other):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
-        racket_speed = 30
         if groub == 'character:ball':
-            dist_from_center = (canvas_width // 2) - character.x, (canvas_height // 2) - character.y
-            hit_power_x, hit_power_y = dist_from_center[0] / character.x * racket_speed,\
-                dist_from_center[1] / character.y * racket_speed
-            hit_dir = dist_from_center[0] / abs(dist_from_center[0]), dist_from_center[1] / abs(dist_from_center[1])
-            other.hit_ball(hit_dir[0] * hit_power_x, hit_dir[1] * hit_power_y, 40)
+            dist_from_center_x, dist_from_center_y = (canvas_width // 2) - character.x, (canvas_height // 2) - character.y
+            z_power_scale = 1.5
+            racket_speed_x, racket_speed_y, racket_speed_z = 50, 30, 50
+
+            # 최대 파워를 40으로 설정
+            hit_power_limit = 40.0
+
+            hit_power_x, hit_power_y, hit_power_z = min(dist_from_center_x / character.x * racket_speed_x, hit_power_limit),\
+                min(dist_from_center_y / character.y * racket_speed_y, hit_power_limit),\
+                min(dist_from_center_y / character.y * z_power_scale * racket_speed_z, hit_power_limit)
+
+            print(f'hit_power_z: {hit_power_z}')
+
+            other.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
 class Run:
     @staticmethod

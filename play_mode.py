@@ -36,7 +36,7 @@ def init():
     game_world.add_object(character, 1)
 
     # 반대방향 테스트용 공
-    test_ball = Ball(800, 600, 0,  -10, -30, 50)
+    test_ball = Ball(800, 600, 0,  -30, -40, 50)
     game_world.add_object(test_ball, 1)
     game_world.add_collision_pair('character:ball', None, test_ball)
 

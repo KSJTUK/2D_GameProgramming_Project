@@ -88,7 +88,7 @@ class Ball:
         if groub == 'character:serve_ball':
             game_world.remove_object(self)
         if groub == 'ball:net':
-            print(f'COLLISION {groub}')
+            pass
 
 
 

@@ -64,8 +64,6 @@ def collide_aabb(object1, object2):
     if z_a >= 0.0 or z_b >= 0.0:
         if z_a > z_b: return False
 
-    print(f'COLLISION {object1}, {object2}')
-
     return True
 
 
