@@ -103,7 +103,7 @@ class HighHit:
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'character:serve_ball':
             game_world.remove_collision_object(character)
-            character.throw_ball('character:ball', 10, 50, 30)
+            character.throw_ball('character:ball', 10, 50, 40)
 
 
 
@@ -262,7 +262,9 @@ class Hit:
 
     @staticmethod
     def handle_collision(character, groub, other):
-        pass
+        if groub == 'character:ball':
+            dir_x, dir_y = character.x - (game_framework.CANVAS_W // 2), character.y - (game_framework.CANVAS_H // 2)
+            dir_x, dir_y = dir_x / abs(dir_x), dir_y / abs(dir_y)
 
 
 class Run:
@@ -358,7 +360,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, character):
         self.character = character
-        self.cur_state = Idle
+        self.cur_state = Ready
         self.transition_state_dic = {
             Ready: {space_down: PreparingServe},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
