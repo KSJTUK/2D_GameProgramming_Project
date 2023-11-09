@@ -62,11 +62,11 @@ class TennisNet:
 
     def handle_collision(self, groub, other):
         if groub == 'ball:net':
-            distance_between_other_object_y = other.y - self.y
-            push_out_object_y = distance_between_other_object_y
+            ball_move_dir_y = other.move_speed_y / abs(other.move_speed_y)
+            push_out_object_y = self.height + other.height
 
             bound_coefficient = 1.5
-            other.y += push_out_object_y
+            other.y += push_out_object_y if ball_move_dir_y < 0 else -push_out_object_y
             after_bounding_speeds = (other.move_speed_x / bound_coefficient,
                                      -other.move_speed_y / bound_coefficient, bound_coefficient)
             other.hit_ball(*after_bounding_speeds)
