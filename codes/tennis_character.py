@@ -425,6 +425,7 @@ class Character:
     def __init__(self):
         if Character.image == None:
             Character.image = load_image('./../resources/tennis_character_micki.png')
+
         self.x, self.y = 400, 100  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션
         self.animation_information = micky_animation[self.cur_animation]  # 캐릭터 애니메이션 정보

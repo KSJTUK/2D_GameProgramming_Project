@@ -1,5 +1,5 @@
 from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN, \
-    SDLK_SPACE, SDLK_v
+    SDLK_SPACE, SDLK_v, SDLK_r
 
 # 새로운 코트가 시작했음을 알려줄 변수
 # 임시로 이곳에 선언하고 저장
@@ -144,6 +144,8 @@ def space_down(e):
 def key_down_v(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_v
 
+def key_down_r(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_r
 
 def animation_end(e):
     return e[0] == 'ANIMATION_END'
@@ -151,13 +153,6 @@ def animation_end(e):
 
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
-
-
-def court_start(e):
-    global new_court_start
-    if e[0] == 'NEW_COURT_START':
-        new_court_start = True
-        return True
 
 def collision_character_serveball(e):
     return e[0] == 'character:serve_ball'

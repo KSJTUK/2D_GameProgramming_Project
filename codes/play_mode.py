@@ -1,4 +1,5 @@
 from pico2d import *
+from random import randint
 
 import game_framework
 
@@ -15,13 +16,17 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-            pass
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-            pass
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
+            test_throw_ball(800, 600, randint(-40, 10), randint(-40, -30), randint(40, 50))
         else:
             character.handle_event(event)
 
+def test_throw_ball(x, y, speed_x, speed_y, speed_z):
+    new_test_ball = Ball(x, y, 0, speed_x, speed_y, speed_z)
+    game_world.add_object(new_test_ball, 1)
+    game_world.add_collision_pair('character:ball', None, new_test_ball)
 
 def init():
     global court
