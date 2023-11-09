@@ -54,16 +54,16 @@ class Ball:
 
     def bounding(self):
         bound_coefficient = 1.5
-        cant_bound_speed_z = 1.3
+        cant_bound_speed = 2.0
 
         self.bound_count += 1
         self.z = 0.0
         self.move_speed_z = abs(self.move_speed_z / bound_coefficient)
-        if self.move_speed_z < cant_bound_speed_z: self.move_speed_z = 0.0
+        if abs(self.move_speed_z) < cant_bound_speed: self.move_speed_z = 0.0
         self.move_speed_y = self.move_speed_y / bound_coefficient
-        if abs(self.move_speed_y) < sys.float_info.epsilon: self.move_speed_y = 0.0
+        if abs(self.move_speed_y) < cant_bound_speed: self.move_speed_y = 0.0
         self.move_speed_x = self.move_speed_x / bound_coefficient
-        if abs(self.move_speed_x) < sys.float_info.epsilon: self.move_speed_x = 0.0
+        if abs(self.move_speed_x) < cant_bound_speed: self.move_speed_x = 0.0
 
     def render(self):
         Ball.image.clip_composite_draw(0, 0, 128, 128,
