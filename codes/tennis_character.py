@@ -364,7 +364,7 @@ class CharacterSatateMachine:
             Run: {is_diff_arrow_downed_same_time: Idle, not_downed: Idle, is_player_has_no_direction: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                  space_down: Hit, key_down_v: Diving},
+                  space_down: Hit, key_down_v_and_not_updown: Diving},
             Hit: {animation_end_and_keydown: Run, animation_end: Idle},
             Diving: {animation_end_and_keydown: Run, animation_end: Idle},
             PreparingServe: {space_down: HighHit, collision_character_serveball: Ready},

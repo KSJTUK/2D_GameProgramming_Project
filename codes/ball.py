@@ -7,9 +7,11 @@ import sys
 
 class Ball:
     image = None
+    shadow_image = None
 
     def __init__(self, x, y, z, speed_x, speed_y, speed_z):
         self.x, self.y, self.z = x, y, z
+        self.shadow_y = self.y
         self.move_speed_x, self.move_speed_y, self.move_speed_z = speed_x, speed_y, speed_z
 
         self.pps_speed_x, self.pps_speed_y, self.pps_speed_z = \
@@ -24,6 +26,9 @@ class Ball:
 
         if Ball.image == None:
             Ball.image = load_image('./../resources/tennis_ball.png')
+            
+        if Ball.shadow_image == None:
+            Ball.shadow_image = load_image('./../resources/ball_shadow.png')
 
     def hit_ball(self, power_x, power_y, power_z):
         self.move_speed_x, self.move_speed_y, self.move_speed_z = power_x, power_y, power_z
@@ -50,6 +55,7 @@ class Ball:
 
         self.x += self.pps_speed_x * game_framework.frame_time
         self.z += self.pps_speed_z * game_framework.frame_time
+        self.shadow_y += self.pps_speed_y * game_framework.frame_time
         self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
 
     def bounding(self):
@@ -66,6 +72,9 @@ class Ball:
         if abs(self.move_speed_x) < cant_bound_speed: self.move_speed_x = 0.0
 
     def render(self):
+        Ball.shadow_image.clip_composite_draw(0, 0, 128, 30,
+                                              0, '', self.x, self.shadow_y,
+                                              self.width, self.height)
         Ball.image.clip_composite_draw(0, 0, 128, 128,
                                        0, '', self.x, self.y,
                                        self.width, self.height)
@@ -75,7 +84,7 @@ class Ball:
 
     def get_bounding_box(self):
         half_w, half_h = self.width // 2, self.height // 2
-        return self.x - half_w, self.y - half_h, self.x + half_w, self.y + half_h
+        return self.x - half_w, self.shadow_y - half_h, self.x + half_w, self.shadow_y + half_h
 
     def get_z(self):
         return self.z

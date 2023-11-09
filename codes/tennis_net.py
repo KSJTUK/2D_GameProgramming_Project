@@ -69,6 +69,7 @@ class TennisNet:
 
             bound_coefficient = 1.5
             other.y += push_out_object_y if ball_move_dir_y < 0 else -push_out_object_y
+            other.shadow_y += push_out_object_y if ball_move_dir_y < 0 else -push_out_object_y
             after_bounding_speeds = (other.move_speed_x / bound_coefficient,
                                      -other.move_speed_y / bound_coefficient, bound_coefficient)
             other.hit_ball(*after_bounding_speeds)
