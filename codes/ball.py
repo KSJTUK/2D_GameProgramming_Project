@@ -12,7 +12,7 @@ class Ball:
         self.x, self.y, self.z = x, y, z
         self.move_speed_x, self.move_speed_y, self.move_speed_z = speed_x, speed_y, speed_z
 
-        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z =\
+        self.pps_speed_x, self.pps_speed_y, self.pps_speed_z = \
             kmph_to_pps(self.move_speed_x), kmph_to_pps(self.move_speed_y), kmph_to_pps(self.move_speed_z)
 
         self.w_meter, self.h_meter = 0.4, 0.4
@@ -30,7 +30,7 @@ class Ball:
 
     def update(self):
         pixel_per_meter = game_framework.PIXEL_PER_METER
-        self.width, self.height = self.w_meter  * pixel_per_meter, self.h_meter * pixel_per_meter
+        self.width, self.height = self.w_meter * pixel_per_meter, self.h_meter * pixel_per_meter
 
         self.move()
         self.gravity()
@@ -81,13 +81,12 @@ class Ball:
         return self.z
 
     def handle_collision(self, groub, other):
-        if groub == 'character:ball':
+        if groub == 'tennis_player:ball':
             pass
-        if groub == 'character:serve_ball':
+        if groub == 'tennis_player:serve_ball':
             game_world.remove_object(self)
         if groub == 'ball:net':
             pass
-
 
 
 def kmph_to_pps(kmph_speed):

@@ -5,7 +5,7 @@ import game_framework
 
 import game_world
 from tennis_court import TennisCourt
-from tennis_character import Character
+from tennis_character import TennisPlayer
 from tennis_net import TennisNet, Wall
 # test
 from ball import Ball
@@ -21,29 +21,32 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
             test_throw_ball(800, 600, randint(-40, 10), randint(-40, -30), randint(40, 50))
         else:
-            character.handle_event(event)
+            tennis_player.handle_event(event)
+
 
 def test_throw_ball(x, y, speed_x, speed_y, speed_z):
     new_test_ball = Ball(x, y, 0, speed_x, speed_y, speed_z)
     game_world.add_object(new_test_ball, 1)
-    game_world.add_collision_pair('character:ball', None, new_test_ball)
+    game_world.add_collision_pair('tennis_player:ball', None, new_test_ball)
+
 
 def init():
     global court
-    global character
+    global tennis_player
 
     running = True
 
     court = TennisCourt(0)
     game_world.add_object(court, 0)
 
-    character = Character()
-    game_world.add_object(character, 1)
+    tennis_player = TennisPlayer()
+    game_world.add_object(tennis_player, 1)
+    game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
 
     # 반대방향 테스트용 공
-    test_ball = Ball(800, 600, 0,  -30, -40, 50)
+    test_ball = Ball(800, 600, 0, -30, -40, 50)
     game_world.add_object(test_ball, 1)
-    game_world.add_collision_pair('character:ball', None, test_ball)
+    game_world.add_collision_pair('tennis_player:ball', None, test_ball)
 
     # # 테스트용 벽
     # wall = Wall()
@@ -53,9 +56,6 @@ def init():
     net = TennisNet()
     game_world.add_object(net, 1)
     game_world.add_collision_pair('ball:net', None, net)
-
-    game_world.add_collision_pair('character:ball', character, None)
-
 
 def finish():
     game_world.clear()

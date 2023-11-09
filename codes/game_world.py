@@ -3,6 +3,7 @@ game_objects = [[] for _ in range(4)]
 # 물리 세계 (충돌세계) 생성
 collision_pairs = {}
 
+
 def add_collision_pair(groub, object1=None, object2=None):
     if groub not in collision_pairs:
         print(f'Add new groub {groub}')
@@ -19,6 +20,7 @@ def remove_collision_object(object):
             pairs[0].remove(object)
         if object in pairs[1]:
             pairs[1].remove(object)
+
 
 def add_object(object, layer):
     game_objects[layer].append(object)
