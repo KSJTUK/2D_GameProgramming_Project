@@ -371,7 +371,7 @@ class CharacterSatateMachine:
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                    space_down: Hit},  # court_start_end_space_down:
-            Run: {diff_arrow_downed_same_time: Idle, not_downed: Idle,
+            Run: {is_diff_arrow_downed_same_time: Idle, not_downed: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                   space_down: Hit, key_down_v: Diving},

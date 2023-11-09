@@ -10,6 +10,7 @@ left_arrow_downed = False
 right_arrow_downed = False
 up_arrow_downed = False
 down_arrow_downed = False
+diff_arrow_downed_same_time = False
 
 
 # new_court_start 변수를 설정할 함수
@@ -108,17 +109,20 @@ def check_arrow_all(e):
 
 
 # 반대 방향의 방향키가 같이 눌려있다면 True리턴
-def diff_arrow_downed_same_time(e):
-    global right_arrow_downed, left_arrow_downed, up_arrow_downed, down_arrow_downed
+def is_diff_arrow_downed_same_time(e):
+    global right_arrow_downed, left_arrow_downed, up_arrow_downed, down_arrow_downed, diff_arrow_downed_same_time
     if e[0] != 'INPUT':
         return False
 
     check_arrow_all(e)
     if down_arrow_downed and up_arrow_downed and not left_arrow_downed and not right_arrow_downed:
+        diff_arrow_downed_same_time = True
         return True
     elif right_arrow_downed and left_arrow_downed and not down_arrow_downed and not up_arrow_downed:
+        diff_arrow_downed_same_time = True
         return True
     elif right_arrow_downed and left_arrow_downed and up_arrow_downed and down_arrow_downed:
+        diff_arrow_downed_same_time = True
         return True
     else:
         return False
@@ -152,7 +156,8 @@ def animation_end(e):
 
 
 def animation_end_and_keydown(e):
-    return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
+    if e[0] == 'ANIMATION_END' and not diff_arrow_downed_same_time:
+        return (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
 
 def collision_character_serveball(e):
     return e[0] == 'character:serve_ball'
