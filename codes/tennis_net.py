@@ -47,7 +47,7 @@ class Wall:
 class TennisNet:
     def __init__(self):
         self.x, self.y, self.z = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2 - 35, 25
-        self.width, self.height = 400, 40
+        self.width, self.height = 600, 40
 
     def get_bounding_box(self):
         half_width, half_height = self.width // 2, self.height // 2

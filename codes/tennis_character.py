@@ -170,8 +170,9 @@ class Diving:
 
     @staticmethod
     def do(tennis_player):
-        tennis_player.x += tennis_player.dir_x * (RUN_SPEED_PPS) * game_framework.frame_time
-        tennis_player.y += tennis_player.dir_y * (RUN_SPEED_PPS) * game_framework.frame_time
+        diving_speed = 2.0 * RUN_SPEED_PPS
+        tennis_player.x += tennis_player.dir_x * diving_speed * game_framework.frame_time
+        tennis_player.y += tennis_player.dir_y * diving_speed * game_framework.frame_time
 
         # 프레임 업데이트
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
@@ -195,8 +196,9 @@ class Diving:
             # 추가 코드 또한 프레임이 업데이트 될 떄만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
             if tennis_player.face_y == '':
+                diving_height = 10.0
                 tennis_player.jump_angle += 360 // tennis_player.frame_per_action
-                tennis_player.y += 10 * tennis_player.character_height * sin(radians(tennis_player.jump_angle))
+                tennis_player.y += diving_height * tennis_player.character_height * sin(radians(tennis_player.jump_angle))
 
     @staticmethod
     def exit(tennis_player, event):
@@ -208,7 +210,8 @@ class Diving:
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
-        pass
+        if groub == 'tennis_player:ball':
+            tennis_player.hit_ball(other)
 
 
 class Hit:
@@ -254,7 +257,6 @@ class Hit:
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
-        canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         if groub == 'tennis_player:ball':
             tennis_player.hit_ball(other)
 
