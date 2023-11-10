@@ -107,8 +107,10 @@ def check_arrow_all(e):
     right_arrow_down(e), left_arrow_down(e), left_arrow_up(e), right_arrow_up(e),
     down_arrow_down(e), up_arrow_down(e), down_arrow_up(e), up_arrow_up(e)
 
+
 def is_player_has_no_direction(e):
     return e[0] == 'PLAYER_HAS_NO_DIRECTION'
+
 
 # 반대 방향의 방향키가 같이 눌려있다면 True리턴
 def is_diff_arrow_downed_same_time(e):
@@ -148,7 +150,8 @@ def space_down(e):
 
 
 def key_down_v_and_not_updown(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_v and not up_arrow_downed and not down_arrow_downed
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[
+        1].key == SDLK_v and not up_arrow_downed and not down_arrow_downed
 
 
 def key_down_r(e):
@@ -157,6 +160,7 @@ def key_down_r(e):
 
 def animation_end(e):
     return e[0] == 'ANIMATION_END'
+
 
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)

@@ -57,6 +57,7 @@ def init():
     game_world.add_object(net, 1)
     game_world.add_collision_pair('ball:net', None, net)
 
+
 def finish():
     game_world.clear()
 

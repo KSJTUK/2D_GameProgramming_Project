@@ -28,7 +28,7 @@ class Ball:
 
         if Ball.image == None:
             Ball.image = load_image('./../resources/tennis_ball.png')
-            
+
         if Ball.shadow_image == None:
             Ball.shadow_image = load_image('./../resources/ball_shadow.png')
 
@@ -80,11 +80,8 @@ class Ball:
         Ball.image.clip_composite_draw(0, 0, 128, 128,
                                        0, '', self.x, self.y,
                                        self.width, self.height)
-
         # 디버그용
         pico2d.draw_rectangle(*self.get_bounding_box())
-        x, y = COURT_CENTER_X, COURT_CENTER_Y
-        pico2d.draw_rectangle(x - 30, y - 30, x + 30, y + 30)
 
     def get_bounding_box(self):
         half_w, half_h = self.width // 2, self.height // 2

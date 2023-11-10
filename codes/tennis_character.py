@@ -71,7 +71,7 @@ class HighHit:
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
         tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                           % tennis_player.frame_per_action)
+                               % tennis_player.frame_per_action)
 
         delta_frame = int(tennis_player.frame) - prev_frame
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -80,7 +80,8 @@ class HighHit:
             tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
-            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][int(tennis_player.frame - 1)]
+            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                int(tennis_player.frame - 1)]
 
             # 추가 코드또한 프레임이 업데이트 될때만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
@@ -130,12 +131,13 @@ class PreparingServe:
                 tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
             else:
                 tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                                   % tennis_player.frame_per_action)
+                                       % tennis_player.frame_per_action)
 
             delta_frame = int(tennis_player.frame) - prev_frame
 
             if delta_frame == 1:
-                tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][int(tennis_player.frame - 1)]
+                tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                    int(tennis_player.frame - 1)]
         else:
             game_world.add_collision_pair('tennis_player:serve_ball', tennis_player, None)
 
@@ -183,7 +185,7 @@ class Diving:
             tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
         else:
             tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                               % tennis_player.frame_per_action)
+                                   % tennis_player.frame_per_action)
 
         delta_frame = int(tennis_player.frame) - prev_frame
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -192,14 +194,16 @@ class Diving:
             tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
-            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][int(tennis_player.frame - 1)]
+            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                int(tennis_player.frame - 1)]
 
             # 추가 코드 또한 프레임이 업데이트 될 떄만 실행되도록함
             # 캐릭터 애니메이션에 따라 점프
             if tennis_player.face_y == '':
                 diving_height = 10.0
                 tennis_player.jump_angle += 360 // tennis_player.frame_per_action
-                tennis_player.y += diving_height * tennis_player.character_height * sin(radians(tennis_player.jump_angle))
+                tennis_player.y += diving_height * tennis_player.character_height * sin(
+                    radians(tennis_player.jump_angle))
 
     @staticmethod
     def exit(tennis_player, event):
@@ -237,7 +241,7 @@ class Hit:
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
         tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                           % tennis_player.frame_per_action)
+                               % tennis_player.frame_per_action)
 
         delta_frame = int(tennis_player.frame) - prev_frame
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -246,7 +250,8 @@ class Hit:
             tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
-            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][int(tennis_player.frame - 1)]
+            tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                int(tennis_player.frame - 1)]
 
     @staticmethod
     def exit(tennis_player, event):
@@ -480,7 +485,7 @@ class TennisPlayer:
                                                               dist_from_center_y / (canvas_height // 2))
 
         # 최대 파워를 40으로 설정
-        racket_speed = 70
+        racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
 
         hit_power_x = min(percentage_from_canvas_w * racket_speed, hit_power_limit)
@@ -505,7 +510,7 @@ def character_default_frame_update(tennis_player):
     prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
     tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                       % tennis_player.frame_per_action)
+                           % tennis_player.frame_per_action)
 
     delta_frame = int(tennis_player.frame) - prev_frame
     # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -531,8 +536,8 @@ def character_default_draw_animation(tennis_player):
     tennis_player.width = tennis_player.height * aspect * scale
 
     tennis_player.image.clip_composite_draw(tennis_player.frame_start_x, tennis_player.animation_information['start_y'],
-                                        width, height, 0, ' ',
-                                        tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
+                                            width, height, 0, ' ',
+                                            tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
 
     # 디버그용
     pico2d.draw_rectangle(*tennis_player.get_bounding_box())
