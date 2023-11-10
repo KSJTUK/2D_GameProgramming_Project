@@ -4,6 +4,8 @@ import game_framework
 import game_world
 import sys
 
+from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
+
 
 class Ball:
     image = None
@@ -81,6 +83,8 @@ class Ball:
 
         # 디버그용
         pico2d.draw_rectangle(*self.get_bounding_box())
+        x, y = COURT_CENTER_X, COURT_CENTER_Y
+        pico2d.draw_rectangle(x - 30, y - 30, x + 30, y + 30)
 
     def get_bounding_box(self):
         half_w, half_h = self.width // 2, self.height // 2

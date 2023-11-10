@@ -6,6 +6,7 @@ import game_framework
 # height = 296
 # left = 433 * (num % 2)
 # bottom = 1 + 297 * (num // 2)
+COURT_CENTER_X, COURT_CENTER_Y = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2 - 50
 
 class TennisCourt:
     def __init__(self, court_number):

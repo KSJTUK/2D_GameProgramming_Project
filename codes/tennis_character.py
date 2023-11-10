@@ -9,6 +9,7 @@ from pico2d import load_image
 from math import pi, radians, sin, cos
 
 import game_framework
+from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
 
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
@@ -474,18 +475,17 @@ class TennisPlayer:
 
     def hit_ball(self, ball):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
-        dist_from_center_x, dist_from_center_y = (canvas_width // 2) - self.x, (
-                canvas_height // 2) - self.y
-        z_power_scale = 1.5
-        racket_speed_x, racket_speed_y, racket_speed_z = 50, 30, 50
+        dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
+        percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
+                                                              dist_from_center_y / (canvas_height // 2))
 
         # 최대 파워를 40으로 설정
-        hit_power_limit = 40.0
+        racket_speed = 70
+        hit_power_limit, z_power_scale = 40.0, 2.0
 
-        hit_power_x, hit_power_y, hit_power_z = min(dist_from_center_x / self.x * racket_speed_x,
-                                                    hit_power_limit), \
-            min(dist_from_center_y / self.y * racket_speed_y, hit_power_limit), \
-            min(dist_from_center_y / self.y * z_power_scale * racket_speed_z, hit_power_limit)
+        hit_power_x = min(percentage_from_canvas_w * racket_speed, hit_power_limit)
+        hit_power_y = min(percentage_from_canvas_h * racket_speed, hit_power_limit)
+        hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
