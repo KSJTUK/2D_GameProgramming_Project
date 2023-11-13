@@ -35,6 +35,8 @@ def init():
     global court
     global tennis_player
 
+    tennis_referee.set_refree()
+
     running = True
 
     court = TennisCourt(0)
@@ -46,13 +48,13 @@ def init():
 
     tennis_referee.subscribe_player('main_player', tennis_player)
 
-    # 반대방향 테스트용 공
-    test_ball = Ball(800, 600, 0, -30, -10, 50)
-    game_world.add_object(test_ball, 1)
-    game_world.add_collision_pair('tennis_player:ball', None, test_ball)
-
-    # 심판 모듈 테스트
-    tennis_referee.subscribe_ball(test_ball)
+    # # 반대방향 테스트용 공
+    # test_ball = Ball(800, 600, 0, -30, -10, 50)
+    # game_world.add_object(test_ball, 1)
+    # game_world.add_collision_pair('tennis_player:ball', None, test_ball)
+    #
+    # # 심판 모듈 테스트
+    # tennis_referee.subscribe_ball(test_ball)
 
     # # 테스트용 벽
     # wall = Wall()

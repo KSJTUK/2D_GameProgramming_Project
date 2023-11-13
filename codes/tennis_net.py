@@ -33,7 +33,7 @@ class Wall:
 
 class TennisNet:
     def __init__(self):
-        self.x, self.y, self.z = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2 - 35, 25
+        self.x, self.y, self.z = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2 - 35, 0
         self.width, self.height = 600, 40
 
     def get_bounding_box(self):
@@ -41,7 +41,7 @@ class TennisNet:
         return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
-        return self.z
+        return self.z, self.z + self.height
 
     def update(self):
         pass

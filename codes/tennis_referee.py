@@ -1,8 +1,19 @@
+def new_court_start():
+    global turn
+    turn = (turn + 1) % 2
+
+    main_player.state_machine.handle_event(('NEW_COURT_START', 0))
+
 def set_refree():
     global play_ball, main_player, opponent_player, turn
+    global main_player_score, opponent_player_score
+    global main_player_set_score, opponent_player_set_score
+
     play_ball = None
     main_player = None
     opponent_player = None
+    main_player_score, opponent_player_score = 0, 0
+    main_player_set_score, opponent_player_set_score = 0, 0
 
     turn = 0
 
@@ -19,6 +30,7 @@ def subscribe_ball(ball):
 
 def remove_ball(ball):
     global play_ball
+    print('remove ball in referee')
     if play_ball is ball:
         play_ball = None
 

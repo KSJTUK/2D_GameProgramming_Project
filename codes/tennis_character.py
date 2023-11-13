@@ -9,6 +9,7 @@ from pico2d import load_image
 from math import pi, radians, sin, cos
 
 import game_framework
+import tennis_referee
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
 
 RUN_SPEED_KMPH = 20.0
@@ -141,7 +142,7 @@ class HighHit:
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
         tennis_player.frame = 0
-        tennis_player.frame_start_x = tennis_player.animation_information[start_x]
+        tennis_player.frame_start_x = tennis_player.animation_information['start_x']
 
         # 애니메이션이 더 자연스러워 보이기위해 초기 y값을 더해줌
         tennis_player.jump_angle = 0
@@ -211,12 +212,8 @@ class PreparingServe:
         if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
             prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-            # 프레임이 점프되는걸 방지하기 위한 작업
-            if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
-                tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
-            else:
-                tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                                       % tennis_player.frame_per_action)
+            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                   % tennis_player.frame_per_action)
 
             delta_frame = int(tennis_player.frame) - prev_frame
 
@@ -236,6 +233,8 @@ class PreparingServe:
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
+        if groub == 'tennis_player:serve_ball':
+            print(f'collisiton {groub}')
         game_world.remove_collision_object(tennis_player)
         tennis_player.state_machine.handle_event((groub, 0))
 
@@ -448,7 +447,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
-        self.cur_state = Idle
+        self.cur_state = Ready
         self.transition_state_dic = {
             Win: { },
             Lose: { },
@@ -520,7 +519,7 @@ class TennisPlayer:
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
         self.character_height = 1.6  # 캐릭터 크기
 
-        self.z = -1
+        self.z = 0
 
         self.width, self.height = 0, 0
 
@@ -564,6 +563,8 @@ class TennisPlayer:
         game_world.add_object(ball, 1)
         game_world.add_collision_pair(groub, None, ball)
 
+        tennis_referee.subscribe_ball(ball)
+
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
@@ -588,7 +589,7 @@ class TennisPlayer:
         return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
-        return self.z
+        return self.z, self.z + self.height // 2
 
     def handle_collision(self, groub, other):
         self.state_machine.handle_collision(groub, other)

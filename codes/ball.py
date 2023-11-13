@@ -45,7 +45,10 @@ class Ball:
         if self.z < 0.0:
             self.bounding()
 
+        print(f'x: {self.x}, y: {self.y}')
+
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
+            print('remove ball')
             tennis_referee.remove_ball(self)
             game_world.remove_object(self)
 
@@ -90,7 +93,8 @@ class Ball:
         return self.x - half_w, self.shadow_y - half_h, self.x + half_w, self.shadow_y + half_h
 
     def get_z(self):
-        return self.z
+        half_h = self.height // 2
+        return self.z - half_h, self.z + half_h
 
     def handle_collision(self, groub, other):
         if groub == 'tennis_player:ball':
