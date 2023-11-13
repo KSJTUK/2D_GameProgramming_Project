@@ -571,11 +571,14 @@ class TennisPlayer:
         game_world.add_collision_pair(groub, None, ball)
 
         tennis_referee.subscribe_ball(ball)
+        tennis_referee.last_hit_player = self
 
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
     def hit_ball(self, ball):
+        tennis_referee.last_hit_player = self
+
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
         percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),

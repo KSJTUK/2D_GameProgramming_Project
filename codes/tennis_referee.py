@@ -11,13 +11,14 @@ def new_set_start():
 
 
 def set_refree():
-    global play_ball, main_player, opponent_player, turn
+    global play_ball, main_player, opponent_player, last_hit_player, turn
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
 
     play_ball = None
     main_player = None
     opponent_player = None
+    last_hit_player = None
     main_player_score, opponent_player_score = 0, 0
     main_player_set_score, opponent_player_set_score = 0, 0
 
@@ -49,4 +50,7 @@ def update():
 
 
 def bound_over_court():
-    print('ball bound over the court')
+    if last_hit_player == None:
+        raise ValueError('last hit player is None')
+
+    last_hit_player.state_machine.handle_event(('LOSE', 0))
