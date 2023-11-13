@@ -100,7 +100,7 @@ class Ball:
         if groub == 'tennis_player:ball':
             self.last_check_collision_groub = groub
         if groub == 'tennis_player:serve_ball':
-            game_world.remove_object(self)
+            pass
         if groub == 'ball:net':
             pass
 

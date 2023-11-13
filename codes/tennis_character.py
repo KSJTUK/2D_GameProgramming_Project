@@ -187,8 +187,11 @@ class HighHit:
     def handle_collision(tennis_player, groub, other):
         # 캐릭터가 서브 공을 쳤다면 그 볼은 더이상 serve_ball이 아닌 일반 ball로 전환
         if groub == 'tennis_player:serve_ball':
+            game_world.remove_collision_object(other)
             game_world.remove_collision_object(tennis_player)
-            tennis_player.throw_ball('tennis_player:ball', 10, 50, 40)
+
+            game_world.add_collision_pair('tennis_player:ball', tennis_player, other)
+            tennis_player.hit_ball(other)
 
 
 class PreparingServe:
@@ -447,7 +450,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
-        self.cur_state = Idle
+        self.cur_state = Ready
         self.transition_state_dic = {
             Win: { },
             Lose: { },
