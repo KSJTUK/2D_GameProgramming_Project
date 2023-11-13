@@ -447,7 +447,7 @@ class Idle:
 class CharacterSatateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
-        self.cur_state = Ready
+        self.cur_state = Idle
         self.transition_state_dic = {
             Win: { },
             Lose: { },

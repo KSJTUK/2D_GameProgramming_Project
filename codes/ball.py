@@ -23,6 +23,8 @@ class Ball:
         self.w_meter, self.h_meter = 0.4, 0.4
         self.width, self.height = 0, 0
 
+        self.last_check_collision_groub = ''
+
         self.bound_count = 0
 
         game_world.add_collision_pair('ball:net', self, None)
@@ -44,8 +46,6 @@ class Ball:
         self.gravity()
         if self.z < 0.0:
             self.bounding()
-
-        print(f'x: {self.x}, y: {self.y}')
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
             print('remove ball')
@@ -98,7 +98,7 @@ class Ball:
 
     def handle_collision(self, groub, other):
         if groub == 'tennis_player:ball':
-            pass
+            self.last_check_collision_groub = groub
         if groub == 'tennis_player:serve_ball':
             game_world.remove_object(self)
         if groub == 'ball:net':
