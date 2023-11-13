@@ -19,17 +19,40 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 class Win:
     @staticmethod
     def enter(tennis_player, event):
-        print('entered WIN')
+        tennis_player.cur_animation = 'Win'
+
+        tennis_player.face_x = ''
+        tennis_player.dir_x, tennis_player.dir_y = 0, 0
+
+        tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
+
+        tennis_player.frame = 0
+        tennis_player.frame_start_x = tennis_player.animation_information['start_x']
+
+        tennis_player.calculation_action_time()
 
     @staticmethod
     def do(tennis_player):
-        pass
+        # 애니메이션의 끝에 다다르면 더이상 실행하지 않도록 함
+        if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
+            prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
+
+            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                   % tennis_player.frame_per_action)
+
+            delta_frame = int(tennis_player.frame) - prev_frame
+
+            if delta_frame == 1:
+                tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                    int(tennis_player.frame - 1)]
+
     @staticmethod
     def exit(tennis_player, event):
         pass
+
     @staticmethod
     def render(tennis_player):
-        pass
+        character_default_draw_animation(tennis_player)
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
@@ -39,11 +62,32 @@ class Win:
 class Lose:
     @staticmethod
     def enter(tennis_player, event):
-        pass
+        tennis_player.cur_animation = 'Lose'
+
+        tennis_player.face_x = ''
+        tennis_player.dir_x, tennis_player.dir_y = 0, 0
+
+        tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
+
+        tennis_player.frame = 0
+        tennis_player.frame_start_x = tennis_player.animation_information['start_x']
+
+        tennis_player.calculation_action_time()
 
     @staticmethod
     def do(tennis_player):
-        pass
+        # 애니메이션의 끝에 다다르면 더이상 실행하지 않도록 함
+        if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
+            prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
+
+            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                   % tennis_player.frame_per_action)
+
+            delta_frame = int(tennis_player.frame) - prev_frame
+
+            if delta_frame == 1:
+                tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
+                    int(tennis_player.frame - 1)]
 
     @staticmethod
     def exit(tennis_player):
@@ -51,7 +95,7 @@ class Lose:
 
     @staticmethod
     def render(tennis_player):
-        pass
+        character_default_draw_animation(tennis_player)
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
