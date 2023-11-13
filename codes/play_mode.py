@@ -9,6 +9,7 @@ from tennis_character import TennisPlayer
 from tennis_net import TennisNet, Wall
 # test
 from ball import Ball
+import tennis_referee
 
 
 def handle_events():
@@ -43,10 +44,15 @@ def init():
     game_world.add_object(tennis_player, 1)
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
 
+    tennis_referee.subscribe_player('main_player', tennis_player)
+
     # 반대방향 테스트용 공
     test_ball = Ball(800, 600, 0, -30, -40, 50)
     game_world.add_object(test_ball, 1)
     game_world.add_collision_pair('tennis_player:ball', None, test_ball)
+
+    # 심판 모듈 테스트
+    tennis_referee.subscribe_ball(test_ball)
 
     # # 테스트용 벽
     # wall = Wall()
@@ -57,13 +63,13 @@ def init():
     game_world.add_object(net, 1)
     game_world.add_collision_pair('ball:net', None, net)
 
-
 def finish():
     game_world.clear()
 
 
 def update():
     game_world.update()
+    tennis_referee.update()
     # delay(0.5)
     game_world.handle_collision()
 

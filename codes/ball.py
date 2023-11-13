@@ -5,6 +5,7 @@ import game_world
 import sys
 
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
+import tennis_referee
 
 
 class Ball:
@@ -45,6 +46,7 @@ class Ball:
             self.bounding()
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
+            tennis_referee.remove_ball(self)
             game_world.remove_object(self)
 
     def gravity(self):
@@ -97,7 +99,6 @@ class Ball:
             game_world.remove_object(self)
         if groub == 'ball:net':
             pass
-
 
 def kmph_to_pps(kmph_speed):
     mps = (kmph_speed * 1000.0 / 60.0) / 60.0

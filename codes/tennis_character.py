@@ -419,7 +419,6 @@ class CharacterSatateMachine:
 
 class TennisPlayer:
     image = None
-    worldsBall = None
 
     def __init__(self):
         if TennisPlayer.image == None:
@@ -479,9 +478,6 @@ class TennisPlayer:
 
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
-
-            if TennisPlayer.worldsBall == None:
-                TennisPlayer.worldsBall = ball
 
     def hit_ball(self, ball):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
