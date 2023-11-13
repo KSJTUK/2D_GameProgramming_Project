@@ -105,6 +105,9 @@ class Lose:
 class Ready:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_referee.turn == 0
+        tennis_player.my_surve_turn = True
+
         tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
@@ -236,8 +239,7 @@ class PreparingServe:
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
-        if groub == 'tennis_player:serve_ball':
-            print(f'collisiton {groub}')
+        game_world.remove_object(other)
         game_world.remove_collision_object(tennis_player)
         tennis_player.state_machine.handle_event((groub, 0))
 
@@ -447,7 +449,7 @@ class Idle:
 
 
 # 캐릭터의 상태 기계
-class CharacterSatateMachine:
+class TennisPlayerStateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
         self.cur_state = Ready
@@ -535,13 +537,15 @@ class TennisPlayer:
         self.face_x, self.face_y = '', '_back'  # 캐릭터가 바라보는 방향
 
         # 캐릭터의 상태기계 생성
-        self.state_machine = CharacterSatateMachine(self)  # 캐릭터 상태 기계
+        self.state_machine = TennisPlayerStateMachine(self)  # 캐릭터 상태 기계
         self.state_machine.start()
 
         # 캐릭터 IDLE 크기를 기준으로 캐릭터의 크기를 정하게 함
         # 즉 캐릭터의 키가 n미터 이면 IDLE상태의 height값이 n미터가 되도록 하게 함
         self.defualt_height = micky_animation['Idle_back']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
+
+        self.my_surve_turn = False
 
     # 캐릭터 애니메이션 프레임 업데이트
     def update(self):

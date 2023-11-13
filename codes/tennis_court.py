@@ -6,6 +6,7 @@ import game_framework
 # left = 433 * (num % 2)
 # bottom = 1 + 297 * (num // 2)
 COURT_CENTER_X, COURT_CENTER_Y = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2 - 50
+COURT_WIDTH, COURT_HEIGHT = 600, 400
 
 
 class TennisCourt:

@@ -1,8 +1,14 @@
-def new_court_start():
+def new_set_start():
     global turn
     turn = (turn + 1) % 2
 
+    global main_player_score, opponent_player_score
+    global main_player_set_score, opponent_player_set_score
+
+    main_player_score, opponent_player_score = 0, 0
+
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
+
 
 def set_refree():
     global play_ball, main_player, opponent_player, turn
@@ -40,3 +46,7 @@ def update():
 
     if play_ball.bound_count >= 2:
         main_player.state_machine.handle_event(('WIN', 0))
+
+
+def bound_over_court():
+    print('ball bound over the court')

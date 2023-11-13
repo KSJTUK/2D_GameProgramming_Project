@@ -1,5 +1,6 @@
 import pico2d
 
+from tennis_court import COURT_CENTER_X, COURT_WIDTH, COURT_HEIGHT, COURT_CENTER_Y
 import game_framework
 import game_world
 

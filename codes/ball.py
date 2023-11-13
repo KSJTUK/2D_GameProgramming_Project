@@ -4,7 +4,7 @@ import game_framework
 import game_world
 import sys
 
-from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
+from tennis_court import COURT_CENTER_X, COURT_CENTER_Y, COURT_WIDTH, COURT_HEIGHT
 import tennis_referee
 
 
@@ -78,6 +78,9 @@ class Ball:
         self.move_speed_x = self.move_speed_x / bound_coefficient
         if abs(self.move_speed_x) < cant_bound_speed: self.move_speed_x = 0.0
 
+        if not self.is_in_court():
+            tennis_referee.bound_over_court()
+
     def render(self):
         Ball.shadow_image.clip_composite_draw(0, 0, 128, 30,
                                               0, '', self.x, self.shadow_y,
@@ -103,6 +106,14 @@ class Ball:
             pass
         if groub == 'ball:net':
             pass
+
+    def is_in_court(self):
+        if self.x > COURT_CENTER_X + COURT_WIDTH // 2: return False
+        if self.x < COURT_CENTER_X - COURT_WIDTH // 2: return False
+        if self.y > COURT_CENTER_Y + COURT_HEIGHT // 2: return False
+        if self.y < COURT_CENTER_Y - COURT_HEIGHT // 2: return False
+
+        return True
 
 def kmph_to_pps(kmph_speed):
     mps = (kmph_speed * 1000.0 / 60.0) / 60.0
