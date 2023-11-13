@@ -20,7 +20,6 @@ def subscribe_ball(ball):
 def remove_ball(ball):
     global play_ball
     if play_ball is ball:
-        print('Refree module: play_ball remove')
         play_ball = None
 
 def update():
@@ -28,4 +27,4 @@ def update():
         return
 
     if play_ball.bound_count >= 2:
-        print(f'refree observed play_ball bound_cound: {play_ball.bound_count}')
+        main_player.state_machine.handle_event(('WIN', 0))

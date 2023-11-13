@@ -168,3 +168,9 @@ def animation_end_and_keydown(e):
 
 def collision_character_serveball(e):
     return e[0] == 'character:serve_ball'
+
+def player_win(e):
+    return e[0] == 'WIN'
+
+def player_lose(e):
+    return e[0] == 'LOSE'

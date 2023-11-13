@@ -16,6 +16,47 @@ RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
 
+class Win:
+    @staticmethod
+    def enter(tennis_player, event):
+        print('entered WIN')
+
+    @staticmethod
+    def do(tennis_player):
+        pass
+    @staticmethod
+    def exit(tennis_player, event):
+        pass
+    @staticmethod
+    def render(tennis_player):
+        pass
+
+    @staticmethod
+    def handle_collision(tennis_player, groub, other):
+        pass
+
+
+class Lose:
+    @staticmethod
+    def enter(tennis_player, event):
+        pass
+
+    @staticmethod
+    def do(tennis_player):
+        pass
+
+    @staticmethod
+    def exit(tennis_player):
+        pass
+
+    @staticmethod
+    def render(tennis_player):
+        pass
+
+    @staticmethod
+    def handle_collision(tennis_player, groub, other):
+        pass
+
 class Ready:
     @staticmethod
     def enter(tennis_player, event):
@@ -365,18 +406,21 @@ class CharacterSatateMachine:
         self.tennis_player = tennis_player
         self.cur_state = Idle
         self.transition_state_dic = {
-            Ready: {space_down: PreparingServe},
+            Win: { },
+            Lose: { },
+            Ready: {space_down: PreparingServe, player_win: Win, player_lose: Lose},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                   space_down: Hit},  # court_start_end_space_down:
+                   space_down: Hit, player_win: Win, player_lose: Lose},  # court_start_end_space_down:
             Run: {is_diff_arrow_downed_same_time: Idle, not_downed: Idle, is_player_has_no_direction: Idle,
                   right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                   up_arrow_down: Run, down_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
-                  space_down: Hit, key_down_v_and_not_updown: Diving},
-            Hit: {animation_end_and_keydown: Run, animation_end: Idle},
-            Diving: {animation_end_and_keydown: Run, animation_end: Idle},
-            PreparingServe: {space_down: HighHit, collision_character_serveball: Ready},
-            HighHit: {animation_end_and_keydown: Run, animation_end: Idle}
+                  space_down: Hit, key_down_v_and_not_updown: Diving, player_win: Win, player_lose: Lose},
+            Hit: {animation_end_and_keydown: Run, animation_end: Idle, player_win: Win, player_lose: Lose},
+            Diving: {animation_end_and_keydown: Run, animation_end: Idle, player_win: Win, player_lose: Lose},
+            PreparingServe: {space_down: HighHit, collision_character_serveball: Ready,
+                             player_win: Win, player_lose: Lose},
+            HighHit: {animation_end_and_keydown: Run, animation_end: Idle, player_win: Win, player_lose: Lose}
         }
 
     def start(self):
