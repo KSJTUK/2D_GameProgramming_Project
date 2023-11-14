@@ -19,10 +19,11 @@ def serve_turn_player_hit_serve():
     # opponent_player.state_machine.handle_event(('NEW_COURT_START', 0))
 
 def set_refree():
-    global play_ball, main_player, opponent_player, last_hit_player, win_player, turn
+    global play_ball, main_player, opponent_player, last_hit_player, turn
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
-    global court_end
+    global is_court_end
+    global win_player, lose_player
 
     play_ball = None
     main_player = None
@@ -30,7 +31,7 @@ def set_refree():
     last_hit_player = None
     win_player = None
 
-    court_end = False
+    is_court_end = False
     main_player_score, opponent_player_score = 0, 0
     main_player_set_score, opponent_player_set_score = 0, 0
 
@@ -74,27 +75,41 @@ def calculate_game_score():
         pass
 
 def bound_net():
-    global court_end
+    global is_court_end
 
     if not court_end:
         last_hit_player.state_machine.handle_event(('LOSE', 0))
         calculate_game_score()
 
-    court_end = True
+    is_court_end = True
 
 def bound_over_court():
-    global court_end, win_player
+    global is_court_end, win_player, lose_player
+    if is_court_end: return
 
     if last_hit_player == None:
         raise ValueError('last hit player is None')
 
     bound_count_over_1 = play_ball.bound_count > 1
 
-    if not court_end:
-        last_hit_player_event = 'WIN' if bound_count_over_1 else 'LOSE'
-        win_player = main_player if bound_count_over_1 else opponent_player
+    if bound_count_over_1:
+        if last_hit_player is main_player:
+            win_player, lose_player = main_player, opponent_player
+        else:
+            win_player, lose_player = opponent_player, main_player
+    else:
+        if last_hit_player is main_player:
+            win_player, lose_player = opponent_player, main_player
+        else:
+            win_player, lose_player = main_player, opponent_player
+    court_end()
 
-        last_hit_player.state_machine.handle_event((last_hit_player_event, 0))
-        calculate_game_score()
+def court_end():
+    global is_court_end
+    if is_court_end: return
 
-    court_end = True
+    win_player.state_machine.handle_event(('WIN', 0))
+    lose_player.state_machine.handle_event(('LOSE', 0))
+    calculate_game_score()
+
+    is_court_end = True

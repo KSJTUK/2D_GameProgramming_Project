@@ -535,11 +535,11 @@ class TennisPlayerStateMachine:
 class TennisPlayer:
     image = None
 
-    def __init__(self):
+    def __init__(self, init_x=400, init_y=100):
         if TennisPlayer.image == None:
             TennisPlayer.image = load_image('./../resources/tennis_character_micki.png')
 
-        self.x, self.y = 400, 100  # 캐릭터 위치
+        self.x, self.y = init_x, init_y  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션
         self.animation_information = micky_animation[self.cur_animation]  # 캐릭터 애니메이션 정보
         self.frame = 0.0  # 캐릭터 애니메이션 프레임

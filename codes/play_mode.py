@@ -44,11 +44,15 @@ def init():
     court = TennisCourt(0)
     game_world.add_object(court, 0)
 
-    tennis_player = TennisPlayer()
+    tennis_player = TennisPlayer(800, 600)
     game_world.add_object(tennis_player, 1)
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
+    test_opponent_player = TennisPlayer()
+    game_world.add_object(test_opponent_player, 1)
+    game_world.add_collision_pair('tennis_player:ball', test_opponent_player, None)
 
     tennis_referee.subscribe_player('main_player', tennis_player)
+    tennis_referee.subscribe_player('opponent_player', test_opponent_player)
 
     # # 반대방향 테스트용 공
     # test_ball = Ball(800, 600, 0, -30, -10, 50)
