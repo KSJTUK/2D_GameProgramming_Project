@@ -19,7 +19,7 @@ def serve_turn_player_hit_serve():
     # opponent_player.state_machine.handle_event(('NEW_COURT_START', 0))
 
 def set_refree():
-    global play_ball, main_player, opponent_player, last_hit_player, turn
+    global play_ball, main_player, opponent_player, last_hit_player, win_player, turn
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
     global court_end
@@ -28,6 +28,7 @@ def set_refree():
     main_player = None
     opponent_player = None
     last_hit_player = None
+    win_player = None
 
     court_end = False
     main_player_score, opponent_player_score = 0, 0
@@ -62,10 +63,10 @@ def update():
 
 def calculate_game_score():
     global main_player_score, opponent_player_score
-    if last_hit_player == main_player:
-        opponent_player_score += 15
+    if win_player is main_player:
+         main_player_score += 15
     else:
-        main_player_score += 15
+        opponent_player_score += 15
 
     print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')
 
@@ -82,13 +83,17 @@ def bound_net():
     court_end = True
 
 def bound_over_court():
-    global court_end
+    global court_end, win_player
 
     if last_hit_player == None:
         raise ValueError('last hit player is None')
 
+    bound_count_over_1 = play_ball.bound_count > 1
+
     if not court_end:
-        last_hit_player_event = 'WIN' if play_ball.bound_count >= 2 else 'LOSE'
+        last_hit_player_event = 'WIN' if bound_count_over_1 else 'LOSE'
+        win_player = main_player if bound_count_over_1 else opponent_player
+
         last_hit_player.state_machine.handle_event((last_hit_player_event, 0))
         calculate_game_score()
 
