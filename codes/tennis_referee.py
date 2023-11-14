@@ -7,7 +7,16 @@ def new_set_start():
 
     main_player_score, opponent_player_score = 0, 0
 
+    if turn == 0:
+        main_player.state_machine.handle_event(('SERVE_TURN', 0))
+        opponent_player.state_machine.handle_event(('NOT_SERVE_TURN'))
+    else:
+        main_player.state_machine.handle_event(('NOT_SERVE_TURN', 0))
+        # opponent_player.state_machine.handle_event(('SERVE_TURN', 0))
+
+def serve_turn_player_hit_serve():
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
+    # opponent_player.state_machine.handle_event(('NEW_COURT_START', 0))
 
 def set_refree():
     global play_ball, main_player, opponent_player, last_hit_player, turn
@@ -63,6 +72,14 @@ def calculate_game_score():
     if main_player_score >= 45 or opponent_player_score >= 45:
         pass
 
+def bound_net():
+    global court_end
+
+    if not court_end:
+        last_hit_player.state_machine.handle_event(('LOSE', 0))
+        calculate_game_score()
+
+    court_end = True
 
 def bound_over_court():
     global court_end
@@ -71,7 +88,8 @@ def bound_over_court():
         raise ValueError('last hit player is None')
 
     if not court_end:
-        last_hit_player.state_machine.handle_event(('LOSE', 0))
+        last_hit_player_event = 'WIN' if play_ball.bound_count >= 2 else 'LOSE'
+        last_hit_player.state_machine.handle_event((last_hit_player_event, 0))
         calculate_game_score()
 
     court_end = True

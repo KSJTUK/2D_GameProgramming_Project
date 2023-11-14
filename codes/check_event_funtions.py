@@ -144,6 +144,10 @@ def animation_end(e):
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
 
+def in_my_serve_turn(e):
+    return e[0] == 'SERVE_TURN'
+def in_not_my_serve_turn(e):
+    return e[0] == 'NOT_SERVE_TURN'
 
 def collision_character_serveball(e):
     return e[0] == 'tennis_player:serve_ball'

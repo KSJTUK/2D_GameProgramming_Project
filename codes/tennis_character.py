@@ -16,7 +16,6 @@ RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
-
 class Win:
     @staticmethod
     def enter(tennis_player, event):
@@ -97,6 +96,27 @@ class Lose:
     @staticmethod
     def render(tennis_player):
         character_default_draw_animation(tennis_player)
+
+    @staticmethod
+    def handle_collision(tennis_player, groub, other):
+        pass
+
+class ReadyInNotServeTurn:
+    @staticmethod
+    def enter(tennis_player, event):
+        print('in state ReadyInNotServeTurn')
+
+    @staticmethod
+    def do(tennis_player):
+        pass
+
+    @staticmethod
+    def exit(tennis_player, event):
+        pass
+
+    @staticmethod
+    def render(tennis_player):
+        pass
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
@@ -195,6 +215,8 @@ class HighHit:
 
             game_world.add_collision_pair('tennis_player:ball', tennis_player, other)
             tennis_player.hit_ball(other)
+
+            tennis_referee.serve_turn_player_hit_serve()
 
 
 class PreparingServe:
@@ -454,8 +476,9 @@ class TennisPlayerStateMachine:
         self.tennis_player = tennis_player
         self.cur_state = Ready
         self.transition_state_dic = {
-            Win: { },
-            Lose: { },
+            Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
+            Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
+            ReadyInNotServeTurn: { new_court_start: Idle },
             Ready: {space_down: PreparingServe, player_win: Win, player_lose: Lose},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,

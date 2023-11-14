@@ -21,6 +21,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
             test_throw_ball(800, 600, randint(-40, 10), randint(-40, -30), randint(40, 50))
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
+            tennis_referee.new_set_start()
         else:
             tennis_player.handle_event(event)
 
