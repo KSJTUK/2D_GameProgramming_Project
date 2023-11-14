@@ -90,7 +90,7 @@ class Lose:
                     int(tennis_player.frame - 1)]
 
     @staticmethod
-    def exit(tennis_player):
+    def exit(tennis_player, event):
         pass
 
     @staticmethod
@@ -104,11 +104,20 @@ class Lose:
 class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
-        print('in state ReadyInNotServeTurn')
+        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
+        tennis_player.face_x = ''
+        tennis_player.dir_x, tennis_player.dir_y = 0, 0
+
+        tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
+
+        tennis_player.frame = 0
+        tennis_player.frame_start_x = tennis_player.animation_information['start_x']
+
+        tennis_player.calculation_action_time()
 
     @staticmethod
     def do(tennis_player):
-        pass
+        character_default_frame_update(tennis_player)
 
     @staticmethod
     def exit(tennis_player, event):
@@ -116,7 +125,7 @@ class ReadyInNotServeTurn:
 
     @staticmethod
     def render(tennis_player):
-        pass
+        character_default_draw_animation(tennis_player)
 
     @staticmethod
     def handle_collision(tennis_player, groub, other):
@@ -125,9 +134,6 @@ class ReadyInNotServeTurn:
 class Ready:
     @staticmethod
     def enter(tennis_player, event):
-        tennis_referee.turn == 0
-        tennis_player.my_surve_turn = True
-
         tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
@@ -478,7 +484,7 @@ class TennisPlayerStateMachine:
         self.transition_state_dic = {
             Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
             Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
-            ReadyInNotServeTurn: { new_court_start: Idle },
+            ReadyInNotServeTurn: { new_court_start: Idle, player_win: Win, player_lose: Lose },
             Ready: {space_down: PreparingServe, player_win: Win, player_lose: Lose},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
