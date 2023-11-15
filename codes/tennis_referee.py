@@ -10,11 +10,12 @@ def new_set_start():
     new_court_start()
 
 def new_court_start():
-    global is_court_end
+    global is_court_end, play_ball
     is_court_end = False
 
     if play_ball:
         game_world.remove_object(play_ball)
+        play_ball = None
 
     if turn == 0:
         main_player.state_machine.handle_event(('SERVE_TURN', 0))

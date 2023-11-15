@@ -63,7 +63,7 @@ class Ball:
         self.x += self.pps_speed_x * game_framework.frame_time
         self.z += self.pps_speed_z * game_framework.frame_time
         self.shadow_y += self.pps_speed_y * game_framework.frame_time
-        self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
+        self.y += self.pps_speed_y * game_framework.frame_time + (self.pps_speed_z * game_framework.frame_time) / 2.0
 
     def bounding(self):
         bound_coefficient = 1.5
