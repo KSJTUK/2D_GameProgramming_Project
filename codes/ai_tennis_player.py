@@ -19,6 +19,7 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 class Win:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_information = False
         tennis_player.cur_animation = 'Win'
 
         tennis_player.face_x = ''
@@ -45,6 +46,8 @@ class Win:
             if delta_frame == 1:
                 tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
                     int(tennis_player.frame - 1)]
+        else:
+            tennis_player.animation_end = True
 
     @staticmethod
     def exit(tennis_player, event):
@@ -62,6 +65,7 @@ class Win:
 class Lose:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = 'Lose'
 
         tennis_player.face_x = ''
@@ -88,6 +92,8 @@ class Lose:
             if delta_frame == 1:
                 tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
                     int(tennis_player.frame - 1)]
+        else:
+            tennis_player.animation_end = True
 
     @staticmethod
     def exit(tennis_player, event):
@@ -104,6 +110,7 @@ class Lose:
 class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
@@ -134,6 +141,7 @@ class ReadyInNotServeTurn:
 class Ready:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
@@ -166,6 +174,7 @@ class Ready:
 class HighHit:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = "High_hit" + tennis_player.face_y if tennis_player.face_y != '' else "High_hit_back"
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
@@ -228,6 +237,7 @@ class HighHit:
 class PreparingServe:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y if tennis_player.face_y != '' else 'Preparing_serve_back'
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
@@ -255,6 +265,7 @@ class PreparingServe:
                 tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
                     int(tennis_player.frame - 1)]
         else:
+            tennis_player.animation_end = True
             game_world.add_collision_pair('tennis_player:serve_ball', tennis_player, None)
 
     @staticmethod
@@ -275,6 +286,7 @@ class PreparingServe:
 class Diving:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.cur_animation = 'Diving' + tennis_player.face_x if tennis_player.face_x != '' else 'Hit_right'
         tennis_player.cur_animation = tennis_player.cur_animation + tennis_player.face_y if tennis_player.face_y != '' else tennis_player.cur_animation + '_back'
 
@@ -308,7 +320,7 @@ class Diving:
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
         if abs(delta_frame) == tennis_player.frame_per_action - 1:
             tennis_player.frame_start_x = tennis_player.animation_information['start_x']
-            tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
+            tennis_player.animation_end = True
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
             tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
@@ -339,6 +351,7 @@ class Diving:
 class Hit:
     @staticmethod
     def enter(tennis_player, event):
+        tennis_player.animation_end = False
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
         # 지금은 Run 상태에서의 캐릭터의 방향을 따라가지만 나중에는 공의 위치에 따라 변경해야함
         # 공의 움직임 구현할 때 같이 구현 할것
@@ -364,7 +377,7 @@ class Hit:
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
         if abs(delta_frame) == tennis_player.frame_per_action - 1:
             tennis_player.frame_start_x = tennis_player.animation_information['start_x']
-            tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
+            tennis_player.animation_end = True
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
             tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
@@ -466,6 +479,7 @@ class TennisAI:
         self.cur_state.enter(self, ('NONE', 0))
         self.cur_animation = "Idle_front"
         self.animation_information = micky_animation[self.cur_animation]
+        self.animation_end = False
         self.frame = 0.0
         self.frame_start_x = 0
         self.character_height = 1.6
@@ -513,7 +527,7 @@ class TennisAI:
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
-    def hit_ball(self, ball):
+    def handle_collision_with_ball(self, ball):
         tennis_referee.last_hit_player = self
 
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
@@ -530,6 +544,17 @@ class TennisAI:
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
+
+    def hit_ball(self):
+        if self.cur_state != Hit:
+            self.cur_state = Hit
+            self.cur_animation = 'Hit_front'
+            self.cur_state.enter(self, ('NONE', 0))
+
+        if self.animation_end:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.RUNNING
 
     def get_bounding_box(self):
         half_width, half_height = self.width / 2, self.height / 2
@@ -565,18 +590,25 @@ class TennisAI:
         else:
             return BehaviorTree.RUNNING
 
+    def is_nearby_ball(self):
+        pass
+
     def set_move_target_location(self, target_x=None, target_y=None):
         if not target_x or not target_y:
             raise ValueError('ai_players target location is None')
         self.tx, self.ty = target_x, target_y
         return BehaviorTree.SUCCESS
 
+    def set_random_target_location(self):
+        self.tx, self.ty = random.randint(100, game_framework.CANVAS_W - 100), random.randint(100, game_framework.CANVAS_H - 100)
+        return BehaviorTree.SUCCESS
+
     def build_behavior_tree(self):
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
         action_move_to = Action('move to', self.move_to)
+        action_hit_ball = Action('hit ball', self.hit_ball)
 
-        root = SEQ_move_to = Sequence('move', action_set_move_target, action_move_to)
-
+        root = SEQ_move_to_and_hit = Sequence('move and hit', action_set_move_target, action_move_to, action_hit_ball)
         self.behavior_tree = BehaviorTree(root)
 
 
