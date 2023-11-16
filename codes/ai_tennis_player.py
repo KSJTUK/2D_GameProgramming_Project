@@ -495,7 +495,7 @@ class TennisAI:
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
 
         self.dir = 0.0
-        self.tx, self.ty = self.x, self.y
+        self.tx, self.ty = 0, 0
         self.build_behavior_tree()
 
     def update(self):
@@ -578,14 +578,8 @@ class TennisAI:
         self.y += self.speed * sin(self.dir) * game_framework.frame_time
 
     def move_to(self, r=0.5):
-        if self.cur_state != Run:
-            self.cur_state = Run
-            self.face_x = '_right' if self.tx > self.x else '_left'
-            self.face_y = '_back' if self.ty > self.y else '_front'
-            self.cur_animation = 'Run' + self.face_x + self.face_y
-            self.cur_state.enter(self, ('NONE', 0))
         self.move_slightly_to(self.tx, self.ty)
-        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, r * game_framework.PIXEL_PER_METER):
+        if self.pixel_distance_less_than(self.tx, self.x, self.ty, self.y, r * game_framework.PIXEL_PER_METER):
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
@@ -597,18 +591,29 @@ class TennisAI:
         if not target_x or not target_y:
             raise ValueError('ai_players target location is None')
         self.tx, self.ty = target_x, target_y
+        self.cur_state = Run
+        self.face_x = '_right' if self.tx > self.x else '_left'
+        self.face_y = '_back' if self.ty > self.y else '_front'
+        self.cur_animation = 'Run' + self.face_x + self.face_y
+        self.cur_state.enter(self, ('NONE', 0))
         return BehaviorTree.SUCCESS
 
     def set_random_target_location(self):
         self.tx, self.ty = random.randint(100, game_framework.CANVAS_W - 100), random.randint(100, game_framework.CANVAS_H - 100)
+        self.cur_state = Run
+        self.face_x = '_right' if self.tx > self.x else '_left'
+        self.face_y = '_back' if self.ty > self.y else '_front'
+        self.cur_animation = 'Run' + self.face_x + self.face_y
+        self.cur_state.enter(self, ('NONE', 0))
         return BehaviorTree.SUCCESS
 
     def build_behavior_tree(self):
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
+        action_set_random_move_target = Action('set random move target', self.set_random_target_location)
         action_move_to = Action('move to', self.move_to)
         action_hit_ball = Action('hit ball', self.hit_ball)
 
-        root = SEQ_move_to_and_hit = Sequence('move and hit', action_set_move_target, action_move_to, action_hit_ball)
+        root = SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
         self.behavior_tree = BehaviorTree(root)
 
 
@@ -633,7 +638,7 @@ def character_default_draw_animation(tennis_player):
     width, height = (tennis_player.animation_information['frame_widths'][int(tennis_player.frame)],
                      tennis_player.animation_information['frame_height'])
 
-    scale = 1.0 - tennis_player.y / 1000.0 * 0.05
+    scale = 1.0 - tennis_player.y / 100.0 * 0.01
 
     aspect = width / height
     h = height / tennis_player.defualt_height

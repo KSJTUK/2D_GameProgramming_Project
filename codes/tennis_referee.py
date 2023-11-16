@@ -123,8 +123,12 @@ def court_end():
     global is_court_end, win_player, lose_player
     if is_court_end: return
 
-    win_player.state_machine.handle_event(('WIN', 0))
-    lose_player.state_machine.handle_event(('LOSE', 0))
+    if win_player is main_player:
+        win_player.state_machine.handle_event(('WIN', 0))
+        lose_player.handle_event(('LOSE', 0))
+    else:
+        win_player.handle_event(('WIN', 0))
+        lose_player.state_machine.handle_event(('LOSE', 0))
     calculate_game_score()
 
     is_court_end = True
