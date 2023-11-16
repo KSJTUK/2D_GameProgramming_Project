@@ -12,7 +12,7 @@ import game_framework
 import tennis_referee
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
 
-RUN_SPEED_KMPH = 20.0
+RUN_SPEED_KMPH = 25.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
@@ -526,24 +526,28 @@ class TennisAI:
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
-    def handle_collision_with_ball(self, ball):
-        tennis_referee.last_hit_player = self
-
+    def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
         percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
                                                               dist_from_center_y / (canvas_height // 2))
 
-        x_dir = dist_from_center_x / abs(dist_from_center_x)
-        if abs(dist_from_center_x) < 1.0: dist_from_center_x = x_dir * 1.0
+        hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         # 최대 파워를 40으로 설정
         racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
-        rand_speed_range = 50, 100
+        rand_speed_range = 20, 80
 
-        hit_power_x = random.randint(*rand_speed_range) * (1.0 / (dist_from_center_x / 2.0))
+        hit_power_x = hit_dir_x * min(abs(random.randint(*rand_speed_range) * (1.0 / (dist_from_center_x / 2.0))),
+                                      hit_power_limit)
         hit_power_y = percentage_from_canvas_h * racket_speed
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
+        return hit_power_x, hit_power_y, hit_power_z
+
+    def handle_collision_with_ball(self, ball):
+        tennis_referee.last_hit_player = self
+
+        hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 

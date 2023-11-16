@@ -12,7 +12,7 @@ import game_framework
 import tennis_referee
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
 
-RUN_SPEED_KMPH = 20.0
+RUN_SPEED_KMPH = 25.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
@@ -603,22 +603,26 @@ class TennisPlayer:
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
-    def hit_ball(self, ball):
-        tennis_referee.last_hit_player = self
-
+    def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
         percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
                                                               dist_from_center_y / (canvas_height // 2))
 
+        hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         # 최대 파워를 40으로 설정
-
         racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
 
         hit_power_x = percentage_from_canvas_w * racket_speed
         hit_power_y = percentage_from_canvas_h * racket_speed
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
+        return hit_power_x, hit_power_y, hit_power_z
+
+    def hit_ball(self, ball):
+        tennis_referee.last_hit_player = self
+
+        hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
@@ -654,7 +658,7 @@ def character_default_draw_animation(tennis_player):
     width, height = (tennis_player.animation_information['frame_widths'][int(tennis_player.frame)],
                      tennis_player.animation_information['frame_height'])
 
-    scale = 1.0 - tennis_player.y / 100.0 * 0.05
+    scale = 1.0 - tennis_player.y / 100.0 * 0.01
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
     # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
     # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함
