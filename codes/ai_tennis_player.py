@@ -111,7 +111,7 @@ class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
         tennis_player.animation_end = False
-        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
+        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_front'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
 
@@ -142,7 +142,7 @@ class Ready:
     @staticmethod
     def enter(tennis_player, event):
         tennis_player.animation_end = False
-        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
+        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_front'
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
 
@@ -175,7 +175,7 @@ class HighHit:
     @staticmethod
     def enter(tennis_player, event):
         tennis_player.animation_end = False
-        tennis_player.cur_animation = "High_hit" + tennis_player.face_y if tennis_player.face_y != '' else "High_hit_back"
+        tennis_player.cur_animation = "High_hit" + tennis_player.face_y if tennis_player.face_y != '' else "High_hit_front"
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
@@ -238,7 +238,7 @@ class PreparingServe:
     @staticmethod
     def enter(tennis_player, event):
         tennis_player.animation_end = False
-        tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y if tennis_player.face_y != '' else 'Preparing_serve_back'
+        tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y if tennis_player.face_y != '' else 'Preparing_serve_front'
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
@@ -428,13 +428,8 @@ class Run:
 class Idle:
     @staticmethod
     def enter(tennis_player, event):
-        # 이전 상태가 Run에서 들어왔다면 움직임 관련 변수 모두 초기화
-        # tennis_player.running = False
-
+        tennis_player.animation_end = False
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
-
-        # face_y의 문자열을 따라가되 빈 문자열이면 default인 Idle_back으로 애니메이션을 정함
-        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
 
         # 프레임 초기화
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
@@ -468,15 +463,16 @@ class TennisAI:
             TennisAI.image = load_image('./../resources/tennis_character_micki.png')
 
         self.x, self.y = init_x, init_y
-        self.face_x, self.face_y = '', ''
+        self.face_x, self.face_y = '', '_front'
         self.cur_state = Idle
-        self.cur_state.enter(self, ('NONE', 0))
-        self.cur_animation = "Idle_front"
-        self.animation_information = micky_animation[self.cur_animation]
+        self.cur_animation = 'Idle_front'
         self.animation_end = False
         self.frame = 0.0
         self.frame_start_x = 0
         self.character_height = 1.6
+
+        self.cur_state.enter(self, ('NONE', 0))
+        self.animation_information = micky_animation[self.cur_animation]
 
         self.tennis_game_state = 'RUNNING' # RUNNING, WIN, LOSE
 
@@ -487,7 +483,7 @@ class TennisAI:
         self.start_y = self.y  # 캐릭터의 y 위치
         self.jump_angle = 0  # 점프를 위한 변수
         self.face_x, self.face_y = '', '_front'  # 캐릭터가 바라보는 방향
-        self.defualt_height = micky_animation['Idle_back']['frame_height']
+        self.defualt_height = micky_animation['Idle_front']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
 
         self.dir = 0.0
@@ -538,12 +534,15 @@ class TennisAI:
         percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
                                                               dist_from_center_y / (canvas_height // 2))
 
+        x_dir = dist_from_center_x / abs(dist_from_center_x)
+        if abs(dist_from_center_x) < 1.0: dist_from_center_x = x_dir * 1.0
         # 최대 파워를 40으로 설정
         racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
+        rand_speed_range = 50, 100
 
-        hit_power_x = min(percentage_from_canvas_w * racket_speed, hit_power_limit)
-        hit_power_y = min(percentage_from_canvas_h * racket_speed, hit_power_limit)
+        hit_power_x = random.randint(*rand_speed_range) * (1.0 / (dist_from_center_x / 2.0))
+        hit_power_y = percentage_from_canvas_h * racket_speed
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
@@ -631,18 +630,18 @@ class TennisAI:
     def game_win(self):
         if self.cur_state != Win:
             self.cur_state = Win
+            self.face_y = '_front'
             self.cur_animation = 'Win_front'
             self.cur_state.enter(self, ('NONE', 0))
-            self.face_y = '_front'
 
         return BehaviorTree.SUCCESS
 
     def game_lose(self):
         if self.cur_state != Lose:
             self.cur_state = Lose
+            self.face_y = '_front'
             self.cur_animation = 'Lose_front'
             self.cur_state.enter(self, ('NONE', 0))
-            self.face_y = '_front'
 
         return BehaviorTree.SUCCESS
 

@@ -612,11 +612,12 @@ class TennisPlayer:
                                                               dist_from_center_y / (canvas_height // 2))
 
         # 최대 파워를 40으로 설정
+
         racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
 
-        hit_power_x = min(percentage_from_canvas_w * racket_speed, hit_power_limit)
-        hit_power_y = min(percentage_from_canvas_h * racket_speed, hit_power_limit)
+        hit_power_x = percentage_from_canvas_w * racket_speed
+        hit_power_y = percentage_from_canvas_h * racket_speed
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)

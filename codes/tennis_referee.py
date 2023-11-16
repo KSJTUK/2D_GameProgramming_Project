@@ -107,6 +107,9 @@ def bound_over_court():
     if last_hit_player == None:
         raise ValueError('last hit player is None')
 
+    if not play_ball:
+        return
+
     bound_count_over_1 = play_ball.bound_count > 1
 
     if bound_count_over_1:
