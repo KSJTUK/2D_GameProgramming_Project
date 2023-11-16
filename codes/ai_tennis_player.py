@@ -504,7 +504,18 @@ class TennisAI:
         self.behavior_tree.run()
 
     def handle_event(self, event):
-        pass
+        if event[0] == 'WIN':
+            self.cur_animation = 'Win_front'
+            self.cur_state.enter(self, event)
+        if event[0] == 'LOSE':
+            self.cur_animation = 'Lose_front'
+            self.cur_state.enter(self, event)
+        if event[0] == 'SERVE_TURN':
+            self.cur_animation = 'Ready_front'
+            self.cur_state.enter(self, event)
+        if event[0] == 'NOT_SERVE_TURN':
+            self.cur_animation = 'Ready_front'
+            self.cur_state.enter(self, event)
 
     def render(self):
         self.cur_state.render(self)
@@ -546,9 +557,10 @@ class TennisAI:
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
     def hit_ball(self):
+        self.face_y = '_front'
         if self.cur_state != Hit:
             self.cur_state = Hit
-            self.cur_animation = 'Hit_front'
+            self.cur_animation = 'Hit' + self.face_y
             self.cur_state.enter(self, ('NONE', 0))
 
         if self.animation_end:
@@ -584,6 +596,13 @@ class TennisAI:
         else:
             return BehaviorTree.RUNNING
 
+    def idle_state(self):
+        if self.cur_state != Idle:
+            self.cur_state = Idle
+            self.cur_animation = 'Idle_front'
+            self.cur_state.enter()
+        return BehaviorTree.SUCCESS
+
     def is_nearby_ball(self):
         pass
 
@@ -612,6 +631,8 @@ class TennisAI:
         action_set_random_move_target = Action('set random move target', self.set_random_target_location)
         action_move_to = Action('move to', self.move_to)
         action_hit_ball = Action('hit ball', self.hit_ball)
+
+        action_idle_state = Action('idle state', self.idle_state)
 
         root = SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
         self.behavior_tree = BehaviorTree(root)
