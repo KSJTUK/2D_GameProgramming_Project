@@ -9,7 +9,7 @@ from math import pi, radians, sin, cos
 
 import game_framework
 import tennis_referee
-from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
+import tennis_court
 
 RUN_SPEED_KMPH = 25.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
@@ -290,6 +290,7 @@ class Diving:
         diving_speed = 2.0 * RUN_SPEED_PPS
         tennis_player.x += tennis_player.dir_x * diving_speed * game_framework.frame_time
         tennis_player.y += tennis_player.dir_y * diving_speed * game_framework.frame_time
+        tennis_player.block_move_over_play_area()
 
         # 프레임 업데이트
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
@@ -418,6 +419,7 @@ class Run:
         # 캐릭터 위치 이동
         tennis_player.x += tennis_player.dir_x * RUN_SPEED_PPS * game_framework.frame_time
         tennis_player.y += tennis_player.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+        tennis_player.block_move_over_play_area()
 
         # 프레임 업데이트
         character_default_frame_update(tennis_player)
@@ -477,7 +479,7 @@ class Idle:
 class TennisPlayerStateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
-        self.cur_state = Ready
+        self.cur_state = Idle
         self.transition_state_dic = {
             Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
             Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
@@ -602,9 +604,14 @@ class TennisPlayer:
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
+    def block_move_over_play_area(self):
+        center_x, center_y = tennis_court.COURT_CENTER_X, tennis_court.COURT_CENTER_Y
+        self.x = clamp(center_x - 10.0 * self.pixel_per_meter, self.x, center_x + 10.0 * self.pixel_per_meter)
+        self.y = clamp(center_y - 6.0 * self.pixel_per_meter, self.y, center_y - 0.5 * self.pixel_per_meter)
+
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
-        dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
+        dist_from_center_x, dist_from_center_y = tennis_court.COURT_CENTER_X - self.x, tennis_court.COURT_CENTER_Y - self.y
         percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
         percentage_from_canvas_h = abs(dist_from_center_y / (canvas_height // 2))
 

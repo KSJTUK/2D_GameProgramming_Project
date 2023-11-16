@@ -9,7 +9,7 @@ from behavior_tree import *
 
 import game_framework
 import tennis_referee
-from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
+import tennis_court
 
 RUN_SPEED_KMPH = 60.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
@@ -535,7 +535,7 @@ class TennisAI:
 
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
-        dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
+        dist_from_center_x, dist_from_center_y = tennis_court.COURT_CENTER_X - self.x, tennis_court.COURT_CENTER_Y - self.y
         if abs(dist_from_center_x) < 1.0: dist_from_center_x = 1.0
         percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
         percentage_from_canvas_h = abs(dist_from_center_y / (canvas_height // 2))
@@ -551,6 +551,11 @@ class TennisAI:
         hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
         return hit_power_x, hit_power_y, hit_power_z
+
+    def block_move_over_play_area(self):
+        center_x, center_y = tennis_court.COURT_CENTER_X, tennis_court.COURT_CENTER_Y
+        self.x = clamp(center_x - 10.0 * self.pixel_per_meter, self.x, center_x + 10.0 * self.pixel_per_meter)
+        self.y = clamp(center_y + 0.5 * self.pixel_per_meter, self.y, center_y + 6.0 * self.pixel_per_meter)
 
     def handle_collision_with_ball(self, ball):
         tennis_referee.last_hit_player = self
@@ -687,7 +692,7 @@ class TennisAI:
 
     def is_play_ball_in_my_area(self):
         detect_range = 2.0  # meter
-        if tennis_referee.play_ball.shadow_y >= COURT_CENTER_Y + detect_range * game_framework.PIXEL_PER_METER:
+        if tennis_referee.play_ball.shadow_y >= tennis_court.COURT_CENTER_Y + detect_range * game_framework.PIXEL_PER_METER:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
