@@ -507,20 +507,12 @@ class TennisAI:
     def handle_event(self, event):
         if event[0] == 'WIN':
             self.tennis_game_state = 'WIN'
-            self.cur_animation = 'Win_front'
-            self.cur_state.enter(self, event)
         if event[0] == 'LOSE':
             self.tennis_game_state = 'LOSE'
-            self.cur_animation = 'Lose_front'
-            self.cur_state.enter(self, event)
         if event[0] == 'SERVE_TURN':
             self.tennis_game_state = 'RUNNING'
-            self.cur_animation = 'Ready_front'
-            self.cur_state.enter(self, event)
         if event[0] == 'NOT_SERVE_TURN':
             self.tennis_game_state = 'RUNNING'
-            self.cur_animation = 'Ready_front'
-            self.cur_state.enter(self, event)
 
     def render(self):
         self.cur_state.render(self)
@@ -661,11 +653,27 @@ class TennisAI:
 
         return BehaviorTree.SUCCESS
 
+    def trace_ball(self):
+        self.tx, self.ty = tennis_referee.play_ball.x, tennis_referee.play_ball.y
+
+        self.move_slightly_to(self.tx, self.ty)
+        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 1.0):
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.RUNNING
+
+    def is_play_ball_exist(self):
+        if tennis_referee.play_ball:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
     def build_behavior_tree(self):
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
         action_set_random_move_target = Action('set random move target', self.set_random_target_location)
         action_move_to = Action('move to', self.move_to)
         action_hit_ball = Action('hit ball', self.hit_ball)
+        action_trace_ball = Action('trace ball', self.trace_ball)
 
         action_idle_state = Action('idle state', self.idle_state)
         action_win = Action('game win', self.game_win)
@@ -673,16 +681,20 @@ class TennisAI:
 
         condition_game_end = Condition('game end?', self.is_game_end)
         condition_game_win = Condition('game win?', self.is_game_win)
+        condition_ball_exist = Condition('play ball exist?', self.is_play_ball_exist)
 
         SEQ_win = Sequence('win', condition_game_win, action_win)
 
         SEL_win_or_lose =  Selector('win or lose', SEQ_win, action_lose)
         SEQ_game_end = Sequence('game end', condition_game_end, SEL_win_or_lose)
-        root = SEL_idle_or_game_end = Selector('idle or game end', SEQ_game_end, action_idle_state)
-
+        SEQ_trace_ball = Sequence('ball exist -> trace ball', condition_ball_exist, action_trace_ball)
 
         SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
+
+        # root = SEL_idle_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEQ_move_to_and_hit)
+        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEQ_trace_ball, action_idle_state)
         self.behavior_tree = BehaviorTree(root)
+
 
 
 def character_default_frame_update(tennis_player):
