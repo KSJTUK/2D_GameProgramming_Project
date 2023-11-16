@@ -611,7 +611,7 @@ class TennisPlayer:
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
-        racket_speed = 60
+        racket_speed = 50
         minimum_hit_power, hit_power_limit, z_power_scale = 20.0, 40.0, 2.0
 
         hit_power_x = hit_dir_x * clamp(minimum_hit_power, percentage_from_canvas_w * racket_speed, hit_power_limit)

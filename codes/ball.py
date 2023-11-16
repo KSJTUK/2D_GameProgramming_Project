@@ -4,7 +4,7 @@ import game_framework
 import game_world
 import sys
 
-from tennis_court import COURT_CENTER_X, COURT_CENTER_Y, COURT_WIDTH, COURT_HEIGHT
+from tennis_court import COURT_CENTER_X, COURT_CENTER_Y, get_court_width, get_court_heights
 import tennis_referee
 
 
@@ -50,6 +50,7 @@ class Ball:
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
             print('remove ball')
+            tennis_referee.ball_in_over_court()
             tennis_referee.remove_ball(self)
             game_world.remove_object(self)
 
@@ -113,10 +114,12 @@ class Ball:
             pass
 
     def is_in_court(self):
-        if self.x > COURT_CENTER_X + COURT_WIDTH // 2: return False
-        if self.x < COURT_CENTER_X - COURT_WIDTH // 2: return False
-        if self.y > COURT_CENTER_Y + COURT_HEIGHT // 2: return False
-        if self.y < COURT_CENTER_Y - COURT_HEIGHT // 2: return False
+        court_width = get_court_width(self.y)
+        court_top_height, court_bottom_height = get_court_heights()
+        if self.x > COURT_CENTER_X + (court_width // 2): return False
+        if self.x < COURT_CENTER_X - (court_width // 2): return False
+        if self.y > COURT_CENTER_Y + court_top_height: return False
+        if self.y < COURT_CENTER_Y - court_bottom_height: return False
 
         return True
 

@@ -1,12 +1,14 @@
 import game_world
+from tennis_court import *
 
 def new_set_start():
-    # global turn
-    # turn = (turn + 1) % 2
+    global turn
+    turn = (turn + 1) % 2
 
     global main_player_score, opponent_player_score
 
     main_player_score, opponent_player_score = 0, 0
+    set_serve_turn()
     new_court_start()
 
 def new_court_start():
@@ -17,6 +19,7 @@ def new_court_start():
         game_world.remove_object(play_ball)
         play_ball = None
 
+def set_serve_turn():
     if turn == 0:
         main_player.state_machine.handle_event(('SERVE_TURN', 0))
         opponent_player.handle_event(('NOT_SERVE_TURN', 0))
@@ -71,7 +74,10 @@ def update():
         return
 
     if play_ball.bound_count == 2:
-        main_player.state_machine.handle_event(('WIN', 0))
+        if last_hit_player is main_player:
+            main_player_win()
+        else:
+            opponent_player_win()
 
 
 def calculate_game_score():
@@ -93,11 +99,34 @@ def calculate_game_score():
 
 def bound_net():
     global is_court_end
+    if is_court_end: return
 
-    if not court_end:
-        last_hit_player.state_machine.handle_event(('LOSE', 0))
-        calculate_game_score()
+    if last_hit_player == main_player:
+        opponent_player_win()
+    else:
+        main_player_win()
 
+    calculate_game_score()
+
+    is_court_end = True
+
+def ball_in_over_court():
+    global play_ball
+    global is_court_end
+    if is_court_end: return
+
+    if play_ball.bound_count == 0:
+        if last_hit_player is main_player:
+            opponent_player_win()
+        else:
+            main_player_win()
+    else:
+        if last_hit_player is main_player:
+            main_player_win()
+        else:
+            opponent_player_win()
+
+    play_ball = None
     is_court_end = True
 
 def bound_over_court():
@@ -110,30 +139,24 @@ def bound_over_court():
     if not play_ball:
         return
 
-    bound_count_over_1 = play_ball.bound_count > 1
-
-    if bound_count_over_1:
+    if play_ball.bound_count > 1:
         if last_hit_player is main_player:
-            win_player, lose_player = main_player, opponent_player
+            main_player_win()
         else:
-            win_player, lose_player = opponent_player, main_player
+            opponent_player_win()
     else:
         if last_hit_player is main_player:
-            win_player, lose_player = opponent_player, main_player
+            opponent_player_win()
         else:
-            win_player, lose_player = main_player, opponent_player
-    court_end()
+            main_player_win()
 
-def court_end():
-    global is_court_end, win_player, lose_player
-    if is_court_end: return
-
-    if win_player is main_player:
-        win_player.state_machine.handle_event(('WIN', 0))
-        lose_player.handle_event(('LOSE', 0))
-    else:
-        win_player.handle_event(('WIN', 0))
-        lose_player.state_machine.handle_event(('LOSE', 0))
     calculate_game_score()
 
     is_court_end = True
+
+def main_player_win():
+    main_player.state_machine.handle_event(('WIN', 0))
+    opponent_player.handle_event(('LOSE', 0))
+def opponent_player_win():
+    opponent_player.handle_event(('WIN', 0))
+    main_player.state_machine.handle_event(('LOSE', 0))
