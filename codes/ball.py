@@ -84,12 +84,15 @@ class Ball:
             tennis_referee.bound_over_court()
 
     def render(self):
+        # 그림자는 크기가 y값에 따라 감소 하고 z값에 따라 증가함
+        shadow_scale = 1.0 + self.z *  game_framework.SCALE_PER_Z_PIXEL - self.y * game_framework.SCALE_PER_Y_PIXEL
+        scale = 1.0 - self.z * game_framework.SCALE_PER_Z_PIXEL - self.y * game_framework.SCALE_PER_Y_PIXEL
         Ball.shadow_image.clip_composite_draw(0, 0, 128, 30,
                                               0, '', self.x, self.shadow_y,
-                                              self.width, self.height)
+                                              self.width * shadow_scale, self.height * shadow_scale)
         Ball.image.clip_composite_draw(0, 0, 128, 128,
                                        0, '', self.x, self.y,
-                                       self.width, self.height)
+                                       self.width * scale, self.height * scale)
         # 디버그용
         pico2d.draw_rectangle(*self.get_bounding_box())
 

@@ -31,18 +31,18 @@ micky_animation = {
         'start_x': 223, 'start_y': 283, 'frame_widths': [36, 57, 46, 39, 32], 'frame_height': 31, 'time_per_action': 0.5
     },
     'Hit_left_back': {
-        'start_x': 0, 'start_y': 318, 'frame_widths': [23, 39, 20, 28, 20], 'frame_height': 34, 'time_per_action': 0.5
+        'start_x': 0, 'start_y': 318, 'frame_widths': [23, 39, 20, 28, 20], 'frame_height': 34, 'time_per_action': 0.25
     },
     'Hit_left_front': {
         'start_x': 223, 'start_y': 318, 'frame_widths': [23, 39, 20, 28, 20], 'frame_height': 34,
-        'time_per_action': 0.5
+        'time_per_action': 0.25
     },
     'Hit_right_back': {
-        'start_x': 0, 'start_y': 359, 'frame_widths': [28, 42, 19, 34, 23], 'frame_height': 33, 'time_per_action': 0.5
+        'start_x': 0, 'start_y': 359, 'frame_widths': [28, 42, 19, 34, 23], 'frame_height': 33, 'time_per_action': 0.25
     },
     'Hit_right_front': {
         'start_x': 223, 'start_y': 359, 'frame_widths': [27, 42, 19, 36, 24], 'frame_height': 33,
-        'time_per_action': 0.5
+        'time_per_action': 0.25
     },
     'Run_back': {
         'start_x': 0, 'start_y': 642, 'frame_widths': [25, 27, 21, 28, 21, 27], 'frame_height': 32,

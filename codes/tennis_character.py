@@ -549,7 +549,7 @@ class TennisPlayer:
         self.frame = 0.0  # 캐릭터 애니메이션 프레임
         self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
-        self.character_height = 1.6  # 캐릭터 크기
+        self.character_height = 1.4  # 캐릭터 크기
 
         self.z = 0
 
@@ -612,7 +612,7 @@ class TennisPlayer:
 
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
-        # 최대 파워를 40으로 설정
+        # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
         minimum_hit_power, hit_power_limit, z_power_scale = 20.0, 40.0, 2.0
 
@@ -660,7 +660,7 @@ def character_default_draw_animation(tennis_player):
     width, height = (tennis_player.animation_information['frame_widths'][int(tennis_player.frame)],
                      tennis_player.animation_information['frame_height'])
 
-    scale = 1.0 - tennis_player.y / 100.0 * 0.01
+    scale = 1.0 - tennis_player.y * game_framework.SCALE_PER_Y_PIXEL
     # 캐릭터 크기는 고정값인 높이만 정하고 종횡비를 구해서 곱해주는 방식으로 너비를 구함
     # 캐릭터의 크기가 애니메이션마다 달라지는 것을 방지하기 위해 
     # 기준 애니메이션을 정하고 기준과 현재 애니메이션 간의 비율을 계산해서 곱해주는 방식으로 최종 높이를 구함

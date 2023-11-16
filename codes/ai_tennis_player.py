@@ -473,7 +473,7 @@ class TennisAI:
         self.animation_end = False
         self.frame = 0.0
         self.frame_start_x = 0
-        self.character_height = 1.6
+        self.character_height = 1.4
 
         self.cur_state.enter(self, ('NONE', 0))
         self.animation_information = micky_animation[self.cur_animation]
@@ -536,7 +536,7 @@ class TennisAI:
         percentage_from_canvas_h = dist_from_center_y / (canvas_height // 2)
 
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
-        # 최대 파워를 40으로 설정
+        # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
         hit_power_limit, z_power_scale = 40.0, 2.0
         rand_speed_range = 20, 80
@@ -687,7 +687,7 @@ class TennisAI:
         else:
             return BehaviorTree.FAIL
 
-    def is_nearby_ball(self, r=1.0):
+    def is_nearby_ball(self, r=0.75):
         tx, ty = tennis_referee.play_ball.x, tennis_referee.play_ball.shadow_y
         if self.pixel_distance_less_than(tx, self.x, ty, self.y, r):
             return BehaviorTree.SUCCESS
@@ -751,7 +751,7 @@ def character_default_draw_animation(tennis_player):
     width, height = (tennis_player.animation_information['frame_widths'][int(tennis_player.frame)],
                      tennis_player.animation_information['frame_height'])
 
-    scale = 1.0 - tennis_player.y / 100.0 * 0.01
+    scale = 1.0 - tennis_player.y * game_framework.SCALE_PER_Y_PIXEL
 
     aspect = width / height
     h = height / tennis_player.defualt_height

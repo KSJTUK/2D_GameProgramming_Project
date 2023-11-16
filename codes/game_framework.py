@@ -7,6 +7,11 @@ PIXEL_PER_METER = 10.0 / 0.2
 CANVAS_W, CANVAS_H = 1280, 800
 ASPECT = CANVAS_W / CANVAS_H
 
+# 몇 픽셀당 사이즈를 몇 퍼센트 만큼 줄일 것인지 설정
+# y 100픽셀당 2퍼센트 씩 줄임
+SCALE_PER_Y_PIXEL = (2.0 / 100.0) / 100.0
+SCALE_PER_Z_PIXEL = (0.5 / 100.0) / 100.0
+
 
 def change_mode(mode):
     global stack
