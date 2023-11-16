@@ -554,9 +554,10 @@ class TennisAI:
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
     def hit_ball(self):
-        self.face_y = '_front'
         if self.cur_state != Hit:
             self.cur_state = Hit
+            self.face_y = '_front'
+            self.face_x = '_right' if tennis_referee.play_ball.x < self.x else '_left'
             self.cur_animation = 'Hit' + self.face_y
             self.cur_state.enter(self, ('NONE', 0))
 
@@ -577,7 +578,7 @@ class TennisAI:
 
     def pixel_distance_less_than(self, x1, x2, y1, y2, pixel_dist):
         distance2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
-        return distance2 < (pixel_dist ** 2)
+        return distance2 < (pixel_dist * game_framework.PIXEL_PER_METER) ** 2
 
 
     def move_slightly_to(self, tx, ty):
@@ -588,7 +589,7 @@ class TennisAI:
 
     def move_to(self, r=0.5):
         self.move_slightly_to(self.tx, self.ty)
-        if self.pixel_distance_less_than(self.tx, self.x, self.ty, self.y, r * game_framework.PIXEL_PER_METER):
+        if self.pixel_distance_less_than(self.tx, self.x, self.ty, self.y, r):
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
@@ -599,9 +600,6 @@ class TennisAI:
             self.cur_animation = 'Idle_front'
             self.cur_state.enter()
         return BehaviorTree.SUCCESS
-
-    def is_nearby_ball(self):
-        pass
 
     def set_move_target_location(self, target_x=None, target_y=None):
         if not target_x or not target_y:
@@ -664,7 +662,7 @@ class TennisAI:
             self.cur_state.enter(self, ('NONE', 0))
 
         self.move_slightly_to(self.tx, self.ty)
-        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 1.0):
+        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 2.0):
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
@@ -681,7 +679,15 @@ class TennisAI:
         else:
             return BehaviorTree.FAIL
 
+    def is_nearby_ball(self, r=0.5):
+        tx, ty = tennis_referee.play_ball.x, tennis_referee.play_ball.shadow_y
+        if self.pixel_distance_less_than(tx, self.x, ty, self.y, r):
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
     def build_behavior_tree(self):
+        # action node part
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
         action_set_random_move_target = Action('set random move target', self.set_random_target_location)
         action_move_to = Action('move to', self.move_to)
@@ -692,22 +698,25 @@ class TennisAI:
         action_win = Action('game win', self.game_win)
         action_lose = Action('game lose', self.game_lose)
 
+        # condition node part
         condition_game_end = Condition('game end?', self.is_game_end)
         condition_game_win = Condition('game win?', self.is_game_win)
         condition_ball_exist = Condition('play ball exist?', self.is_play_ball_exist)
         condition_ball_in_my_area = Condition('play ball in my court area?', self.is_play_ball_in_my_area)
+        condition_is_nearby_ball = Condition('nearby ball?', self.is_nearby_ball)
 
+        # SEQ, SEL tree part
         SEQ_win = Sequence('win', condition_game_win, action_win)
-
         SEL_win_or_lose =  Selector('win or lose', SEQ_win, action_lose)
         SEQ_game_end = Sequence('game end', condition_game_end, SEL_win_or_lose)
         SEQ_trace_ball = Sequence('ball exist and in my area-> trace ball',
                                   condition_ball_exist, condition_ball_in_my_area, action_trace_ball)
-
+        SEQ_near_ball_hit = Sequence('near ball hit', condition_ball_exist, condition_is_nearby_ball, action_hit_ball)
+        SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEQ_trace_ball)
         SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
 
         # root = SEL_idle_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEQ_move_to_and_hit)
-        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEQ_trace_ball, action_idle_state)
+        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEL_trace_or_hit_ball, action_idle_state)
         self.behavior_tree = BehaviorTree(root)
 
 
