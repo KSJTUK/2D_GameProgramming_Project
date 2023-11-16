@@ -36,6 +36,7 @@ class Ball:
             Ball.shadow_image = load_image('./../resources/ball_shadow.png')
 
     def hit_ball(self, power_x, power_y, power_z):
+        self.bound_count = 0
         self.move_speed_x, self.move_speed_y, self.move_speed_z = power_x, power_y, power_z
 
     def update(self):

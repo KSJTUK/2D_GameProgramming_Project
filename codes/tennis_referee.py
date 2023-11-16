@@ -25,8 +25,10 @@ def new_court_start():
         opponent_player.handle_event(('SERVE_TURN', 0))
 
 def serve_turn_player_hit_serve():
+    game_world.add_collision_pair('tennis_player:ball', main_player, play_ball)
+    game_world.add_collision_pair('tennis_player:ball', opponent_player, None)
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
-    # opponent_player.state_machine.handle_event(('NEW_COURT_START', 0))
+    opponent_player.handle_event(('NEW_COURT_START', 0))
 
 def set_refree():
     global play_ball, main_player, opponent_player, last_hit_player, turn

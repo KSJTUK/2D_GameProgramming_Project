@@ -219,11 +219,9 @@ class HighHit:
             game_world.remove_collision_object(other)
             game_world.remove_collision_object(tennis_player)
 
-            game_world.add_collision_pair('tennis_player:ball', tennis_player, other)
-            tennis_player.hit_ball(other)
 
             tennis_referee.serve_turn_player_hit_serve()
-
+            tennis_player.hit_ball(other)
 
 class PreparingServe:
     @staticmethod
@@ -628,7 +626,7 @@ class TennisPlayer:
         return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
-        return self.z, self.z + self.height // 2
+        return self.z, self.z + self.height
 
     def handle_collision(self, groub, other):
         self.state_machine.handle_collision(groub, other)

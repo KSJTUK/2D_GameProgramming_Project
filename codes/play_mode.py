@@ -52,7 +52,6 @@ def init():
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
     test_opponent_player = TennisAI(800, 600)
     game_world.add_object(test_opponent_player, 1)
-    game_world.add_collision_pair('tennis_player:ball', test_opponent_player, None)
 
     tennis_referee.subscribe_player('main_player', tennis_player)
     tennis_referee.subscribe_player('opponent_player', test_opponent_player)

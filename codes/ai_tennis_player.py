@@ -229,7 +229,7 @@ class HighHit:
             game_world.remove_collision_object(tennis_player)
 
             game_world.add_collision_pair('tennis_player:ball', tennis_player, other)
-            tennis_player.hit_ball(other)
+            tennis_player.handle_collision_with_ball(other)
 
             tennis_referee.serve_turn_player_hit_serve()
 
@@ -344,7 +344,7 @@ class Diving:
     @staticmethod
     def handle_collision(tennis_player, groub, other):
         if groub == 'tennis_player:ball':
-            tennis_player.hit_ball(other)
+            tennis_player.handle_collision_with_ball(other)
 
 
 class Hit:
@@ -352,11 +352,6 @@ class Hit:
     def enter(tennis_player, event):
         tennis_player.animation_end = False
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
-        # 지금은 Run 상태에서의 캐릭터의 방향을 따라가지만 나중에는 공의 위치에 따라 변경해야함
-        # 공의 움직임 구현할 때 같이 구현 할것
-        tennis_player.cur_animation = 'Hit' + tennis_player.face_x if tennis_player.face_x != '' else 'Hit_right'
-        tennis_player.cur_animation = tennis_player.cur_animation + tennis_player.face_y if tennis_player.face_y != '' else tennis_player.cur_animation + '_back'
-
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
         tennis_player.frame = 0
@@ -393,7 +388,7 @@ class Hit:
     @staticmethod
     def handle_collision(tennis_player, groub, other):
         if groub == 'tennis_player:ball':
-            tennis_player.hit_ball(other)
+            tennis_player.handle_collision_with_ball(other)
 
 
 class Run:
@@ -558,7 +553,7 @@ class TennisAI:
             self.cur_state = Hit
             self.face_y = '_front'
             self.face_x = '_right' if tennis_referee.play_ball.x < self.x else '_left'
-            self.cur_animation = 'Hit' + self.face_y
+            self.cur_animation = 'Hit' + self.face_x + self.face_y
             self.cur_state.enter(self, ('NONE', 0))
 
         if self.animation_end:
@@ -571,7 +566,7 @@ class TennisAI:
         return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
-        return self.z, self.z + self.height // 2
+        return self.z, self.z + self.height
 
     def handle_collision(self, groub, other):
         self.cur_state.handle_collision(self, groub, other)
@@ -598,7 +593,7 @@ class TennisAI:
         if self.cur_state != Idle:
             self.cur_state = Idle
             self.cur_animation = 'Idle_front'
-            self.cur_state.enter()
+            self.cur_state.enter(self, ('None', 0))
         return BehaviorTree.SUCCESS
 
     def set_move_target_location(self, target_x=None, target_y=None):
@@ -662,7 +657,7 @@ class TennisAI:
             self.cur_state.enter(self, ('NONE', 0))
 
         self.move_slightly_to(self.tx, self.ty)
-        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 2.0):
+        if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 1.0):
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
@@ -674,12 +669,12 @@ class TennisAI:
             return BehaviorTree.FAIL
 
     def is_play_ball_in_my_area(self):
-        if tennis_referee.play_ball.y >= COURT_CENTER_Y:
+        if tennis_referee.play_ball.shadow_y >= COURT_CENTER_Y + 3.0 * game_framework.PIXEL_PER_METER:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
 
-    def is_nearby_ball(self, r=0.5):
+    def is_nearby_ball(self, r=1.0):
         tx, ty = tennis_referee.play_ball.x, tennis_referee.play_ball.shadow_y
         if self.pixel_distance_less_than(tx, self.x, ty, self.y, r):
             return BehaviorTree.SUCCESS
