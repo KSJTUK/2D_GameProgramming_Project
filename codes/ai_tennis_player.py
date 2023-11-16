@@ -655,6 +655,13 @@ class TennisAI:
 
     def trace_ball(self):
         self.tx, self.ty = tennis_referee.play_ball.x, tennis_referee.play_ball.y
+        face_x = '_right' if self.tx > self.x else '_left'
+        face_y = '_back' if self.ty > self.y else '_front'
+        if face_x != self.face_x or face_y != self.face_y or self.cur_state != Run:
+            self.face_x, self.face_y = face_x, face_y
+            self.cur_state = Run
+            self.cur_animation = 'Run' + self.face_x + self.face_y
+            self.cur_state.enter(self, ('NONE', 0))
 
         self.move_slightly_to(self.tx, self.ty)
         if self.pixel_distance_less_than(self.tx, self.ty, self.x, self.y, 1.0):
