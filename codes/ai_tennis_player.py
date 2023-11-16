@@ -1,10 +1,9 @@
-import pico2d
 import random
 
 import game_world
 from animation_info import *
 from ball import Ball
-from pico2d import load_image
+from pico2d import load_image, clamp, draw_rectangle
 from math import pi, radians, sin, cos, atan2
 from behavior_tree import *
 
@@ -479,6 +478,7 @@ class TennisAI:
         self.animation_information = micky_animation[self.cur_animation]
 
         self.tennis_game_state = 'RUNNING'  # RUNNING, WIN, LOSE
+        self.random_power_range = 100.0
 
         self.z = 0
 
@@ -530,20 +530,25 @@ class TennisAI:
         if groub == 'tennis_player:ball':
             game_world.add_collision_pair('ball:net', ball, None)
 
+    def decide_random_hit_power_range(self):
+        pass
+
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
-        percentage_from_canvas_h = dist_from_center_y / (canvas_height // 2)
+        if abs(dist_from_center_x) < 1.0: dist_from_center_x = 1.0
+        percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
+        percentage_from_canvas_h = abs(dist_from_center_y / (canvas_height // 2))
 
-        hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
+        hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
-        hit_power_limit, z_power_scale = 40.0, 2.0
-        rand_speed_range = 20, 80
+        minimum_hit_power, hit_power_limit, z_power_scale = 10.0, 40.0, 2.0
+        random_speed = random.randint(-100, 100)
+        hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
-        hit_power_x = hit_dir_x * min(abs(random.randint(*rand_speed_range) * (1.0 / (dist_from_center_x / 2.0))),
-                                      hit_power_limit)
-        hit_power_y = percentage_from_canvas_h * racket_speed
+        hit_power_x = hit_dir_x * clamp(minimum_hit_power, abs(percentage_from_canvas_w * random_speed), hit_power_limit)
+        hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
         return hit_power_x, hit_power_y, hit_power_z
 
@@ -763,4 +768,4 @@ def character_default_draw_animation(tennis_player):
                                             tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
 
     # 디버그용
-    pico2d.draw_rectangle(*tennis_player.get_bounding_box())
+    draw_rectangle(*tennis_player.get_bounding_box())

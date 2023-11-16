@@ -1,11 +1,10 @@
-import pico2d
 import random
 
 import game_world
 from animation_info import *
 from check_event_funtions import *
 from ball import Ball
-from pico2d import load_image, clamp
+from pico2d import load_image, clamp, draw_rectangle
 from math import pi, radians, sin, cos
 
 import game_framework
@@ -604,7 +603,6 @@ class TennisPlayer:
             game_world.add_collision_pair('ball:net', ball, None)
 
     def calc_hit_power(self):
-        left_down, right_down = is_left_arrow_downed(), is_right_arrow_downed()
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
         percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
@@ -674,4 +672,4 @@ def character_default_draw_animation(tennis_player):
                                             tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
 
     # 디버그용
-    pico2d.draw_rectangle(*tennis_player.get_bounding_box())
+    draw_rectangle(*tennis_player.get_bounding_box())
