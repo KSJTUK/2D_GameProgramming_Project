@@ -10,6 +10,7 @@ from tennis_net import TennisNet, Wall
 # test
 from ball import Ball
 import tennis_referee
+from ai_tennis_player import TennisAI
 
 
 def handle_events():
@@ -49,7 +50,7 @@ def init():
     tennis_player = TennisPlayer()
     game_world.add_object(tennis_player, 1)
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
-    test_opponent_player = TennisPlayer(800, 600)
+    test_opponent_player = TennisAI(800, 600)
     game_world.add_object(test_opponent_player, 1)
     game_world.add_collision_pair('tennis_player:ball', test_opponent_player, None)
 

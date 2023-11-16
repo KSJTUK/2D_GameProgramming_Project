@@ -19,10 +19,10 @@ def new_court_start():
 
     if turn == 0:
         main_player.state_machine.handle_event(('SERVE_TURN', 0))
-        opponent_player.state_machine.handle_event(('NOT_SERVE_TURN', 0))
+        opponent_player.handle_event(('NOT_SERVE_TURN', 0))
     else:
         main_player.state_machine.handle_event(('NOT_SERVE_TURN', 0))
-        opponent_player.state_machine.handle_event(('SERVE_TURN', 0))
+        opponent_player.handle_event(('SERVE_TURN', 0))
 
 def serve_turn_player_hit_serve():
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
