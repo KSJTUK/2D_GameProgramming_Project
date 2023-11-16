@@ -675,6 +675,12 @@ class TennisAI:
         else:
             return BehaviorTree.FAIL
 
+    def is_play_ball_in_my_area(self):
+        if tennis_referee.play_ball.y >= COURT_CENTER_Y:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
     def build_behavior_tree(self):
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
         action_set_random_move_target = Action('set random move target', self.set_random_target_location)
@@ -689,12 +695,14 @@ class TennisAI:
         condition_game_end = Condition('game end?', self.is_game_end)
         condition_game_win = Condition('game win?', self.is_game_win)
         condition_ball_exist = Condition('play ball exist?', self.is_play_ball_exist)
+        condition_ball_in_my_area = Condition('play ball in my court area?', self.is_play_ball_in_my_area)
 
         SEQ_win = Sequence('win', condition_game_win, action_win)
 
         SEL_win_or_lose =  Selector('win or lose', SEQ_win, action_lose)
         SEQ_game_end = Sequence('game end', condition_game_end, SEL_win_or_lose)
-        SEQ_trace_ball = Sequence('ball exist -> trace ball', condition_ball_exist, action_trace_ball)
+        SEQ_trace_ball = Sequence('ball exist and in my area-> trace ball',
+                                  condition_ball_exist, condition_ball_in_my_area, action_trace_ball)
 
         SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
 
