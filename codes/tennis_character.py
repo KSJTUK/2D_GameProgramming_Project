@@ -538,7 +538,7 @@ class TennisPlayerStateMachine:
 class TennisPlayer:
     image = None
 
-    def __init__(self, init_x=400, init_y=100):
+    def __init__(self, init_x=100, init_y=100):
         if TennisPlayer.image == None:
             TennisPlayer.image = load_image('./../resources/tennis_character_micki.png')
 
@@ -548,7 +548,7 @@ class TennisPlayer:
         self.frame = 0.0  # 캐릭터 애니메이션 프레임
         self.frame_start_x = 0  # png파일에서의 캐릭터 애니메이션 시작좌표
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
-        self.character_height = 1.4  # 캐릭터 크기
+        self.character_height = 1.4 * game_framework.RATIO_FROM_DEFAULT_H  # 캐릭터 크기
 
         self.z = 0
 

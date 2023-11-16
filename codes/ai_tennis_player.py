@@ -472,7 +472,7 @@ class TennisAI:
         self.animation_end = False
         self.frame = 0.0
         self.frame_start_x = 0
-        self.character_height = 1.4
+        self.character_height = 1.4 * game_framework.RATIO_FROM_DEFAULT_H
 
         self.cur_state.enter(self, ('NONE', 0))
         self.animation_information = micky_animation[self.cur_animation]

@@ -52,7 +52,7 @@ class TennisNet:
 
     def handle_collision(self, groub, other):
         if groub == 'ball:net' and other.last_check_collision_groub != 'ball:net':
-            ball_move_dir_y = other.move_speed_y / abs(other.move_speed_y)
+            # ball_move_dir_y = other.move_speed_y / abs(other.move_speed_y)
 
             bound_coefficient = 2.0
             after_bounding_speeds = (other.move_speed_x / bound_coefficient,

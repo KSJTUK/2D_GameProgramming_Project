@@ -1,5 +1,6 @@
 import game_world
-from tennis_court import *
+import game_framework
+import tennis_court
 
 def new_set_start():
     global turn
@@ -18,6 +19,21 @@ def new_court_start():
     if play_ball:
         game_world.remove_object(play_ball)
         play_ball = None
+
+    tennis_players_position_reset()
+
+
+def tennis_players_position_reset():
+    characters_default_diff_y = 40 * game_framework.RATIO_FROM_DEFAULT_H
+    characters_default_diff_x = 100 * game_framework.RATIO_FROM_DEFAULT_W
+    court_top = tennis_court.COURT_CENTER_Y + tennis_court.COURT_TOP_HEIGHT
+    court_bottom = tennis_court.COURT_CENTER_Y - tennis_court.COURT_BOTTOM_HEIGHT
+
+    main_player.x = tennis_court.COURT_CENTER_X - characters_default_diff_x
+    main_player.y = court_bottom - characters_default_diff_y
+    opponent_player.x = tennis_court.COURT_CENTER_X + characters_default_diff_x
+    opponent_player.y = court_top + characters_default_diff_y
+
 
 def set_serve_turn():
     if turn == 0:
@@ -70,6 +86,10 @@ def remove_ball(ball):
         play_ball = None
 
 def update():
+    global is_court_end
+
+    if is_court_end: return
+
     if play_ball == None or main_player == None:
         return
 
@@ -78,6 +98,8 @@ def update():
             main_player_win()
         else:
             opponent_player_win()
+        calculate_game_score()
+        is_game_end = True
 
 
 def calculate_game_score():

@@ -4,7 +4,7 @@ from random import randint
 import game_framework
 
 import game_world
-from tennis_court import TennisCourt
+import tennis_court
 from tennis_character import TennisPlayer
 from tennis_net import TennisNet, Wall
 # test
@@ -39,35 +39,25 @@ def test_throw_ball(x, y, speed_x, speed_y, speed_z):
 def init():
     global court
     global tennis_player
+    running = True
+    court = tennis_court.TennisCourt(0)
+    game_world.add_object(court, 0)
 
     tennis_referee.set_refree()
 
-    running = True
+    characters_default_diff_y = 40 * game_framework.RATIO_FROM_DEFAULT_H
+    characters_default_diff_x = 100 * game_framework.RATIO_FROM_DEFAULT_W
+    court_top = tennis_court.COURT_CENTER_Y + tennis_court.COURT_TOP_HEIGHT
+    court_bottom = tennis_court.COURT_CENTER_Y - tennis_court.COURT_BOTTOM_HEIGHT
 
-    court = TennisCourt(0)
-    game_world.add_object(court, 0)
-
-    tennis_player = TennisPlayer()
+    tennis_player = TennisPlayer(tennis_court.COURT_CENTER_X - characters_default_diff_x, court_bottom - characters_default_diff_y)
     game_world.add_object(tennis_player, 1)
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
-    test_opponent_player = TennisAI(800, 600)
+    test_opponent_player = TennisAI(tennis_court.COURT_CENTER_X + characters_default_diff_x, court_top + characters_default_diff_y)
     game_world.add_object(test_opponent_player, 1)
 
     tennis_referee.subscribe_player('main_player', tennis_player)
     tennis_referee.subscribe_player('opponent_player', test_opponent_player)
-
-    # # 반대방향 테스트용 공
-    # test_ball = Ball(800, 600, 0, -30, -10, 50)
-    # game_world.add_object(test_ball, 1)
-    # game_world.add_collision_pair('tennis_player:ball', None, test_ball)
-    #
-    # # 심판 모듈 테스트
-    # tennis_referee.subscribe_ball(test_ball)
-
-    # # 테스트용 벽
-    # wall = Wall()
-    # game_world.add_object(wall, 3)
-    # game_world.add_collision_pair('ball:wall', None, wall)
 
     net = TennisNet()
     game_world.add_object(net, 1)
