@@ -201,7 +201,7 @@ class HighHit:
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
         if abs(delta_frame) >= tennis_player.frame_per_action - 1:
             tennis_player.frame_start_x = tennis_player.animation_information['start_x']
-            tennis_player.state_machine.handle_event(('ANIMATION_END', 0))
+            tennis_player.animation_end = True
         # 아니라면 계속 업데이트
         elif delta_frame == 1:
             tennis_player.frame_start_x += tennis_player.animation_information['frame_widths'][
@@ -280,7 +280,6 @@ class PreparingServe:
     def handle_collision(tennis_player, groub, other):
         game_world.remove_object(other)
         game_world.remove_collision_object(tennis_player)
-        tennis_player.state_machine.handle_event((groub, 0))
 
 
 class Diving:
@@ -484,6 +483,8 @@ class TennisAI:
         self.frame_start_x = 0
         self.character_height = 1.6
 
+        self.tennis_game_state = 'RUNNING' # RUNNING, WIN, LOSE
+
         self.z = 0
 
         self.width, self.height = 0, 0
@@ -505,15 +506,19 @@ class TennisAI:
 
     def handle_event(self, event):
         if event[0] == 'WIN':
+            self.tennis_game_state = 'WIN'
             self.cur_animation = 'Win_front'
             self.cur_state.enter(self, event)
         if event[0] == 'LOSE':
+            self.tennis_game_state = 'LOSE'
             self.cur_animation = 'Lose_front'
             self.cur_state.enter(self, event)
         if event[0] == 'SERVE_TURN':
+            self.tennis_game_state = 'RUNNING'
             self.cur_animation = 'Ready_front'
             self.cur_state.enter(self, event)
         if event[0] == 'NOT_SERVE_TURN':
+            self.tennis_game_state = 'RUNNING'
             self.cur_animation = 'Ready_front'
             self.cur_state.enter(self, event)
 
@@ -576,7 +581,7 @@ class TennisAI:
         return self.z, self.z + self.height // 2
 
     def handle_collision(self, groub, other):
-        self.cur_state.handle_collision(groub, other)
+        self.cur_state.handle_collision(self, groub, other)
 
     def pixel_distance_less_than(self, x1, x2, y1, y2, pixel_dist):
         distance2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
@@ -626,6 +631,36 @@ class TennisAI:
         self.cur_state.enter(self, ('NONE', 0))
         return BehaviorTree.SUCCESS
 
+    def is_game_end(self):
+        if self.tennis_game_state != 'RUNNING':
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def is_game_win(self):
+        if self.tennis_game_state == 'WIN':
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def game_win(self):
+        if self.cur_state != Win:
+            self.cur_state = Win
+            self.cur_animation = 'Win_front'
+            self.cur_state.enter(self, ('NONE', 0))
+            self.face_y = '_front'
+
+        return BehaviorTree.SUCCESS
+
+    def game_lose(self):
+        if self.cur_state != Lose:
+            self.cur_state = Lose
+            self.cur_animation = 'Lose_front'
+            self.cur_state.enter(self, ('NONE', 0))
+            self.face_y = '_front'
+
+        return BehaviorTree.SUCCESS
+
     def build_behavior_tree(self):
         action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
         action_set_random_move_target = Action('set random move target', self.set_random_target_location)
@@ -633,8 +668,20 @@ class TennisAI:
         action_hit_ball = Action('hit ball', self.hit_ball)
 
         action_idle_state = Action('idle state', self.idle_state)
+        action_win = Action('game win', self.game_win)
+        action_lose = Action('game lose', self.game_lose)
 
-        root = SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
+        condition_game_end = Condition('game end?', self.is_game_end)
+        condition_game_win = Condition('game win?', self.is_game_win)
+
+        SEQ_win = Sequence('win', condition_game_win, action_win)
+
+        SEL_win_or_lose =  Selector('win or lose', SEQ_win, action_lose)
+        SEQ_game_end = Sequence('game end', condition_game_end, SEL_win_or_lose)
+        root = SEL_idle_or_game_end = Selector('idle or game end', SEQ_game_end, action_idle_state)
+
+
+        SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
         self.behavior_tree = BehaviorTree(root)
 
 
