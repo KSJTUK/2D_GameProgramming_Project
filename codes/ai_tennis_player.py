@@ -12,9 +12,10 @@ import game_framework
 import tennis_referee
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y
 
-RUN_SPEED_KMPH = 25.0
+RUN_SPEED_KMPH = 60.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
+
 
 class Win:
     @staticmethod
@@ -107,6 +108,7 @@ class Lose:
     def handle_collision(tennis_player, groub, other):
         pass
 
+
 class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
@@ -137,6 +139,7 @@ class ReadyInNotServeTurn:
     @staticmethod
     def handle_collision(tennis_player, groub, other):
         pass
+
 
 class Ready:
     @staticmethod
@@ -455,6 +458,7 @@ class Idle:
     def handle_collision(tennis_player, groub, other):
         pass
 
+
 class TennisAI:
     image = None
 
@@ -474,7 +478,7 @@ class TennisAI:
         self.cur_state.enter(self, ('NONE', 0))
         self.animation_information = micky_animation[self.cur_animation]
 
-        self.tennis_game_state = 'RUNNING' # RUNNING, WIN, LOSE
+        self.tennis_game_state = 'RUNNING'  # RUNNING, WIN, LOSE
 
         self.z = 0
 
@@ -529,8 +533,7 @@ class TennisAI:
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
-        percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
-                                                              dist_from_center_y / (canvas_height // 2))
+        percentage_from_canvas_h = dist_from_center_y / (canvas_height // 2)
 
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         # 최대 파워를 40으로 설정
@@ -559,10 +562,16 @@ class TennisAI:
             self.cur_animation = 'Hit' + self.face_x + self.face_y
             self.cur_state.enter(self, ('NONE', 0))
 
+        return BehaviorTree.SUCCESS
+
+    def is_player_in_hit_state(self):
+        if self.cur_state != Hit:
+            return BehaviorTree.FAIL
+
         if self.animation_end:
-            return BehaviorTree.SUCCESS
+            return BehaviorTree.FAIL
         else:
-            return BehaviorTree.RUNNING
+            return BehaviorTree.SUCCESS
 
     def get_bounding_box(self):
         half_width, half_height = self.width / 2, self.height / 2
@@ -577,7 +586,6 @@ class TennisAI:
     def pixel_distance_less_than(self, x1, x2, y1, y2, pixel_dist):
         distance2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
         return distance2 < (pixel_dist * game_framework.PIXEL_PER_METER) ** 2
-
 
     def move_slightly_to(self, tx, ty):
         self.dir = atan2(ty - self.y, tx - self.x)
@@ -611,7 +619,8 @@ class TennisAI:
         return BehaviorTree.SUCCESS
 
     def set_random_target_location(self):
-        self.tx, self.ty = random.randint(100, game_framework.CANVAS_W - 100), random.randint(100, game_framework.CANVAS_H - 100)
+        self.tx, self.ty = random.randint(100, game_framework.CANVAS_W - 100), random.randint(100,
+                                                                                              game_framework.CANVAS_H - 100)
         self.cur_state = Run
         self.face_x = '_right' if self.tx > self.x else '_left'
         self.face_y = '_back' if self.ty > self.y else '_front'
@@ -672,7 +681,8 @@ class TennisAI:
             return BehaviorTree.FAIL
 
     def is_play_ball_in_my_area(self):
-        if tennis_referee.play_ball.shadow_y >= COURT_CENTER_Y + 3.0 * game_framework.PIXEL_PER_METER:
+        detect_range = 2.0  # meter
+        if tennis_referee.play_ball.shadow_y >= COURT_CENTER_Y + detect_range * game_framework.PIXEL_PER_METER:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
@@ -702,21 +712,22 @@ class TennisAI:
         condition_ball_exist = Condition('play ball exist?', self.is_play_ball_exist)
         condition_ball_in_my_area = Condition('play ball in my court area?', self.is_play_ball_in_my_area)
         condition_is_nearby_ball = Condition('nearby ball?', self.is_nearby_ball)
+        condition_is_player_in_hit_state = Condition('hit state(animation) end?', self.is_player_in_hit_state)
 
         # SEQ, SEL tree part
         SEQ_win = Sequence('win', condition_game_win, action_win)
-        SEL_win_or_lose =  Selector('win or lose', SEQ_win, action_lose)
+        SEL_win_or_lose = Selector('win or lose', SEQ_win, action_lose)
         SEQ_game_end = Sequence('game end', condition_game_end, SEL_win_or_lose)
         SEQ_trace_ball = Sequence('ball exist and in my area-> trace ball',
                                   condition_ball_exist, condition_ball_in_my_area, action_trace_ball)
         SEQ_near_ball_hit = Sequence('near ball hit', condition_ball_exist, condition_is_nearby_ball, action_hit_ball)
-        SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEQ_trace_ball)
-        SEQ_move_to_and_hit = Sequence('move and hit', action_set_random_move_target, action_move_to, action_hit_ball)
+        SEQ_keep_running_hit = Sequence('keep running hit', condition_is_player_in_hit_state, action_hit_ball)
+        SEL_keep_running_hit_or_trace = Selector('keep running hit state or trace', SEQ_keep_running_hit, SEQ_trace_ball)
+        SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEL_keep_running_hit_or_trace)
 
-        # root = SEL_idle_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEQ_move_to_and_hit)
-        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit', SEQ_game_end, SEL_trace_or_hit_ball, action_idle_state)
+        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
+                                                     SEQ_game_end, SEL_trace_or_hit_ball, action_idle_state)
         self.behavior_tree = BehaviorTree(root)
-
 
 
 def character_default_frame_update(tennis_player):

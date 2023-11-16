@@ -5,7 +5,7 @@ import game_world
 from animation_info import *
 from check_event_funtions import *
 from ball import Ball
-from pico2d import load_image
+from pico2d import load_image, clamp
 from math import pi, radians, sin, cos
 
 import game_framework
@@ -604,18 +604,20 @@ class TennisPlayer:
             game_world.add_collision_pair('ball:net', ball, None)
 
     def calc_hit_power(self):
+        left_down, right_down = is_left_arrow_downed(), is_right_arrow_downed()
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = COURT_CENTER_X - self.x, COURT_CENTER_Y - self.y
-        percentage_from_canvas_w, percentage_from_canvas_h = (dist_from_center_x / (canvas_width // 2),
-                                                              dist_from_center_y / (canvas_height // 2))
+        percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
+        percentage_from_canvas_h = abs(dist_from_center_y / (canvas_height // 2))
 
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
+        hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최대 파워를 40으로 설정
         racket_speed = 60
-        hit_power_limit, z_power_scale = 40.0, 2.0
+        minimum_hit_power, hit_power_limit, z_power_scale = 20.0, 40.0, 2.0
 
-        hit_power_x = percentage_from_canvas_w * racket_speed
-        hit_power_y = percentage_from_canvas_h * racket_speed
+        hit_power_x = hit_dir_x * clamp(minimum_hit_power, percentage_from_canvas_w * racket_speed, hit_power_limit)
+        hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
         return hit_power_x, hit_power_y, hit_power_z
 
