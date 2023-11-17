@@ -761,6 +761,12 @@ class TennisAI:
         else:
             return BehaviorTree.FAIL
 
+    def is_not_serve_state(self):
+        if self.my_serve_turn:
+            return BehaviorTree.FAIL
+        else:
+            return BehaviorTree.SUCCESS
+
     def is_nearby_ball(self, r=0.75):
         tx, ty = tennis_referee.play_ball.x, tennis_referee.play_ball.shadow_y
         if self.pixel_distance_less_than(tx, self.x, ty, self.y, r):
@@ -791,6 +797,8 @@ class TennisAI:
         condition_is_nearby_ball = Condition('nearby ball?', self.is_nearby_ball)
         condition_is_nearby_serve_ball = Condition('nearby serve ball?', self.serve_ball_nearby)
         condition_is_player_in_hit_state = Condition('hit state(animation) end?', self.is_player_in_hit_state)
+        condition_is_player_not_in_serve_state = Condition('not in serve state?',
+                                                           self.is_not_serve_state)
 
         # SEQ, SEL tree part
         SEQ_win = Sequence('win', condition_game_win, action_win)
@@ -802,13 +810,16 @@ class TennisAI:
         SEQ_keep_running_hit = Sequence('keep running hit', condition_is_player_in_hit_state, action_hit_ball)
         SEL_keep_running_hit_or_trace = Selector('keep running hit state or trace', SEQ_keep_running_hit, SEQ_trace_ball)
         SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEL_keep_running_hit_or_trace)
+        SEQ_trace_or_hit_not_in_serve = Sequence('trace or hit not in serve state',
+                                                 condition_is_player_not_in_serve_state, SEL_trace_or_hit_ball)
 
-        SEQ_hit_serve = Sequence('hit serve ball', condition_is_nearby_serve_ball, action_hit_serve_ball)
+        SEQ_hit_serve = Sequence('hit serve ball',
+                                 condition_is_nearby_serve_ball, action_hit_serve_ball)
         SEQ_throw_ball = Sequence('throw if my serve turn', condition_my_serve_turn, action_throw_serve_ball)
         SEL_throw_or_hit_serve = Selector('throw or serve', SEQ_hit_serve, SEQ_throw_ball)
 
         SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
-                                                     SEQ_game_end, SEL_trace_or_hit_ball, action_idle_state)
+                                                     SEQ_game_end, SEQ_trace_or_hit_not_in_serve, action_idle_state)
         root = SEL_serve_or_ready = Selector('serve or ready', SEL_throw_or_hit_serve, SEL_trace_ball_or_game_end)
         self.behavior_tree = BehaviorTree(root)
 
