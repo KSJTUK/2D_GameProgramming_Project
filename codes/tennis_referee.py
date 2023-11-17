@@ -70,7 +70,7 @@ def set_referee():
     main_player_score, opponent_player_score = 0, 0
     main_player_set_score, opponent_player_set_score = 0, 0
 
-    turn = -1
+    turn = 0
 
 
 def subscribe_player(player_tag, player):

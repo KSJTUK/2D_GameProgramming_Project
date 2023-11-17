@@ -477,6 +477,7 @@ class TennisAI:
         self.cur_state.enter(self, ('NONE', 0))
         self.animation_information = micky_animation[self.cur_animation]
 
+        self.my_serve_turn = False
         self.tennis_game_state = 'RUNNING'  # RUNNING, WIN, LOSE
         self.random_power_range = 60.0
 
@@ -505,9 +506,17 @@ class TennisAI:
         if event[0] == 'LOSE':
             self.tennis_game_state = 'LOSE'
         if event[0] == 'SERVE_TURN':
+            self.to_ready_state()
+            self.my_serve_turn = True
             self.tennis_game_state = 'RUNNING'
         if event[0] == 'NOT_SERVE_TURN':
+            self.to_ready_state()
+            self.my_serve_turn = False
             self.tennis_game_state = 'RUNNING'
+        if event[0] == 'PLAYER_HIT_SERVE':
+            self.my_serve_turn = False
+            self.tennis_game_state = 'RUNNING'
+            self.idle_state()
 
     def render(self):
         self.cur_state.render(self)
@@ -584,8 +593,17 @@ class TennisAI:
 
         return BehaviorTree.SUCCESS
 
+    def serve_ball_throw(self):
+        if self.cur_state != PreparingServe:
+            self.cur_state = PreparingServe
+            self.face_y = '_front'
+            self.cur_animation  = 'Preparing_serve' + self.face_y
+            self.cur_state.enter(self, ('NONE', 0))
+
+        return BehaviorTree.SUCCESS
+
     def is_player_in_hit_state(self):
-        if self.cur_state != Hit:
+        if self.cur_state != Hit and self.cur_state != HighHit:
             return BehaviorTree.FAIL
 
         if self.animation_end:
@@ -620,11 +638,47 @@ class TennisAI:
         else:
             return BehaviorTree.RUNNING
 
+    def to_ready_state(self):
+        if self.cur_state != Ready:
+            self.cur_state = Ready
+            self.cur_animation = 'Ready_front'
+            self.cur_state.enter(self, ('NONE', 0))
+        return BehaviorTree.SUCCESS
+
     def idle_state(self):
         if self.cur_state != Idle:
             self.cur_state = Idle
             self.cur_animation = 'Idle_front'
             self.cur_state.enter(self, ('None', 0))
+        return BehaviorTree.SUCCESS
+
+    def is_my_serve_turn(self):
+        if self.cur_state != Ready:
+            return BehaviorTree.FAIL
+
+        if self.my_serve_turn:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def serve_ball_nearby(self):
+        if not self.my_serve_turn or not tennis_referee.play_ball:
+            return BehaviorTree.FAIL
+
+        detect_range = 1.0
+        ball_x, ball_y = tennis_referee.play_ball.x, tennis_referee.play_ball.y
+        if self.pixel_distance_less_than(ball_x, self.x, ball_y, self.y, detect_range):
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def hit_serve_ball(self):
+        if self.cur_state != HighHit:
+            self.cur_state = HighHit
+            self.face_y = '_front'
+            self.cur_animation = 'High_hit' + self.face_y
+            self.cur_state.enter(self, ('NONE, 0'))
+
         return BehaviorTree.SUCCESS
 
     def set_move_target_location(self, target_x=None, target_y=None):
@@ -725,13 +779,17 @@ class TennisAI:
         action_idle_state = Action('idle state', self.idle_state)
         action_win = Action('game win', self.game_win)
         action_lose = Action('game lose', self.game_lose)
+        action_hit_serve_ball = Action('hit serve ball', self.hit_serve_ball)
+        action_throw_serve_ball = Action('throw ball', self.serve_ball_throw)
 
         # condition node part
+        condition_my_serve_turn = Condition('is my serve turn ?', self.is_my_serve_turn)
         condition_game_end = Condition('game end?', self.is_game_end)
         condition_game_win = Condition('game win?', self.is_game_win)
         condition_ball_exist = Condition('play ball exist?', self.is_play_ball_exist)
         condition_ball_in_my_area = Condition('play ball in my court area?', self.is_play_ball_in_my_area)
         condition_is_nearby_ball = Condition('nearby ball?', self.is_nearby_ball)
+        condition_is_nearby_serve_ball = Condition('nearby serve ball?', self.serve_ball_nearby)
         condition_is_player_in_hit_state = Condition('hit state(animation) end?', self.is_player_in_hit_state)
 
         # SEQ, SEL tree part
@@ -745,8 +803,13 @@ class TennisAI:
         SEL_keep_running_hit_or_trace = Selector('keep running hit state or trace', SEQ_keep_running_hit, SEQ_trace_ball)
         SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEL_keep_running_hit_or_trace)
 
-        root = SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
+        SEQ_hit_serve = Sequence('hit serve ball', condition_is_nearby_serve_ball, action_hit_serve_ball)
+        SEQ_throw_ball = Sequence('throw if my serve turn', condition_my_serve_turn, action_throw_serve_ball)
+        SEL_throw_or_hit_serve = Selector('throw or serve', SEQ_hit_serve, SEQ_throw_ball)
+
+        SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
                                                      SEQ_game_end, SEL_trace_or_hit_ball, action_idle_state)
+        root = SEL_serve_or_ready = Selector('serve or ready', SEL_throw_or_hit_serve, SEL_trace_ball_or_game_end)
         self.behavior_tree = BehaviorTree(root)
 
 
