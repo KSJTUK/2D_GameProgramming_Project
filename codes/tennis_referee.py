@@ -4,14 +4,13 @@ import tennis_court
 
 NEW_COURT_START_TIME = 3.0
 
+
 def new_set_start():
     global turn
     turn = (turn + 1) % 2
 
-    global main_player_score, opponent_player_score
-
-    main_player_score, opponent_player_score = 0, 0
     new_court_start()
+
 
 def new_court_start():
     global is_court_end, play_ball
@@ -45,11 +44,13 @@ def set_serve_turn():
         main_player.state_machine.handle_event(('NOT_SERVE_TURN', 0))
         opponent_player.handle_event(('SERVE_TURN', 0))
 
+
 def serve_turn_player_hit_serve():
     game_world.add_collision_pair('tennis_player:ball', main_player, play_ball)
     game_world.add_collision_pair('tennis_player:ball', opponent_player, None)
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
     opponent_player.handle_event(('NEW_COURT_START', 0))
+
 
 def set_referee():
     global play_ball, main_player, opponent_player, last_hit_player, turn
@@ -71,6 +72,7 @@ def set_referee():
 
     turn = -1
 
+
 def subscribe_player(player_tag, player):
     global main_player, opponent_player
     if player_tag == 'opponent_player':
@@ -78,9 +80,11 @@ def subscribe_player(player_tag, player):
     elif player_tag == 'main_player':
         main_player = player
 
+
 def subscribe_ball(ball):
     global play_ball
     play_ball = ball
+
 
 def remove_ball(ball):
     global play_ball
@@ -88,15 +92,24 @@ def remove_ball(ball):
     if play_ball is ball:
         play_ball = None
 
+
+def calc_new_court_start_time():
+    global court_end_time
+    if court_end_time > NEW_COURT_START_TIME:
+        court_end_time = 0.0
+        if main_player_score >= 45 or opponent_player_score >= 45:
+            new_set_start()
+        else:
+            new_court_start()
+    else:
+        court_end_time += game_framework.frame_time
+
+
 def update():
-    global is_court_end, court_end_time
+    global is_court_end
 
     if is_court_end:
-        if court_end_time > NEW_COURT_START_TIME:
-            court_end_time = 0.0
-            new_court_start()
-        else:
-            court_end_time += game_framework.frame_time
+        calc_new_court_start_time()
         return
 
     if play_ball == None or main_player == None:
@@ -115,18 +128,19 @@ def calculate_game_score():
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
     if win_player is main_player:
-         main_player_score += 15
-         if main_player_score >= 45:
-             main_player_set_score += 1
-             new_set_start()
+        main_player_score += 15
+        if main_player_score >= 45:
+            main_player_set_score += 1
+            main_player_score, opponent_player_score = 0, 0
     else:
         opponent_player_score += 15
         if opponent_player_score >= 45:
             opponent_player_set_score += 1
-            new_set_start()
+            main_player_score, opponent_player_score = 0, 0
 
     print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
     print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')
+
 
 def bound_net():
     global is_court_end
@@ -140,6 +154,7 @@ def bound_net():
     calculate_game_score()
 
     is_court_end = True
+
 
 def ball_in_over_court():
     global play_ball
@@ -159,6 +174,7 @@ def ball_in_over_court():
 
     play_ball = None
     is_court_end = True
+
 
 def bound_over_court():
     global is_court_end, win_player, lose_player
@@ -185,11 +201,14 @@ def bound_over_court():
 
     is_court_end = True
 
+
 def main_player_win():
     global win_player, lose_player, main_player, opponent_player
     win_player, lose_plyer = main_player, opponent_player
     main_player.state_machine.handle_event(('WIN', 0))
     opponent_player.handle_event(('LOSE', 0))
+
+
 def opponent_player_win():
     global win_player, lose_player, main_player, opponent_player
     win_player, lose_plyer = opponent_player, main_player
