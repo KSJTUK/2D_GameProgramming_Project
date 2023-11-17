@@ -11,7 +11,7 @@ import game_framework
 import tennis_referee
 import tennis_court
 
-RUN_SPEED_KMPH = 100.0
+RUN_SPEED_KMPH = 30.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
@@ -478,7 +478,7 @@ class TennisAI:
         self.animation_information = micky_animation[self.cur_animation]
 
         self.tennis_game_state = 'RUNNING'  # RUNNING, WIN, LOSE
-        self.random_power_range = 100.0
+        self.random_power_range = 60.0
 
         self.z = 0
 

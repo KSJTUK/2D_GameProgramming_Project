@@ -2,6 +2,8 @@ import game_world
 import game_framework
 import tennis_court
 
+NEW_COURT_START_TIME = 3.0
+
 def new_set_start():
     global turn
     turn = (turn + 1) % 2
@@ -9,7 +11,6 @@ def new_set_start():
     global main_player_score, opponent_player_score
 
     main_player_score, opponent_player_score = 0, 0
-    set_serve_turn()
     new_court_start()
 
 def new_court_start():
@@ -21,6 +22,7 @@ def new_court_start():
         play_ball = None
 
     tennis_players_position_reset()
+    set_serve_turn()
 
 
 def tennis_players_position_reset():
@@ -49,11 +51,11 @@ def serve_turn_player_hit_serve():
     main_player.state_machine.handle_event(('NEW_COURT_START', 0))
     opponent_player.handle_event(('NEW_COURT_START', 0))
 
-def set_refree():
+def set_referee():
     global play_ball, main_player, opponent_player, last_hit_player, turn
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
-    global is_court_end
+    global is_court_end, court_end_time
     global win_player, lose_player
 
     play_ball = None
@@ -61,12 +63,13 @@ def set_refree():
     opponent_player = None
     last_hit_player = None
     win_player = None
+    court_end_time = 0.0
 
     is_court_end = False
     main_player_score, opponent_player_score = 0, 0
     main_player_set_score, opponent_player_set_score = 0, 0
 
-    turn = 0
+    turn = -1
 
 def subscribe_player(player_tag, player):
     global main_player, opponent_player
@@ -86,9 +89,15 @@ def remove_ball(ball):
         play_ball = None
 
 def update():
-    global is_court_end
+    global is_court_end, court_end_time
 
-    if is_court_end: return
+    if is_court_end:
+        if court_end_time > NEW_COURT_START_TIME:
+            court_end_time = 0.0
+            new_court_start()
+        else:
+            court_end_time += game_framework.frame_time
+        return
 
     if play_ball == None or main_player == None:
         return
@@ -177,8 +186,12 @@ def bound_over_court():
     is_court_end = True
 
 def main_player_win():
+    global win_player, lose_player, main_player, opponent_player
+    win_player, lose_plyer = main_player, opponent_player
     main_player.state_machine.handle_event(('WIN', 0))
     opponent_player.handle_event(('LOSE', 0))
 def opponent_player_win():
+    global win_player, lose_player, main_player, opponent_player
+    win_player, lose_plyer = opponent_player, main_player
     opponent_player.handle_event(('WIN', 0))
     main_player.state_machine.handle_event(('LOSE', 0))

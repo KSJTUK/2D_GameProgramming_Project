@@ -23,9 +23,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
             test_throw_ball(800, 600, randint(-40, 10), randint(-40, -30), randint(40, 50))
         elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
-            tennis_referee.new_set_start()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             tennis_referee.new_court_start()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
+            tennis_referee.new_set_start()
         else:
             tennis_player.handle_event(event)
 
@@ -43,7 +43,7 @@ def init():
     court = tennis_court.TennisCourt(0)
     game_world.add_object(court, 0)
 
-    tennis_referee.set_refree()
+    tennis_referee.set_referee()
 
     characters_default_diff_y = 40 * game_framework.RATIO_FROM_DEFAULT_H
     characters_default_diff_x = 100 * game_framework.RATIO_FROM_DEFAULT_W
@@ -61,7 +61,6 @@ def init():
 
     net = TennisNet()
     game_world.add_object(net, 1)
-    game_world.add_collision_pair('ball:net', None, net)
 
     tennis_referee.new_set_start()
 
