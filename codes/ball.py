@@ -111,7 +111,7 @@ class Ball:
         if groub == 'tennis_player:serve_ball':
             pass
         if groub == 'ball:net':
-            pass
+            tennis_referee.bound_net()
 
     def is_in_court(self):
         court_width = get_court_width(self.y)

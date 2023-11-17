@@ -479,7 +479,7 @@ class Idle:
 class TennisPlayerStateMachine:
     def __init__(self, tennis_player):
         self.tennis_player = tennis_player
-        self.cur_state = Idle
+        self.cur_state = Ready
         self.transition_state_dic = {
             Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
             Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
@@ -618,7 +618,7 @@ class TennisPlayer:
         hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
-        racket_speed = 50
+        racket_speed = 60
         minimum_hit_power, hit_power_limit, z_power_scale = 20.0, 40.0, 2.0
 
         hit_power_x = hit_dir_x * clamp(minimum_hit_power, percentage_from_canvas_w * racket_speed, hit_power_limit)
@@ -627,6 +627,9 @@ class TennisPlayer:
         return hit_power_x, hit_power_y, hit_power_z
 
     def hit_ball(self, ball):
+        if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
+            return
+        
         tennis_referee.last_hit_player = self
 
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()

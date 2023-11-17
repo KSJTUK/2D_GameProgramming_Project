@@ -99,7 +99,7 @@ def update():
         else:
             opponent_player_win()
         calculate_game_score()
-        is_game_end = True
+        is_court_end = True
 
 
 def calculate_game_score():

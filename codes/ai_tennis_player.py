@@ -11,7 +11,7 @@ import game_framework
 import tennis_referee
 import tennis_court
 
-RUN_SPEED_KMPH = 60.0
+RUN_SPEED_KMPH = 100.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
@@ -531,7 +531,14 @@ class TennisAI:
             game_world.add_collision_pair('ball:net', ball, None)
 
     def decide_random_hit_power_range(self):
-        pass
+        court_top = tennis_court.COURT_CENTER_Y + tennis_court.COURT_TOP_HEIGHT
+        court_width = tennis_court.get_court_width(court_top)
+        if self.x > tennis_court.COURT_CENTER_X + court_width // 2:
+            return (-self.random_power_range, -self.random_power_range / 10.0)
+        elif self.x < tennis_court.COURT_CENTER_X - court_width // 2:
+            return (self.random_power_range / 10.0, self.random_power_range)
+        else:
+            return (-self.random_power_range, self.random_power_range)
 
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
@@ -543,8 +550,8 @@ class TennisAI:
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
-        minimum_hit_power, hit_power_limit, z_power_scale = 10.0, 40.0, 2.0
-        random_speed = random.randint(-100, 100)
+        minimum_hit_power, hit_power_limit, z_power_scale = 30.0, 40.0, 2.0
+        random_speed = random.randint(*self.decide_random_hit_power_range())
         hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
         hit_power_x = hit_dir_x * clamp(minimum_hit_power, abs(percentage_from_canvas_w * random_speed), hit_power_limit)
@@ -558,6 +565,9 @@ class TennisAI:
         self.y = clamp(center_y + 0.5 * self.pixel_per_meter, self.y, center_y + 6.0 * self.pixel_per_meter)
 
     def handle_collision_with_ball(self, ball):
+        if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
+            return
+
         tennis_referee.last_hit_player = self
 
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
