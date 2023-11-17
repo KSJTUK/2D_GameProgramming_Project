@@ -234,6 +234,7 @@ class HighHit:
             tennis_player.handle_collision_with_ball(other)
 
             tennis_referee.serve_turn_player_hit_serve()
+            self.my_serve_turn = False
 
 
 class PreparingServe:
@@ -653,7 +654,7 @@ class TennisAI:
         return BehaviorTree.SUCCESS
 
     def is_my_serve_turn(self):
-        if self.cur_state != Ready:
+        if self.cur_state != Ready and self.cur_state != PreparingServe:
             return BehaviorTree.FAIL
 
         if self.my_serve_turn:
@@ -665,7 +666,7 @@ class TennisAI:
         if not self.my_serve_turn or not tennis_referee.play_ball:
             return BehaviorTree.FAIL
 
-        detect_range = 1.0
+        detect_range = 2.5
         ball_x, ball_y = tennis_referee.play_ball.x, tennis_referee.play_ball.y
         if self.pixel_distance_less_than(ball_x, self.x, ball_y, self.y, detect_range):
             return BehaviorTree.SUCCESS
@@ -816,6 +817,7 @@ class TennisAI:
         SEQ_hit_serve = Sequence('hit serve ball',
                                  condition_is_nearby_serve_ball, action_hit_serve_ball)
         SEQ_throw_ball = Sequence('throw if my serve turn', condition_my_serve_turn, action_throw_serve_ball)
+        # SEL_keep_preparing_serve_or_hit = Selector('keep prepare or hit', )
         SEL_throw_or_hit_serve = Selector('throw or serve', SEQ_hit_serve, SEQ_throw_ball)
 
         SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
