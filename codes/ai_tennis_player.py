@@ -234,15 +234,13 @@ class HighHit:
             tennis_player.handle_collision_with_ball(other)
 
             tennis_referee.serve_turn_player_hit_serve()
-            self.my_serve_turn = False
+            tennis_player.my_serve_turn = False
 
 
 class PreparingServe:
     @staticmethod
     def enter(tennis_player, event):
         tennis_player.animation_end = False
-        tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y if tennis_player.face_y != '' else 'Preparing_serve_front'
-
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
         tennis_player.frame = 0
@@ -581,6 +579,7 @@ class TennisAI:
         tennis_referee.last_hit_player = self
 
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
+        if self.cur_state == HighHit: hit_power_x = -abs(hit_power_x)
 
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
@@ -674,6 +673,9 @@ class TennisAI:
             return BehaviorTree.FAIL
 
     def hit_serve_ball(self):
+        if self.cur_state == PreparingServe and not self.animation_end:
+            return BehaviorTree.FAIL
+
         if self.cur_state != HighHit:
             self.cur_state = HighHit
             self.face_y = '_front'
