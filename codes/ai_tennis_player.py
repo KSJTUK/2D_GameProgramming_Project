@@ -562,7 +562,8 @@ class TennisAI:
         random_speed = random.randint(*self.decide_random_hit_power_range())
         hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
-        hit_power_x = hit_dir_x * clamp(minimum_hit_power, abs(percentage_from_canvas_w * random_speed), hit_power_limit)
+        hit_power_x = hit_dir_x * clamp(minimum_hit_power, abs(percentage_from_canvas_w * random_speed),
+                                        hit_power_limit)
         hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
         return hit_power_x, hit_power_y, hit_power_z
@@ -597,7 +598,7 @@ class TennisAI:
         if self.cur_state != PreparingServe:
             self.cur_state = PreparingServe
             self.face_y = '_front'
-            self.cur_animation  = 'Preparing_serve' + self.face_y
+            self.cur_animation = 'Preparing_serve' + self.face_y
             self.cur_state.enter(self, ('NONE', 0))
 
         return BehaviorTree.SUCCESS
@@ -811,7 +812,8 @@ class TennisAI:
                                   condition_ball_exist, condition_ball_in_my_area, action_trace_ball)
         SEQ_near_ball_hit = Sequence('near ball hit', condition_ball_exist, condition_is_nearby_ball, action_hit_ball)
         SEQ_keep_running_hit = Sequence('keep running hit', condition_is_player_in_hit_state, action_hit_ball)
-        SEL_keep_running_hit_or_trace = Selector('keep running hit state or trace', SEQ_keep_running_hit, SEQ_trace_ball)
+        SEL_keep_running_hit_or_trace = Selector('keep running hit state or trace', SEQ_keep_running_hit,
+                                                 SEQ_trace_ball)
         SEL_trace_or_hit_ball = Selector('trace and hit', SEQ_near_ball_hit, SEL_keep_running_hit_or_trace)
         SEQ_trace_or_hit_not_in_serve = Sequence('trace or hit not in serve state',
                                                  condition_is_player_not_in_serve_state, SEL_trace_or_hit_ball)
@@ -823,7 +825,7 @@ class TennisAI:
         SEL_throw_or_hit_serve = Selector('throw or serve', SEQ_hit_serve, SEQ_throw_ball)
 
         SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
-                                                     SEQ_game_end, SEQ_trace_or_hit_not_in_serve, action_idle_state)
+                                              SEQ_game_end, SEQ_trace_or_hit_not_in_serve, action_idle_state)
         root = SEL_serve_or_ready = Selector('serve or ready', SEL_throw_or_hit_serve, SEL_trace_ball_or_game_end)
         self.behavior_tree = BehaviorTree(root)
 
