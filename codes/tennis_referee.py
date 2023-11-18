@@ -37,7 +37,7 @@ def tennis_players_position_reset():
 
 
 def set_serve_turn():
-    if turn == 0:
+    if turn == 1:
         main_player.state_machine.handle_event(('SERVE_TURN', 0))
         opponent_player.handle_event(('NOT_SERVE_TURN', 0))
     else:

@@ -484,7 +484,7 @@ class TennisPlayerStateMachine:
             Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
             Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
             ReadyInNotServeTurn: { new_court_start: Idle, player_win: Win, player_lose: Lose },
-            Ready: {space_down: PreparingServe, player_win: Win, player_lose: Lose},
+            Ready: {in_not_my_serve_turn: ReadyInNotServeTurn, space_down: PreparingServe, player_win: Win, player_lose: Lose},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                    space_down: Hit, player_win: Win, player_lose: Lose},  # court_start_end_space_down:
