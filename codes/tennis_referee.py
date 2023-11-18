@@ -9,8 +9,6 @@ def new_set_start():
     global turn
     turn = (turn + 1) % 2
 
-    new_court_start()
-
 
 def new_court_start():
     global is_court_end, play_ball
@@ -132,11 +130,13 @@ def calculate_game_score():
         if main_player_score >= 45:
             main_player_set_score += 1
             main_player_score, opponent_player_score = 0, 0
+            new_set_start()
     else:
         opponent_player_score += 15
         if opponent_player_score >= 45:
             opponent_player_set_score += 1
             main_player_score, opponent_player_score = 0, 0
+            new_set_start()
 
     print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
     print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')
