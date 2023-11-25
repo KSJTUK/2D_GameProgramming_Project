@@ -1,6 +1,7 @@
 import game_world
 import game_framework
 import tennis_court
+import tennis_game_score
 
 NEW_COURT_START_TIME = 3.0
 
@@ -52,9 +53,7 @@ def serve_turn_player_hit_serve():
 
 def set_referee():
     global play_ball, main_player, opponent_player, last_hit_player, turn
-    global main_player_score, opponent_player_score
-    global main_player_set_score, opponent_player_set_score
-    global is_court_end, court_end_time
+    global is_court_end, court_end_time, any_player_win
     global win_player, lose_player
 
     play_ball = None
@@ -64,9 +63,8 @@ def set_referee():
     win_player = None
     court_end_time = 0.0
 
+    any_player_win = False
     is_court_end = False
-    main_player_score, opponent_player_score = 0, 0
-    main_player_set_score, opponent_player_set_score = 0, 0
 
     turn = 0
 
@@ -92,11 +90,12 @@ def remove_ball(ball):
 
 
 def calc_new_court_start_time():
-    global court_end_time
+    global court_end_time, any_player_win
     if court_end_time > NEW_COURT_START_TIME:
         court_end_time = 0.0
-        if main_player_score >= 45 or opponent_player_score >= 45:
+        if any_player_win:
             new_set_start()
+            any_player_win = False
         else:
             new_court_start()
     else:
@@ -123,30 +122,11 @@ def update():
 
 
 def calculate_game_score():
-    global main_player_score, opponent_player_score
-    global main_player_set_score, opponent_player_set_score
+    global any_player_win
     if win_player is main_player:
-        if main_player_score == 30:
-            main_player_score += 10
-        elif main_player_score == 40:
-            main_player_set_score += 1
-            main_player_score, opponent_player_score = 0, 0
-            new_set_start()
-        else:
-            main_player_score += 15
+        any_player_win = tennis_game_score.main_player_win()
     else:
-        if opponent_player_score == 30:
-            opponent_player_score += 10
-        elif opponent_player_score == 40:
-            opponent_player_score += 10
-            opponent_player_set_score += 1
-            main_player_score, opponent_player_score = 0, 0
-            new_set_start()
-        else:
-            opponent_player_score += 15
-
-    print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
-    print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')
+        any_player_win = tennis_game_score.opponent_player_win()
 
 
 def bound_net():
