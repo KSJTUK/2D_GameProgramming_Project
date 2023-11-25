@@ -93,9 +93,9 @@ def calc_new_court_start_time():
     global court_end_time, any_player_win
     if court_end_time > NEW_COURT_START_TIME:
         court_end_time = 0.0
-        if any_player_win:
+        if tennis_game_score.is_new_set_start():
             new_set_start()
-            any_player_win = False
+            tennis_game_score.new_set_started()
         else:
             new_court_start()
     else:

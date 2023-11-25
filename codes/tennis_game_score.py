@@ -5,11 +5,22 @@ opponent_player_score = 0
 main_player_set_score = 0
 opponent_player_set_score = 0
 
+new_set_started = False
+in_deuce_mode = False
+
 # score_number_imgae = load_image('./../resources/tennis_ball.png')
 
+def is_new_set_start():
+    return new_set_started
+
+def new_set_game_start():
+    global new_set_started
+    new_set_started = False
+
 def start_new_set_game():
-    global main_player_score, opponent_player_score
+    global main_player_score, opponent_player_score, new_set_started
     main_player_score, opponent_player_score = 0, 0
+    new_set_started = True
 
 def main_player_win():
     global main_player_score, main_player_set_score
