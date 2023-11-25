@@ -5,6 +5,7 @@ import score_mode
 
 SCORE_IMAGE_SIZE = 65
 
+
 def init():
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
@@ -26,12 +27,14 @@ def init():
     score_images = [load_image(f'./../resources/score_images/score_image_{x}.png') for x in range(1, 10 + 1)]
     set_score_images = [load_image(f'./../resources/score_images/set_score_image_{x}.png') for x in range(1, 10 + 1)]
 
+
 def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_SIZE)
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_SIZE)
+
 
 def draw_scores(score, x, y):
     global score_images
@@ -46,21 +49,26 @@ def draw_scores(score, x, y):
     if divide_score[1] != 0:
         score_images[divide_score[1] - 1].draw(x + SCORE_IMAGE_SIZE // 2, y)
 
+
 def in_deuce_mode():
     global deuce_mode
     deuce_mode = True
 
+
 def is_new_set_start():
     return new_set_started
+
 
 def new_set_game_start():
     global new_set_started
     new_set_started = False
 
+
 def start_new_set_game():
     global main_player_score, opponent_player_score, new_set_started
     main_player_score, opponent_player_score = 0, 0
     new_set_started = True
+
 
 def deuce_main_player_win():
     global main_player_deuce_mode_win, opponent_player_deuce_mode_win, new_set_started, deuce_mode
@@ -74,6 +82,7 @@ def deuce_main_player_win():
     opponent_player_deuce_mode_win = False
     return False
 
+
 def deuce_opponent_player_win():
     global main_player_deuce_mode_win, opponent_player_deuce_mode_win, new_set_started, deuce_mode
 
@@ -86,8 +95,10 @@ def deuce_opponent_player_win():
     opponent_player_deuce_mode_win = True
     return False
 
+
 def is_score_equal():
     return main_player_score == 40 and opponent_player_score == 40
+
 
 def main_player_win():
     global main_player_score, main_player_set_score, deuce_mode
@@ -138,6 +149,7 @@ def opponent_player_win():
     game_framework.push_mode(score_mode)
 
     return isPlayerWin
+
 
 def print_scores():
     print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
