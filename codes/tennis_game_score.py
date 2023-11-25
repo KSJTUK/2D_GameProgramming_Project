@@ -5,7 +5,7 @@ def init():
     global main_player_set_score, opponent_player_set_score
     global new_set_started
     global deuce_mode, main_player_deuce_mode_win, opponent_player_deuce_mode_win
-    global score_number_image
+    global score_images, set_score_images
 
     main_player_score = 0
     opponent_player_score = 0
@@ -18,7 +18,8 @@ def init():
     main_player_deuce_mode_win = False
     opponent_player_deuce_mode_win = False
 
-    score_number_image = load_image('./../resources/tennis_ball.png')
+    score_images = [load_image(f'./../resources/score_images/score_image_{x}.png') for x in range(1, 10 + 1)]
+    set_score_images = [load_image(f'./../resources/score_images/set_score_image_{x}.png') for x in range(1, 10 + 1)]
 
 def in_deuce_mode():
     global deuce_mode
