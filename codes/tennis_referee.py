@@ -19,6 +19,7 @@ def new_court_start():
         game_world.remove_object(play_ball)
         play_ball = None
 
+    game_framework.pop_mode()
     tennis_players_position_reset()
     set_serve_turn()
 

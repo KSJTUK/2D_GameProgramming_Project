@@ -1,3 +1,4 @@
+import sys
 import time
 
 # fill here
@@ -63,6 +64,8 @@ def run(start_mode):
     frame_time = 0.0
     current_time = time.time()
 
+    print(f'current time: {current_time}')
+
     # fill here
     while running:
         stack[-1].handle_events()
@@ -71,7 +74,7 @@ def run(start_mode):
         # fill here
 
         frame_time = time.time() - current_time
-        frame_rate = 1.0 / frame_time
+        frame_rate = 1.0 / frame_time if abs(frame_time) >= sys.float_info.epsilon else 0.0
         current_time += frame_time
         # # 시간 출력용
         # print(f'delta time: {frame_time}, fps: {frame_rate}')

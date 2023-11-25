@@ -1,5 +1,8 @@
 from pico2d import load_image
 
+import game_framework
+import score_mode
+
 SCORE_IMAGE_SIZE = 65
 
 def init():
@@ -86,7 +89,7 @@ def main_player_win():
     else:
         main_player_score += 15
 
-    print_scores()
+    game_framework.push_mode(score_mode)
 
     return isPlayerWin
 
@@ -112,7 +115,7 @@ def opponent_player_win():
     else:
         opponent_player_score += 15
 
-    print_scores()
+    game_framework.push_mode(score_mode)
 
     return isPlayerWin
 
