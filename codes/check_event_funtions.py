@@ -7,8 +7,10 @@ up_arrow_downed = False
 down_arrow_downed = False
 diff_arrow_downed_same_time = False
 
+
 def new_court_start(e):
     return e[0] == 'NEW_COURT_START'
+
 
 def is_right_arrow_downed():
     return right_arrow_downed
@@ -144,16 +146,22 @@ def animation_end(e):
 def animation_end_and_keydown(e):
     return e[0] == 'ANIMATION_END' and (left_arrow_downed or right_arrow_downed or down_arrow_downed or up_arrow_downed)
 
+
 def in_my_serve_turn(e):
     return e[0] == 'SERVE_TURN'
+
+
 def in_not_my_serve_turn(e):
     return e[0] == 'NOT_SERVE_TURN'
+
 
 def collision_character_serveball(e):
     return e[0] == 'tennis_player:serve_ball'
 
+
 def player_win(e):
     return e[0] == 'WIN'
+
 
 def player_lose(e):
     return e[0] == 'LOSE'

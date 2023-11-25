@@ -86,7 +86,7 @@ class Ball:
 
     def render(self):
         # 그림자는 크기가 y값에 따라 감소 하고 z값에 따라 증가함
-        shadow_scale = 1.0 + self.z *  game_framework.SCALE_PER_Z_PIXEL - self.y * game_framework.SCALE_PER_Y_PIXEL
+        shadow_scale = 1.0 + self.z * game_framework.SCALE_PER_Z_PIXEL - self.y * game_framework.SCALE_PER_Y_PIXEL
         scale = 1.0 - self.z * game_framework.SCALE_PER_Z_PIXEL - self.y * game_framework.SCALE_PER_Y_PIXEL
         Ball.shadow_image.clip_composite_draw(0, 0, 128, 30,
                                               0, '', self.x, self.shadow_y,
@@ -122,6 +122,7 @@ class Ball:
         if self.y < COURT_CENTER_Y - court_bottom_height: return False
 
         return True
+
 
 def kmph_to_pps(kmph_speed):
     mps = (kmph_speed * 1000.0 / 60.0) / 60.0

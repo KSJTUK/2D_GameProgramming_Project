@@ -62,9 +62,11 @@ class TennisCourt:
         #     draw_rectangle(COURT_CENTER_X - ((COURT_WIDTH - y * DELTA_X_PER_Y_PIXEL) // 2), bottom + y - 1,
         #                    COURT_CENTER_X + ((COURT_WIDTH - y * DELTA_X_PER_Y_PIXEL) // 2), bottom + y + 1)
 
+
 def get_court_width(object_y):
     in_court_y = object_y - (COURT_CENTER_Y - COURT_BOTTOM_HEIGHT)
     return COURT_WIDTH - (in_court_y * DELTA_X_PER_Y_PIXEL)
+
 
 def get_court_heights():
     return COURT_TOP_HEIGHT, COURT_BOTTOM_HEIGHT

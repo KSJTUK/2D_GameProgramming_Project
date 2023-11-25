@@ -4,6 +4,7 @@ from tennis_court import COURT_CENTER_X, COURT_WIDTH, COURT_HEIGHT, COURT_CENTER
 import game_framework
 import game_world
 
+
 class Wall:
     def __init__(self):
         self.x, self.y, self.z = 0, game_framework.CANVAS_H - 100, 100

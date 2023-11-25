@@ -86,7 +86,8 @@ micky_animation = {
         'start_x': 0, 'start_y': 714, 'frame_widths': [25, 26, 24, 39, 25], 'frame_height': 46, 'time_per_action': 0.75
     },
     'High_hit_front': {
-        'start_x': 157, 'start_y': 714, 'frame_widths': [23, 26, 25, 38, 25], 'frame_height': 46, 'time_per_action': 0.75
+        'start_x': 157, 'start_y': 714, 'frame_widths': [23, 26, 25, 38, 25], 'frame_height': 46,
+        'time_per_action': 0.75
     },
     'Preparing_serve_back': {
         'start_x': 0, 'start_y': 765, 'frame_widths': [27, 38, 18, 31], 'frame_height': 35, 'time_per_action': 0.25

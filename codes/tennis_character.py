@@ -15,6 +15,7 @@ RUN_SPEED_KMPH = 25.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
 
+
 class Win:
     @staticmethod
     def enter(tennis_player, event):
@@ -100,6 +101,7 @@ class Lose:
     def handle_collision(tennis_player, groub, other):
         pass
 
+
 class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
@@ -129,6 +131,7 @@ class ReadyInNotServeTurn:
     @staticmethod
     def handle_collision(tennis_player, groub, other):
         pass
+
 
 class Ready:
     @staticmethod
@@ -218,9 +221,9 @@ class HighHit:
             game_world.remove_collision_object(other)
             game_world.remove_collision_object(tennis_player)
 
-
             tennis_referee.serve_turn_player_hit_serve()
             tennis_player.hit_ball(other)
+
 
 class PreparingServe:
     @staticmethod
@@ -481,10 +484,11 @@ class TennisPlayerStateMachine:
         self.tennis_player = tennis_player
         self.cur_state = Ready
         self.transition_state_dic = {
-            Win: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
-            Lose: { in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn },
-            ReadyInNotServeTurn: { new_court_start: Idle, player_win: Win, player_lose: Lose },
-            Ready: {in_not_my_serve_turn: ReadyInNotServeTurn, space_down: PreparingServe, player_win: Win, player_lose: Lose},
+            Win: {in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn},
+            Lose: {in_my_serve_turn: Ready, in_not_my_serve_turn: ReadyInNotServeTurn},
+            ReadyInNotServeTurn: {new_court_start: Idle, player_win: Win, player_lose: Lose},
+            Ready: {in_not_my_serve_turn: ReadyInNotServeTurn, space_down: PreparingServe, player_win: Win,
+                    player_lose: Lose},
             Idle: {right_arrow_down: Run, left_arrow_down: Run, left_arrow_up: Run, right_arrow_up: Run,
                    down_arrow_down: Run, up_arrow_down: Run, up_arrow_up: Run, down_arrow_up: Run,
                    space_down: Hit, player_win: Win, player_lose: Lose},  # court_start_end_space_down:
@@ -629,7 +633,7 @@ class TennisPlayer:
     def hit_ball(self, ball):
         if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
             return
-        
+
         tennis_referee.last_hit_player = self
 
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
