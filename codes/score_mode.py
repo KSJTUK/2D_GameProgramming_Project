@@ -1,4 +1,5 @@
 import tennis_game_score
+import tennis_referee
 import game_world
 
 from pico2d import clear_canvas, update_canvas
@@ -12,6 +13,7 @@ def finish():
 
 def update():
     game_world.update()
+    tennis_referee.update()
 
 def render():
     clear_canvas()

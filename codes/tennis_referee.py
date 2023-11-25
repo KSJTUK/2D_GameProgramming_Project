@@ -101,8 +101,8 @@ def calc_new_court_start_time():
             tennis_game_score.new_set_game_start()
         else:
             new_court_start()
-    else:
-        court_end_time += game_framework.frame_time
+
+    court_end_time += game_framework.frame_time
 
 
 def update():
