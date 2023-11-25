@@ -126,17 +126,24 @@ def calculate_game_score():
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
     if win_player is main_player:
-        main_player_score += 15
-        if main_player_score >= 45:
+        if main_player_score == 30:
+            main_player_score += 10
+        elif main_player_score == 40:
             main_player_set_score += 1
             main_player_score, opponent_player_score = 0, 0
             new_set_start()
+        else:
+            main_player_score += 15
     else:
-        opponent_player_score += 15
-        if opponent_player_score >= 45:
+        if opponent_player_score == 30:
+            opponent_player_score += 10
+        elif opponent_player_score == 40:
+            opponent_player_score += 10
             opponent_player_set_score += 1
             main_player_score, opponent_player_score = 0, 0
             new_set_start()
+        else:
+            opponent_player_score += 15
 
     print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
     print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')
