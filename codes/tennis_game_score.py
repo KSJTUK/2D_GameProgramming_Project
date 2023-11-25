@@ -1,5 +1,7 @@
 from pico2d import load_image
 
+SCORE_IMAGE_SIZE = 65
+
 def init():
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
