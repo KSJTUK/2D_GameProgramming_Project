@@ -18,7 +18,7 @@ def update():
 def render():
     clear_canvas()
     game_world.render()
-    # tennis_game_score.draw_score()
+    tennis_game_score.draw_score()
     update_canvas()
 
 def handle_events():

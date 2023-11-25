@@ -26,6 +26,11 @@ def init():
     score_images = [load_image(f'./../resources/score_images/score_image_{x}.png') for x in range(1, 10 + 1)]
     set_score_images = [load_image(f'./../resources/score_images/set_score_image_{x}.png') for x in range(1, 10 + 1)]
 
+def draw_score():
+    global score_images
+    cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
+    score_images[0].draw(cw, ch)
+
 def in_deuce_mode():
     global deuce_mode
     deuce_mode = True
