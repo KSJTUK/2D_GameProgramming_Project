@@ -1,17 +1,24 @@
 from pico2d import load_image
 
-main_player_score = 0
-opponent_player_score = 0
-main_player_set_score = 0
-opponent_player_set_score = 0
+def init():
+    global main_player_score, opponent_player_score
+    global main_player_set_score, opponent_player_set_score
+    global new_set_started
+    global deuce_mode, main_player_deuce_mode_win, opponent_player_deuce_mode_win
+    global score_number_image
 
-new_set_started = False
-deuce_mode = False
+    main_player_score = 0
+    opponent_player_score = 0
+    main_player_set_score = 0
+    opponent_player_set_score = 0
 
-main_player_deuce_mode_win = False
-opponent_player_deuce_mode_win = False
+    new_set_started = False
+    deuce_mode = False
 
-# score_number_imgae = load_image('./../resources/tennis_ball.png')
+    main_player_deuce_mode_win = False
+    opponent_player_deuce_mode_win = False
+
+    score_number_image = load_image('./../resources/tennis_ball.png')
 
 def in_deuce_mode():
     global deuce_mode
