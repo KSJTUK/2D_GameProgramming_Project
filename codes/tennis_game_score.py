@@ -6,6 +6,10 @@ import score_mode
 SCORE_IMAGE_WIDTH = 33
 SCORE_IMAGE_HEIGHT = 34
 
+DASH_IMAGE_SIZE = 16
+
+ALPHABET_IMAGE_SIZE = 17
+
 
 def init():
     global main_player_score, opponent_player_score
@@ -13,6 +17,7 @@ def init():
     global new_set_started
     global deuce_mode, main_player_deuce_mode_win, opponent_player_deuce_mode_win
     global score_images, set_score_images
+    global alphabet_images
 
     main_player_score = 0
     opponent_player_score = 0
@@ -26,6 +31,13 @@ def init():
     opponent_player_deuce_mode_win = False
 
     score_images = [load_image(f'./../resources/num_font_yellow/score_image{x}.png') for x in range(0, 10)]
+    upper_alpha = { chr(alpha):load_image(f'./../resources/alphabet_upper_font/alphabet_{chr(alpha)}.png')
+                    for alpha in range(ord('A'), ord('Z') + 1)}
+    lower_alpha = { chr(alpha):load_image(f'./../resources/alphabet_lower_font/alphabet_{chr(alpha)}.png')
+                    for alpha in range(ord('a'), ord('z') + 1)}
+
+    alphabet_images = upper_alpha | lower_alpha
+    print(alphabet_images)
     # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
 
 
@@ -41,14 +53,15 @@ def draw_scores(score, x, y):
     global score_images
 
     divide_score = divmod(score, 10)
-    #
-    # score_images[divide_score[0]].draw(x - SCORE_IMAGE_WIDTH // 2, y)
-    # score_images[divide_score[1]].draw(x + SCORE_IMAGE_WIDTH // 2, y)
 
     score_images[divide_score[0]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
                                             x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
     score_images[divide_score[1]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
                                             x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
+
+    # string test
+    test_string = 'A'
+    alphabet_images[test_string].draw(x, y - 50)
 
 
 def in_deuce_mode():
