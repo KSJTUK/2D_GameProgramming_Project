@@ -3,7 +3,8 @@ from pico2d import load_image
 import game_framework
 import score_mode
 
-SCORE_IMAGE_SIZE = 65
+SCORE_IMAGE_WIDTH = 33
+SCORE_IMAGE_HEIGHT = 34
 
 
 def init():
@@ -24,30 +25,25 @@ def init():
     main_player_deuce_mode_win = False
     opponent_player_deuce_mode_win = False
 
-    score_images = [load_image(f'./../resources/score_images/score_image_{x}.png') for x in range(1, 10 + 1)]
-    set_score_images = [load_image(f'./../resources/score_images/set_score_image_{x}.png') for x in range(1, 10 + 1)]
+    score_images = [load_image(f'./../resources/num_font_yellow/score_image{x}.png') for x in range(0, 10)]
+    # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
 
 
 def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    draw_scores(main_player_score, cw, ch + SCORE_IMAGE_SIZE)
-    draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_SIZE)
+    draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
+    draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
 
 
 def draw_scores(score, x, y):
     global score_images
 
-    if score == 0: return
-
     divide_score = divmod(score, 10)
 
-    if divide_score[0] != 0:
-        score_images[divide_score[0] - 1].draw(x - SCORE_IMAGE_SIZE // 2, y)
-
-    if divide_score[1] != 0:
-        score_images[divide_score[1] - 1].draw(x + SCORE_IMAGE_SIZE // 2, y)
+    score_images[divide_score[0]].draw(x - SCORE_IMAGE_WIDTH // 2, y)
+    score_images[divide_score[1]].draw(x + SCORE_IMAGE_WIDTH // 2, y)
 
 
 def in_deuce_mode():
