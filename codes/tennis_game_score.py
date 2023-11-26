@@ -61,7 +61,7 @@ def draw_scores(score, x, y):
 
     # string test
     test_string = 'playerCharacterIsMickey'
-    draw_string(x, y - 50, test_string, 'right')
+    draw_string(x, y - 50, test_string, 'risght')
 
 
 def draw_string(cx, cy, string, text_aligned='center'):
@@ -71,6 +71,8 @@ def draw_string(cx, cy, string, text_aligned='center'):
         draw_string_aligned_left(cx, cy, string)
     elif text_aligned == 'right':
         draw_string_aligned_right(cx, cy, string)
+    else:
+        raise ValueError(f'not exist text aligned option: {text_aligned}')
 
 
 def draw_string_aligned_center(cx, cy, string):
