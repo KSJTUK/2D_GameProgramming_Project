@@ -61,7 +61,7 @@ def draw_scores(score, x, y):
 
     # string test
     test_string = 'playerCharacterIsMickey'
-    draw_string(x, y - 50, test_string, 'left')
+    draw_string(x, y - 50, test_string, 'right')
 
 
 def draw_string(cx, cy, string, text_aligned='center'):
@@ -69,6 +69,8 @@ def draw_string(cx, cy, string, text_aligned='center'):
         draw_string_aligned_center(cx, cy, string)
     elif text_aligned == 'left':
         draw_string_aligned_left(cx, cy, string)
+    elif text_aligned == 'right':
+        draw_string_aligned_right(cx, cy, string)
 
 
 def draw_string_aligned_center(cx, cy, string):
@@ -79,6 +81,11 @@ def draw_string_aligned_center(cx, cy, string):
 def draw_string_aligned_left(cx, cy, string):
     for i in range(len(string)):
         alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE, cy)
+
+def draw_string_aligned_right(cx, cy, string):
+    left = cx - (len(string) * ALPHABET_IMAGE_SIZE)
+    for i in range(len(string)):
+        alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
 
 
 def in_deuce_mode():
