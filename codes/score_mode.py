@@ -2,6 +2,7 @@ import tennis_game_score
 import tennis_referee
 import game_framework
 import game_world
+import check_event_funtions
 
 from pico2d import clear_canvas, update_canvas, get_events, SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE
 
@@ -13,6 +14,7 @@ def init():
 
 def finish():
     print('exit score mode')
+    check_event_funtions.reset_arrow_key_state()
 
 
 def update():

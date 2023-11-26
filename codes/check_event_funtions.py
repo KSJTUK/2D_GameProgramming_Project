@@ -7,6 +7,11 @@ up_arrow_downed = False
 down_arrow_downed = False
 diff_arrow_downed_same_time = False
 
+def reset_arrow_key_state():
+    global left_arrow_downed, right_arrow_downed, up_arrow_downed, down_arrow_downed
+    global diff_arrow_downed_same_time
+    left_arrow_downed, right_arrow_downed, up_arrow_downed, down_arrow_downed = False, False, False, False
+    diff_arrow_downed_same_time = False
 
 def new_court_start(e):
     return e[0] == 'NEW_COURT_START'

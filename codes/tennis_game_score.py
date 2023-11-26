@@ -41,9 +41,14 @@ def draw_scores(score, x, y):
     global score_images
 
     divide_score = divmod(score, 10)
+    #
+    # score_images[divide_score[0]].draw(x - SCORE_IMAGE_WIDTH // 2, y)
+    # score_images[divide_score[1]].draw(x + SCORE_IMAGE_WIDTH // 2, y)
 
-    score_images[divide_score[0]].draw(x - SCORE_IMAGE_WIDTH // 2, y)
-    score_images[divide_score[1]].draw(x + SCORE_IMAGE_WIDTH // 2, y)
+    score_images[divide_score[0]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
+                                            x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
+    score_images[divide_score[1]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
+                                            x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
 
 
 def in_deuce_mode():
