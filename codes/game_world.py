@@ -6,7 +6,6 @@ collision_pairs = {}
 
 def add_collision_pair(groub, object1=None, object2=None):
     if groub not in collision_pairs:
-        print(f'Add new groub {groub}')
         collision_pairs[groub] = [[], []]
     if object1 and object1 not in collision_pairs[groub][0]:
         collision_pairs[groub][0].append(object1)

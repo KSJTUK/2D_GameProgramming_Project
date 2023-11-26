@@ -8,12 +8,10 @@ from pico2d import clear_canvas, update_canvas, get_events, SDL_QUIT, SDL_KEYDOW
 
 
 def init():
-    print('enter score mode')
-    tennis_game_score.print_scores()
+    pass
 
 
 def finish():
-    print('exit score mode')
     check_event_funtions.reset_arrow_key_state()
 
 

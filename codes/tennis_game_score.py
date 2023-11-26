@@ -150,8 +150,3 @@ def opponent_player_win():
     game_framework.push_mode(score_mode)
 
     return isPlayerWin
-
-
-def print_scores():
-    print(f'main_player set score: {main_player_set_score} , opponent_player set score: {opponent_player_set_score}')
-    print(f'main_player score: {main_player_score} , opponent_player score: {opponent_player_score}')

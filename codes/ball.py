@@ -49,7 +49,6 @@ class Ball:
             self.bounding()
 
         if (self.x > game_framework.CANVAS_W or self.x < 0.0) or (self.y > game_framework.CANVAS_H or self.y < 0.0):
-            print('remove ball')
             tennis_referee.ball_in_over_court()
             tennis_referee.remove_ball(self)
             game_world.remove_object(self)

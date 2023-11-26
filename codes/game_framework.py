@@ -64,8 +64,6 @@ def run(start_mode):
     frame_time = 0.0
     current_time = time.time()
 
-    print(f'current time: {current_time}')
-
     # fill here
     while running:
         stack[-1].handle_events()

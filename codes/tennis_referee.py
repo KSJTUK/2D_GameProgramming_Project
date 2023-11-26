@@ -87,7 +87,6 @@ def subscribe_ball(ball):
 
 def remove_ball(ball):
     global play_ball
-    print('remove ball in referee')
     if play_ball is ball:
         play_ball = None
 
