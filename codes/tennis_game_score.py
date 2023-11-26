@@ -60,8 +60,13 @@ def draw_scores(score, x, y):
                                             x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
 
     # string test
-    test_string = 'A'
-    alphabet_images[test_string].draw(x, y - 50)
+    test_string = 'playerCharacterIsMickey'
+    draw_string(x, y - 50, test_string)
+
+def draw_string(cx, cy, string):
+    left = cx - ((len(string) * ALPHABET_IMAGE_SIZE) // 2)
+    for i in range(len(string)):
+        alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
 
 
 def in_deuce_mode():
