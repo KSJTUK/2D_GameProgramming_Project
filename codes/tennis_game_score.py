@@ -45,8 +45,12 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
+    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, 'yourscore', 'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
+    draw_string(cw, ch, 'yourscore', 'center')
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
+    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, 'yourscore', 'right')
+
 
 
 def draw_scores(score, x, y):
@@ -58,10 +62,6 @@ def draw_scores(score, x, y):
                                             x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
     score_images[divide_score[1]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
                                             x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
-
-    # string test
-    test_string = 'playerCharacterIsMickey'
-    draw_string(x, y - 50, test_string, 'risght')
 
 
 def draw_string(cx, cy, string, text_aligned='center'):
@@ -76,16 +76,19 @@ def draw_string(cx, cy, string, text_aligned='center'):
 
 
 def draw_string_aligned_center(cx, cy, string):
-    left = cx - ((len(string) * ALPHABET_IMAGE_SIZE) // 2)
+    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
+    left = cx - ((len(string) * ALPHABET_IMAGE_SIZE) // 2) + HALF_IMAGE_SIZE
     for i in range(len(string)):
         alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
 
 def draw_string_aligned_left(cx, cy, string):
+    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
     for i in range(len(string)):
-        alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE, cy)
+        alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE + HALF_IMAGE_SIZE, cy)
 
 def draw_string_aligned_right(cx, cy, string):
-    left = cx - (len(string) * ALPHABET_IMAGE_SIZE)
+    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
+    left = cx - (len(string) * ALPHABET_IMAGE_SIZE) + HALF_IMAGE_SIZE
     for i in range(len(string)):
         alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
 
