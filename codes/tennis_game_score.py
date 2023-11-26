@@ -63,7 +63,12 @@ def draw_scores(score, x, y):
     test_string = 'playerCharacterIsMickey'
     draw_string(x, y - 50, test_string)
 
-def draw_string(cx, cy, string):
+def draw_string(cx, cy, string, text_aligned='center'):
+    if text_aligned == 'center':
+        draw_string_aligned_center(cx, cy, string)
+
+
+def draw_string_aligned_center(cx, cy, string):
     left = cx - ((len(string) * ALPHABET_IMAGE_SIZE) // 2)
     for i in range(len(string)):
         alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
