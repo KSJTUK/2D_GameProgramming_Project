@@ -54,20 +54,21 @@ def init():
 def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
-    global main_player_score, opponent_player_score
-
-    # draw_scores(main_player_score, cw - SCORE_IMAGE_WIDTH * 3, ch)
-    # draw_scores(opponent_player_score, cw + SCORE_IMAGE_WIDTH * 3, ch)
-    draw_string(cw - SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'your score', SCORE_IMAGE_WIDTH, 'right')
-    draw_string(cw + SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'ai\'s score', SCORE_IMAGE_WIDTH, 'left')
-    draw_string(cw, ch, f'{main_player_score:^02d}  -  {opponent_player_score:^02d}', SCORE_IMAGE_WIDTH * 2, 'center')
+    draw_string(cw - SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'your score',
+                SCORE_IMAGE_WIDTH, 'right')
+    draw_string(cw + SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'ai\'s score',
+                SCORE_IMAGE_WIDTH, 'left')
+    draw_string(cw, ch, f'{main_player_score:>2d}  -  {opponent_player_score:>2d}',
+                SCORE_IMAGE_WIDTH * 2, 'center')
 
 
 def draw_set_score_in_play_mode():
-    draw_string(0, game_framework.CANVAS_H - 15,
+    draw_font_y = game_framework.CANVAS_H - 15
+    draw_string(0, draw_font_y,
                 f'set score: {main_player_set_score}-{opponent_player_set_score}', 30, 'left')
-    draw_string(0, game_framework.CANVAS_H - 45,
-                f'score: {main_player_score}-{opponent_player_score}', 30, 'left')
+    draw_font_y -= 30
+    draw_string(0, draw_font_y,
+                f'score: {main_player_score:>2d}-{opponent_player_score:>2d}', 30, 'left')
 
 def draw_scores(score, x, y):
     global score_images
@@ -91,8 +92,8 @@ def draw_string(cx, cy, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='cen
 
 
 def draw_string_aligned_center(cx, cy, string, font_size):
-    HALF_IMAGE_SIZE = font_size // 2
-    left = cx - ((len(string) * font_size) // 2) + HALF_IMAGE_SIZE
+    HALF_FONT_SIZE = font_size // 2
+    left = cx - ((len(string) * font_size) // 2) + HALF_FONT_SIZE
     right = left
     for i in range(len(string)):
         alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
@@ -101,17 +102,17 @@ def draw_string_aligned_center(cx, cy, string, font_size):
     return right
 
 def draw_string_aligned_left(cx, cy, string, font_size):
-    HALF_IMAGE_SIZE = font_size // 2
+    HALF_FONT_SIZE = font_size // 2
     right = cx
     for i in range(len(string)):
-        alphabet_images[string[i]].composite_draw(0, ' ', cx + i * font_size + HALF_IMAGE_SIZE, cy,
+        alphabet_images[string[i]].composite_draw(0, ' ', cx + i * font_size + HALF_FONT_SIZE, cy,
                                                   font_size, font_size)
         right += font_size
     return right
 
 def draw_string_aligned_right(cx, cy, string, font_size):
-    HALF_IMAGE_SIZE = font_size // 2
-    left = cx - (len(string) * font_size) + HALF_IMAGE_SIZE
+    HALF_FONT_SIZE = font_size // 2
+    left = cx - (len(string) * font_size) + HALF_FONT_SIZE
     right = left + font_size
     for i in range(len(string)):
         # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
@@ -127,6 +128,10 @@ def in_deuce_mode():
 
 def is_new_set_start():
     return new_set_started
+
+
+def is_in_deuce_mode():
+    return deuce_mode
 
 
 def new_set_game_start():
@@ -174,6 +179,7 @@ def main_player_win():
     global main_player_score, main_player_set_score, deuce_mode
 
     if deuce_mode:
+        game_framework.push_mode(score_mode)
         return deuce_main_player_win()
 
     isPlayerWin = False
