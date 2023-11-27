@@ -52,7 +52,7 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    test_string = 'Make A TestString???'
+    test_string = 'Make A Test String'
     font_size = 30
     draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, font_size,'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
@@ -61,8 +61,10 @@ def draw_score():
     draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, test_string, font_size, 'right')
 
 
-def draw_set_score_in_score_mode():
-    pass
+def draw_set_score_in_score_mode(x, y, text_align, font_size, score_image_size):
+    score_size = 30
+    next_draw = draw_string(x, y, 'you', font_size, text_align)
+    draw_score(next_draw, y, main_player_set_score)
 
 
 def draw_set_score_in_play_mode():
@@ -73,7 +75,6 @@ def draw_scores(score, x, y):
     global score_images
 
     divide_score = divmod(score, 10)
-
     score_images[divide_score[0]].composite_draw(0, ' ',
                                             x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
     score_images[divide_score[1]].composite_draw(0, ' ',
@@ -94,25 +95,31 @@ def draw_string(cx, cy, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='cen
 def draw_string_aligned_center(cx, cy, string, font_size):
     HALF_IMAGE_SIZE = font_size // 2
     left = cx - ((len(string) * font_size) // 2) + HALF_IMAGE_SIZE
+    right = left
     for i in range(len(string)):
-        # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
         alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
                                                   font_size, font_size)
+        right += font_size
+    return right
 
 def draw_string_aligned_left(cx, cy, string, font_size):
     HALF_IMAGE_SIZE = font_size // 2
+    right = cx
     for i in range(len(string)):
-        # alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE + HALF_IMAGE_SIZE, cy)
         alphabet_images[string[i]].composite_draw(0, ' ', cx + i * font_size + HALF_IMAGE_SIZE, cy,
                                                   font_size, font_size)
+        right += font_size
+    return right
 
 def draw_string_aligned_right(cx, cy, string, font_size):
     HALF_IMAGE_SIZE = font_size // 2
     left = cx - (len(string) * font_size) + HALF_IMAGE_SIZE
+    right = left + font_size
     for i in range(len(string)):
         # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
         alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
                                                   font_size, font_size)
+    return right
 
 
 def in_deuce_mode():
