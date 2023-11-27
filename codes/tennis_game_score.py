@@ -37,6 +37,7 @@ def init():
                     for alpha in range(ord('a'), ord('z') + 1)}
 
     alphabet_images = upper_alpha | lower_alpha
+    alphabet_images['-'] = load_image(f'./../resources/dash_image.png')
     print(alphabet_images)
     # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
 
@@ -45,11 +46,11 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, 'yourscore', 'left')
+    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, 'your-score', 'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch, 'yourscore', 'center')
+    draw_string(cw, ch, 'your-score', 'center')
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, 'yourscore', 'right')
+    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, 'your-score', 'right')
 
 
 
