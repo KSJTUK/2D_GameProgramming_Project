@@ -4,6 +4,7 @@ import tennis_court
 import tennis_game_score
 
 NEW_COURT_START_TIME = 3.0
+SCORE_FONT_SIZE = 30
 
 
 def new_set_start():
@@ -123,7 +124,7 @@ def update():
         is_court_end = True
 
 def render():
-    tennis_game_score.draw_set_score_in_play_mode()
+    tennis_game_score.draw_set_score_in_play_mode(SCORE_FONT_SIZE)
 
 def calculate_game_score():
     global any_player_win

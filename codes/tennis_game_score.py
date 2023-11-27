@@ -2,25 +2,7 @@ from pico2d import load_image
 
 import game_framework
 import score_mode
-
-ALPHABET_IMAGE_SIZE = 17
-
-
-supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?', 'rev!', ' ', '/']
-
-def load_fonts():
-    global alphabet_images, score_images
-    upper_alpha = { chr(alpha):load_image(f'./../resources/alphabet_upper_font/alphabet_{chr(alpha)}.png')
-                    for alpha in range(ord('A'), ord('Z') + 1)}
-    lower_alpha = { chr(alpha):load_image(f'./../resources/alphabet_lower_font/alphabet_{chr(alpha)}.png')
-                    for alpha in range(ord('a'), ord('z') + 1)}
-    special_symbols = { supported_special_symbols[symbol_idx]:
-                            load_image(f'./../resources/special_symbols/special_symbols_{symbol_idx + 1}.png')
-                        for symbol_idx in range(len(supported_special_symbols))}
-    numbers = {str(num):load_image(f'./../resources/number_font/number_{num}.png')
-               for num in range(10)}
-
-    alphabet_images = upper_alpha | lower_alpha | special_symbols | numbers
+import tennis_game_ui
 
 
 def init():
@@ -39,80 +21,31 @@ def init():
     new_set_started = False
     deuce_mode = False
 
-    load_fonts()
-
     main_player_deuce_mode_win = False
     opponent_player_deuce_mode_win = False
 
 
-def draw_score():
+def draw_score(score_font_size):
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
-    draw_string(cw - SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'your score',
-                SCORE_IMAGE_WIDTH, 'right')
-    draw_string(cw + SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'ai\'s score',
-                SCORE_IMAGE_WIDTH, 'left')
-    draw_string(cw, ch, f'{main_player_score:>2d}  -  {opponent_player_score:>2d}',
-                SCORE_IMAGE_WIDTH * 2, 'center')
+    tennis_game_ui.draw_string(cw - score_font_size * 2, ch + score_font_size * 2, 'your score',
+                score_font_size, 'right')
+    tennis_game_ui.draw_string(cw + score_font_size * 2, ch + score_font_size * 2, 'ai\'s score',
+                score_font_size, 'left')
+    tennis_game_ui.draw_string(cw, ch, f'{main_player_score:>2d}  -  {opponent_player_score:>2d}',
+                score_font_size * 2, 'center')
+
+def draw_score_in_deuce_mode(score_font_size):
+    pass
 
 
-def draw_set_score_in_play_mode():
+def draw_set_score_in_play_mode(font_size):
     draw_font_y = game_framework.CANVAS_H - 15
-    draw_string(0, draw_font_y,
-                f'set score: {main_player_set_score}-{opponent_player_set_score}', 30, 'left')
+    tennis_game_ui.draw_string(0, draw_font_y,
+                f'set score: {main_player_set_score}-{opponent_player_set_score}', font_size, 'left')
     draw_font_y -= 30
-    draw_string(0, draw_font_y,
-                f'score: {main_player_score:>2d}-{opponent_player_score:>2d}', 30, 'left')
-
-def draw_scores(score, x, y):
-    global score_images
-
-    divide_score = divmod(score, 10)
-    score_images[divide_score[0]].composite_draw(0, ' ',
-                                            x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
-    score_images[divide_score[1]].composite_draw(0, ' ',
-                                            x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
-
-
-def draw_string(cx, cy, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='center'):
-    if text_aligned == 'center':
-        draw_string_aligned_center(cx, cy, string, font_size)
-    elif text_aligned == 'left':
-        draw_string_aligned_left(cx, cy, string, font_size)
-    elif text_aligned == 'right':
-        draw_string_aligned_right(cx, cy, string, font_size)
-    else:
-        raise ValueError(f'not exist text aligned option: {text_aligned}')
-
-
-def draw_string_aligned_center(cx, cy, string, font_size):
-    HALF_FONT_SIZE = font_size // 2
-    left = cx - ((len(string) * font_size) // 2) + HALF_FONT_SIZE
-    right = left
-    for i in range(len(string)):
-        alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
-                                                  font_size, font_size)
-        right += font_size
-    return right
-
-def draw_string_aligned_left(cx, cy, string, font_size):
-    HALF_FONT_SIZE = font_size // 2
-    right = cx
-    for i in range(len(string)):
-        alphabet_images[string[i]].composite_draw(0, ' ', cx + i * font_size + HALF_FONT_SIZE, cy,
-                                                  font_size, font_size)
-        right += font_size
-    return right
-
-def draw_string_aligned_right(cx, cy, string, font_size):
-    HALF_FONT_SIZE = font_size // 2
-    left = cx - (len(string) * font_size) + HALF_FONT_SIZE
-    right = left + font_size
-    for i in range(len(string)):
-        # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
-        alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
-                                                  font_size, font_size)
-    return right
+    tennis_game_ui.draw_string(0, draw_font_y,
+                f'score: {main_player_score:>2d}-{opponent_player_score:>2d}', font_size, 'left')
 
 
 def in_deuce_mode():

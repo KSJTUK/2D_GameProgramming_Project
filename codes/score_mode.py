@@ -5,6 +5,7 @@ import game_world
 import check_event_funtions
 
 from pico2d import clear_canvas, update_canvas, get_events, SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE
+SCORE_FONT_SIZE = 30
 
 
 def init():
@@ -24,7 +25,7 @@ def render():
     clear_canvas()
     game_world.render()
     tennis_referee.render()
-    tennis_game_score.draw_score()
+    tennis_game_score.draw_score(SCORE_FONT_SIZE)
     update_canvas()
 
 
