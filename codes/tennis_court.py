@@ -19,7 +19,7 @@ COURT_B_LEFT, COURT_B_RIGHT = ORIGIN_COURT_B_LEFT, ORIGIN_COURT_B_RIGHT
 
 class TennisCourt:
     def __init__(self, court_number):
-        self.image = load_image('./../resources/tennis_courts.png')
+        self.image = load_image('./../resources/game_image/tennis_courts.png')
         self.court_number = court_number
         self.image_width, self.image_height = 431 - (self.court_number % 2), 296
         self.image_left, self.image_bottom = 433 * (self.court_number % 2), 1 + 297 * (self.court_number // 2)

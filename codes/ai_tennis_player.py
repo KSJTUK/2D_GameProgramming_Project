@@ -462,7 +462,7 @@ class TennisAI:
 
     def __init__(self, init_x=400, init_y=100):
         if TennisAI.image == None:
-            TennisAI.image = load_image('./../resources/tennis_character_micki.png')
+            TennisAI.image = load_image('./../resources/game_image/tennis_character_micki.png')
 
         self.x, self.y = init_x, init_y
         self.face_x, self.face_y = '', '_front'

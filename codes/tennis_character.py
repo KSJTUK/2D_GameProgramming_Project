@@ -546,7 +546,7 @@ class TennisPlayer:
 
     def __init__(self, init_x=100, init_y=100):
         if TennisPlayer.image == None:
-            TennisPlayer.image = load_image('./../resources/tennis_character_micki.png')
+            TennisPlayer.image = load_image('./../resources/game_image/tennis_character_micki.png')
 
         self.x, self.y = init_x, init_y  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션

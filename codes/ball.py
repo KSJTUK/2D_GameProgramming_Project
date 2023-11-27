@@ -30,10 +30,10 @@ class Ball:
         game_world.add_collision_pair('ball:net', self, None)
 
         if Ball.image == None:
-            Ball.image = load_image('./../resources/tennis_ball.png')
+            Ball.image = load_image('./../resources/game_image/tennis_ball.png')
 
         if Ball.shadow_image == None:
-            Ball.shadow_image = load_image('./../resources/ball_shadow.png')
+            Ball.shadow_image = load_image('./../resources/game_image/ball_shadow.png')
 
     def hit_ball(self, power_x, power_y, power_z):
         self.bound_count = 0
