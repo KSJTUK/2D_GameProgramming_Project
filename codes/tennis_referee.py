@@ -122,6 +122,8 @@ def update():
         calculate_game_score()
         is_court_end = True
 
+def render():
+    tennis_game_score.draw_set_score_in_play_mode()
 
 def calculate_game_score():
     global any_player_win

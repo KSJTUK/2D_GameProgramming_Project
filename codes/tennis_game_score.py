@@ -41,8 +41,10 @@ def init():
     special_symbols = { supported_special_symbols[symbol_idx]:
                             load_image(f'./../resources/special_symbols/special_symbols_{symbol_idx + 1}.png')
                         for symbol_idx in range(len(supported_special_symbols))}
+    numbers = {str(num):load_image(f'./../resources/number_font/number_{num}.png')
+               for num in range(10)}
 
-    alphabet_images = upper_alpha | lower_alpha | special_symbols
+    alphabet_images = upper_alpha | lower_alpha | special_symbols | numbers
     alphabet_images['-'] = load_image(f'./../resources/dash_image.png')
     print(alphabet_images)
     # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
@@ -52,24 +54,16 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    test_string = 'Make A Test String'
-    font_size = 30
-    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, font_size,'left')
+
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch, test_string, font_size, 'center')
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, test_string, font_size, 'right')
-
-
-def draw_set_score_in_score_mode(x, y, text_align, font_size, score_image_size):
-    score_size = 30
-    next_draw = draw_string(x, y, 'you', font_size, text_align)
-    draw_score(next_draw, y, main_player_set_score)
 
 
 def draw_set_score_in_play_mode():
-    pass
-
+    draw_string(0, game_framework.CANVAS_H - 15,
+                f'set score: {main_player_set_score}-{opponent_player_set_score}', 30, 'left')
+    draw_string(0, game_framework.CANVAS_H - 45,
+                f'score: {main_player_score}-{opponent_player_score}', 30, 'left')
 
 def draw_scores(score, x, y):
     global score_images
