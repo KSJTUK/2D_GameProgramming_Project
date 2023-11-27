@@ -45,7 +45,6 @@ def init():
                for num in range(10)}
 
     alphabet_images = upper_alpha | lower_alpha | special_symbols | numbers
-    alphabet_images['-'] = load_image(f'./../resources/dash_image.png')
     print(alphabet_images)
     # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
 
@@ -55,8 +54,11 @@ def draw_score():
 
     global main_player_score, opponent_player_score
 
-    draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
-    draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
+    # draw_scores(main_player_score, cw - SCORE_IMAGE_WIDTH * 3, ch)
+    # draw_scores(opponent_player_score, cw + SCORE_IMAGE_WIDTH * 3, ch)
+    draw_string(cw - SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'your score', SCORE_IMAGE_WIDTH, 'right')
+    draw_string(cw + SCORE_IMAGE_WIDTH * 2, ch + SCORE_IMAGE_WIDTH * 2, 'ai\'s score', SCORE_IMAGE_WIDTH, 'left')
+    draw_string(cw, ch, f'{main_player_score:^02d}  -  {opponent_player_score:^02d}', SCORE_IMAGE_WIDTH * 2, 'center')
 
 
 def draw_set_score_in_play_mode():

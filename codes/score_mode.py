@@ -23,6 +23,7 @@ def update():
 def render():
     clear_canvas()
     game_world.render()
+    tennis_referee.render()
     tennis_game_score.draw_score()
     update_canvas()
 
