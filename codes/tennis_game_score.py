@@ -46,13 +46,21 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    test_string = 'mainPlayerScoreAndOpponentPlayerScore'
-    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, 10,'left')
+    test_string = 'MakeATestString'
+    font_size = 30
+    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, font_size,'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch, test_string, 10, 'center')
+    draw_string(cw, ch, test_string, font_size, 'center')
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, test_string, 10, 'right')
+    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, test_string, font_size, 'right')
 
+
+def draw_set_score_in_score_mode():
+    pass
+
+
+def draw_set_score_in_play_mode():
+    pass
 
 
 def draw_scores(score, x, y):
