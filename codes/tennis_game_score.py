@@ -3,11 +3,6 @@ from pico2d import load_image
 import game_framework
 import score_mode
 
-SCORE_IMAGE_WIDTH = 33
-SCORE_IMAGE_HEIGHT = 34
-
-DASH_IMAGE_SIZE = 16
-
 ALPHABET_IMAGE_SIZE = 17
 
 
@@ -15,7 +10,6 @@ supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?
 
 def load_fonts():
     global alphabet_images, score_images
-    score_images = [load_image(f'./../resources/num_font_yellow/score_image{x}.png') for x in range(0, 10)]
     upper_alpha = { chr(alpha):load_image(f'./../resources/alphabet_upper_font/alphabet_{chr(alpha)}.png')
                     for alpha in range(ord('A'), ord('Z') + 1)}
     lower_alpha = { chr(alpha):load_image(f'./../resources/alphabet_lower_font/alphabet_{chr(alpha)}.png')
