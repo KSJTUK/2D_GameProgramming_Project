@@ -46,11 +46,12 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, 'your-score', 'left')
+    test_string = 'mainPlayerScoreAndOpponentPlayerScore'
+    draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, 10,'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch, 'your-score', 'center')
+    draw_string(cw, ch, test_string, 10, 'center')
     draw_scores(opponent_player_score, cw, ch - SCORE_IMAGE_HEIGHT)
-    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, 'your-score', 'right')
+    draw_string(cw, ch - SCORE_IMAGE_HEIGHT * 2, test_string, 10, 'right')
 
 
 
@@ -59,39 +60,45 @@ def draw_scores(score, x, y):
 
     divide_score = divmod(score, 10)
 
-    score_images[divide_score[0]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
+    score_images[divide_score[0]].composite_draw(0, ' ',
                                             x - SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
-    score_images[divide_score[1]].clip_draw(0, 0, SCORE_IMAGE_WIDTH, SCORE_IMAGE_HEIGHT,
+    score_images[divide_score[1]].composite_draw(0, ' ',
                                             x + SCORE_IMAGE_WIDTH, y, SCORE_IMAGE_WIDTH * 2, SCORE_IMAGE_HEIGHT * 2)
 
 
-def draw_string(cx, cy, string, text_aligned='center'):
+def draw_string(cx, cy, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='center'):
     if text_aligned == 'center':
-        draw_string_aligned_center(cx, cy, string)
+        draw_string_aligned_center(cx, cy, string, font_size)
     elif text_aligned == 'left':
-        draw_string_aligned_left(cx, cy, string)
+        draw_string_aligned_left(cx, cy, string, font_size)
     elif text_aligned == 'right':
-        draw_string_aligned_right(cx, cy, string)
+        draw_string_aligned_right(cx, cy, string, font_size)
     else:
         raise ValueError(f'not exist text aligned option: {text_aligned}')
 
 
-def draw_string_aligned_center(cx, cy, string):
-    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
-    left = cx - ((len(string) * ALPHABET_IMAGE_SIZE) // 2) + HALF_IMAGE_SIZE
+def draw_string_aligned_center(cx, cy, string, font_size):
+    HALF_IMAGE_SIZE = font_size // 2
+    left = cx - ((len(string) * font_size) // 2) + HALF_IMAGE_SIZE
     for i in range(len(string)):
-        alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
+        # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
+        alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
+                                                  font_size, font_size)
 
-def draw_string_aligned_left(cx, cy, string):
-    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
+def draw_string_aligned_left(cx, cy, string, font_size):
+    HALF_IMAGE_SIZE = font_size // 2
     for i in range(len(string)):
-        alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE + HALF_IMAGE_SIZE, cy)
+        # alphabet_images[string[i]].draw(cx + i * ALPHABET_IMAGE_SIZE + HALF_IMAGE_SIZE, cy)
+        alphabet_images[string[i]].composite_draw(0, ' ', cx + i * font_size + HALF_IMAGE_SIZE, cy,
+                                                  font_size, font_size)
 
-def draw_string_aligned_right(cx, cy, string):
-    HALF_IMAGE_SIZE = ALPHABET_IMAGE_SIZE // 2
-    left = cx - (len(string) * ALPHABET_IMAGE_SIZE) + HALF_IMAGE_SIZE
+def draw_string_aligned_right(cx, cy, string, font_size):
+    HALF_IMAGE_SIZE = font_size // 2
+    left = cx - (len(string) * font_size) + HALF_IMAGE_SIZE
     for i in range(len(string)):
-        alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
+        # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
+        alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
+                                                  font_size, font_size)
 
 
 def in_deuce_mode():
