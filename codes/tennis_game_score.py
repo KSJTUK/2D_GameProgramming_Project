@@ -11,6 +11,9 @@ DASH_IMAGE_SIZE = 16
 ALPHABET_IMAGE_SIZE = 17
 
 
+supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?', 'rev!', ' ', '/']
+
+
 def init():
     global main_player_score, opponent_player_score
     global main_player_set_score, opponent_player_set_score
@@ -35,8 +38,11 @@ def init():
                     for alpha in range(ord('A'), ord('Z') + 1)}
     lower_alpha = { chr(alpha):load_image(f'./../resources/alphabet_lower_font/alphabet_{chr(alpha)}.png')
                     for alpha in range(ord('a'), ord('z') + 1)}
+    special_symbols = { supported_special_symbols[symbol_idx]:
+                            load_image(f'./../resources/special_symbols/special_symbols_{symbol_idx + 1}.png')
+                        for symbol_idx in range(len(supported_special_symbols))}
 
-    alphabet_images = upper_alpha | lower_alpha
+    alphabet_images = upper_alpha | lower_alpha | special_symbols
     alphabet_images['-'] = load_image(f'./../resources/dash_image.png')
     print(alphabet_images)
     # set_score_images = [load_image(f'./../resources/num_font_green/set_score_image_{x}.png') for x in range(0, 10)]
@@ -46,7 +52,7 @@ def draw_score():
     cw, ch = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
 
     global main_player_score, opponent_player_score
-    test_string = 'MakeATestString'
+    test_string = 'Make A TestString???'
     font_size = 30
     draw_string(cw, ch + SCORE_IMAGE_HEIGHT * 2, test_string, font_size,'left')
     draw_scores(main_player_score, cw, ch + SCORE_IMAGE_HEIGHT)
