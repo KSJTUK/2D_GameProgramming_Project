@@ -48,6 +48,7 @@ def draw_set_score_in_play_mode(font_size):
                 f'score: {main_player_score:>2d}-{opponent_player_score:>2d}', font_size, 'left')
 
 
+
 def in_deuce_mode():
     global deuce_mode
     deuce_mode = True

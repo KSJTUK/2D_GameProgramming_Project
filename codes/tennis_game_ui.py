@@ -5,6 +5,8 @@ ALPHABET_IMAGE_SIZE = 17
 supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?', 'rev!', ' ', '/']
 
 def init():
+    global ui_images
+    ui_images = { }
     load_fonts()
 
 
@@ -23,13 +25,18 @@ def load_fonts():
 
     alphabet_images = upper_alpha | lower_alpha | special_symbols | numbers
 
-def draw_string(cx, cy, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='center'):
+def load_ui_image(key, image_file_path):
+    global ui_images
+    ui_images[key] = load_image(image_file_path)
+
+
+def draw_string(x, y, string, font_size=ALPHABET_IMAGE_SIZE, text_aligned='center'):
     if text_aligned == 'center':
-        draw_string_aligned_center(cx, cy, string, font_size)
+        draw_string_aligned_center(x, y, string, font_size)
     elif text_aligned == 'left':
-        draw_string_aligned_left(cx, cy, string, font_size)
+        draw_string_aligned_left(x, y, string, font_size)
     elif text_aligned == 'right':
-        draw_string_aligned_right(cx, cy, string, font_size)
+        draw_string_aligned_right(x, y, string, font_size)
     else:
         raise ValueError(f'not exist text aligned option: {text_aligned}')
 
@@ -60,7 +67,6 @@ def draw_string_aligned_right(cx, cy, string, font_size):
     left = cx - (len(string) * font_size) + HALF_FONT_SIZE
     right = left + font_size
     for i in range(len(string)):
-        # alphabet_images[string[i]].draw(left + i * ALPHABET_IMAGE_SIZE, cy)
         alphabet_images[string[i]].composite_draw(0, ' ', left + i * font_size, cy,
                                                   font_size, font_size)
     return right
