@@ -6,6 +6,7 @@ import sys
 
 from tennis_court import COURT_CENTER_X, COURT_CENTER_Y, get_court_width, get_court_heights
 import tennis_referee
+import tennis_game_ui
 
 
 class Ball:
@@ -30,10 +31,10 @@ class Ball:
         game_world.add_collision_pair('ball:net', self, None)
 
         if Ball.image == None:
-            Ball.image = load_image('./../resources/game_image/tennis_ball.png')
+            Ball.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_ball.png')
 
         if Ball.shadow_image == None:
-            Ball.shadow_image = load_image('./../resources/game_image/ball_shadow.png')
+            Ball.shadow_image = load_image(tennis_game_ui.resource_dir+'game_image/ball_shadow.png')
 
     def hit_ball(self, power_x, power_y, power_z):
         self.bound_count = 0

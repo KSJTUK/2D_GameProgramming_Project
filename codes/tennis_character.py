@@ -8,6 +8,7 @@ from pico2d import load_image, clamp, draw_rectangle
 from math import pi, radians, sin, cos
 
 import game_framework
+import tennis_game_ui
 import tennis_referee
 import tennis_court
 
@@ -546,7 +547,7 @@ class TennisPlayer:
 
     def __init__(self, init_x=100, init_y=100):
         if TennisPlayer.image == None:
-            TennisPlayer.image = load_image('./../resources/game_image/tennis_character_micki.png')
+            TennisPlayer.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
 
         self.x, self.y = init_x, init_y  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션

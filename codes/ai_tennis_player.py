@@ -10,6 +10,7 @@ from behavior_tree import *
 import game_framework
 import tennis_referee
 import tennis_court
+import tennis_game_ui
 
 RUN_SPEED_KMPH = 30.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
@@ -462,7 +463,7 @@ class TennisAI:
 
     def __init__(self, init_x=400, init_y=100):
         if TennisAI.image == None:
-            TennisAI.image = load_image('./../resources/game_image/tennis_character_micki.png')
+            TennisAI.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
 
         self.x, self.y = init_x, init_y
         self.face_x, self.face_y = '', '_front'

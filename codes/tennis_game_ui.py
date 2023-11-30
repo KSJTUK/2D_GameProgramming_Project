@@ -3,24 +3,32 @@ from pico2d import load_image
 ALPHABET_IMAGE_SIZE = 17
 
 supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?', 'rev!', ' ', '/']
+resource_dir = './../resources/'
+font_dir = resource_dir + 'font/'
+ui_image_dir = resource_dir + 'ui_image/'
 
 def init():
     global ui_images
     ui_images = { }
+    load_ui_image('title', ui_image_dir + 'title.png')
+    load_ui_image('deuce', ui_image_dir + 'deuce.png')
+    load_ui_image('match_point', ui_image_dir + 'match_point.png')
+    load_ui_image('game_point', ui_image_dir+'game_point.png')
+    load_ui_image('set_point', ui_image_dir+'set_point.png')
     load_fonts()
 
 
 def load_fonts():
     global alphabet_images, score_images
 
-    upper_alpha = {chr(alpha): load_image(f'./../resources/font/alphabet_upper_font/alphabet_{chr(alpha)}.png')
+    upper_alpha = {chr(alpha): load_image(font_dir+f'alphabet_upper_font/alphabet_{chr(alpha)}.png')
                    for alpha in range(ord('A'), ord('Z') + 1)}
-    lower_alpha = {chr(alpha): load_image(f'./../resources/font/alphabet_lower_font/alphabet_{chr(alpha)}.png')
+    lower_alpha = {chr(alpha): load_image(font_dir+f'alphabet_lower_font/alphabet_{chr(alpha)}.png')
                    for alpha in range(ord('a'), ord('z') + 1)}
     special_symbols = {supported_special_symbols[symbol_idx]:
-                           load_image(f'./../resources/font/special_symbols/special_symbols_{symbol_idx + 1}.png')
+                           load_image(font_dir+f'special_symbols/special_symbols_{symbol_idx + 1}.png')
                        for symbol_idx in range(len(supported_special_symbols))}
-    numbers = {str(num): load_image(f'./../resources/font/number_font/number_{num}.png')
+    numbers = {str(num): load_image(font_dir+f'number_font/number_{num}.png')
                for num in range(10)}
 
     alphabet_images = upper_alpha | lower_alpha | special_symbols | numbers

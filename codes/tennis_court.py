@@ -1,5 +1,6 @@
 from pico2d import load_image, draw_rectangle
 import game_framework
+import tennis_game_ui
 
 # 아래는 코트 영역에 대한 정보임
 COURT_CENTER_X, COURT_CENTER_Y = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2
@@ -19,7 +20,7 @@ COURT_B_LEFT, COURT_B_RIGHT = ORIGIN_COURT_B_LEFT, ORIGIN_COURT_B_RIGHT
 
 class TennisCourt:
     def __init__(self, court_number):
-        self.image = load_image('./../resources/game_image/tennis_courts.png')
+        self.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_courts.png')
         self.court_number = court_number
         self.image_width, self.image_height = 431 - (self.court_number % 2), 296
         self.image_left, self.image_bottom = 433 * (self.court_number % 2), 1 + 297 * (self.court_number // 2)
