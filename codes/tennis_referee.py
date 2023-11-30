@@ -68,8 +68,6 @@ def set_referee():
     global is_court_end, court_end_time, any_player_win
     global win_player, lose_player
 
-    tennis_game_score.init()
-
     play_ball = None
     main_player = None
     opponent_player = None

@@ -29,8 +29,6 @@ class Ball:
 
         self.bound_count = 0
 
-        game_world.add_collision_pair('ball:net', self, None)
-
         if Ball.image == None:
             Ball.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_ball.png')
 
@@ -118,7 +116,7 @@ class Ball:
         if groub == 'tennis_player:ball':
             self.last_check_collision_groub = groub
         if groub == 'tennis_player:serve_ball':
-            pass
+            self.last_check_collision_groub = groub
         if groub == 'ball:net':
             tennis_referee.bound_net()
 

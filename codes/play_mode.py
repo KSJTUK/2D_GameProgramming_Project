@@ -10,6 +10,7 @@ from tennis_net import TennisNet, Wall
 # test
 from ball import Ball
 import tennis_referee
+import tennis_game_score
 from ai_tennis_player import TennisAI
 
 
@@ -20,12 +21,6 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
-            test_throw_ball(800, 600, randint(-40, 10), randint(-40, -30), randint(40, 50))
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
-            tennis_referee.new_court_start()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
-            tennis_referee.new_set_start()
         else:
             tennis_player.handle_event(event)
 
@@ -40,6 +35,7 @@ def init():
     global court
     global tennis_player
 
+    tennis_game_score.init()
     court = tennis_court.TennisCourt(0)
     game_world.add_object(court, 0)
 
@@ -61,6 +57,7 @@ def init():
 
     net = TennisNet()
     game_world.add_object(net, 1)
+    game_world.add_collision_pair('ball:net', None, net)
 
     tennis_referee.new_set_start()
 

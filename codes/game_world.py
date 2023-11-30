@@ -3,6 +3,9 @@ game_objects = [[] for _ in range(4)]
 # 물리 세계 (충돌세계) 생성
 collision_pairs = {}
 
+# test
+import ball
+import tennis_net
 
 def add_collision_pair(groub, object1=None, object2=None):
     if groub not in collision_pairs:
@@ -59,12 +62,14 @@ def collide_aabb(object1, object2):
     z_bottom_a, z_top_a = object1.get_z()
     z_bottom_b, z_top_b = object2.get_z()
 
+    if z_top_a < z_bottom_b: return False
+    if z_bottom_a > z_top_b: return False
     if left_a > right_b: return False
     if right_a < left_b: return False
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
-    if z_top_a < z_bottom_b: return False
-    if z_bottom_a > z_top_b: return False
+
+    print(f'ballz: {z_bottom_a}, {z_top_a}, netz: {z_bottom_b}, {z_top_b}')
 
     return True
 
