@@ -242,3 +242,7 @@ def opponent_player_win():
     game_framework.push_mode(score_mode)
 
     return isPlayerWin
+
+
+def get_set_scores():
+    return main_player_set_score, opponent_player_set_score

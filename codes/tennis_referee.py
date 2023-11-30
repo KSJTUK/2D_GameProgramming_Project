@@ -2,6 +2,7 @@ import game_world
 import game_framework
 import tennis_court
 import tennis_game_score
+import ending_mode
 
 NEW_COURT_START_TIME = 3.0
 SCORE_FONT_SIZE = 30
@@ -18,9 +19,12 @@ def new_court_start():
     is_court_end = False
     tennis_game_score.new_court_game_start()
 
-    if tennis_game_score.main_player_set_score == END_SET_SCORE or\
-        tennis_game_score.opponent_player_set_score == END_SET_SCORE:
-        game_framework.quit()
+    main_player_set_score, opponent_player_set_score = tennis_game_score.get_set_scores()
+    if main_player_set_score == END_SET_SCORE or\
+        opponent_player_set_score == END_SET_SCORE:
+        game_framework.pop_mode()
+        game_framework.change_mode(ending_mode)
+        return
 
     if play_ball:
         game_world.remove_object(play_ball)
