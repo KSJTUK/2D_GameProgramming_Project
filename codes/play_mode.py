@@ -39,7 +39,7 @@ def test_throw_ball(x, y, speed_x, speed_y, speed_z):
 def init():
     global court
     global tennis_player
-    running = True
+
     court = tennis_court.TennisCourt(0)
     game_world.add_object(court, 0)
 
