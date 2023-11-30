@@ -1,5 +1,5 @@
 import pico2d
-from pico2d import load_image
+from pico2d import load_image, load_wav
 import game_framework
 import game_world
 import sys
@@ -12,6 +12,7 @@ import tennis_game_ui
 class Ball:
     image = None
     shadow_image = None
+    bounding_sound = None
 
     def __init__(self, x, y, z, speed_x, speed_y, speed_z):
         self.x, self.y, self.z = x, y, z
@@ -35,6 +36,13 @@ class Ball:
 
         if Ball.shadow_image == None:
             Ball.shadow_image = load_image(tennis_game_ui.resource_dir+'game_image/ball_shadow.png')
+
+        if Ball.bounding_sound == None:
+            Ball.bounding_sound = load_wav(tennis_game_ui.sound_dir+'ball_bounding.wav')
+            Ball.bounding_sound.set_volume(32)
+
+        if Ball.bounding_sound:
+            Ball.bounding_sound.play()
 
     def hit_ball(self, power_x, power_y, power_z):
         self.bound_count = 0
@@ -68,6 +76,7 @@ class Ball:
         self.y += self.pps_speed_y * game_framework.frame_time + self.pps_speed_z * game_framework.frame_time
 
     def bounding(self):
+        Ball.bounding_sound.play()
         bound_coefficient = 1.5
         cant_bound_speed = 2.0
 

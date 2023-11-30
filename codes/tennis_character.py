@@ -4,7 +4,7 @@ import game_world
 from animation_info import *
 from check_event_funtions import *
 from ball import Ball
-from pico2d import load_image, clamp, draw_rectangle
+from pico2d import load_image, clamp, draw_rectangle, load_wav
 from math import pi, radians, sin, cos
 
 import game_framework
@@ -544,10 +544,14 @@ class TennisPlayerStateMachine:
 
 class TennisPlayer:
     image = None
+    hit_sound = None
 
     def __init__(self, init_x=100, init_y=100):
         if TennisPlayer.image == None:
             TennisPlayer.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
+        if TennisPlayer.hit_sound == None:
+            TennisPlayer.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
+            TennisPlayer.hit_sound.set_volume(16)
 
         self.x, self.y = init_x, init_y  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션
@@ -635,6 +639,7 @@ class TennisPlayer:
         if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
             return
 
+        TennisPlayer.hit_sound.play()
         tennis_referee.last_hit_player = self
 
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()

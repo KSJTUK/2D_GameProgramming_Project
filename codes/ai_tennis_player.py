@@ -3,7 +3,7 @@ import random
 import game_world
 from animation_info import *
 from ball import Ball
-from pico2d import load_image, clamp, draw_rectangle
+from pico2d import load_image, clamp, draw_rectangle, load_wav
 from math import pi, radians, sin, cos, atan2
 from behavior_tree import *
 
@@ -460,10 +460,14 @@ class Idle:
 
 class TennisAI:
     image = None
+    hit_sound = None
 
     def __init__(self, init_x=400, init_y=100):
         if TennisAI.image == None:
             TennisAI.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
+        if TennisAI.hit_sound == None:
+            TennisAI.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
+            TennisAI.hit_sound.set_volume(10)
 
         self.x, self.y = init_x, init_y
         self.face_x, self.face_y = '', '_front'
@@ -583,6 +587,7 @@ class TennisAI:
         hit_power_x, hit_power_y, hit_power_z = self.calc_hit_power()
         if self.cur_state == HighHit: hit_power_x = -abs(hit_power_x)
 
+        TennisAI.hit_sound.play()
         ball.hit_ball(hit_power_x, hit_power_y, hit_power_z)
 
     def hit_ball(self):

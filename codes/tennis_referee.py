@@ -5,6 +5,7 @@ import tennis_game_score
 
 NEW_COURT_START_TIME = 3.0
 SCORE_FONT_SIZE = 30
+END_SET_SCORE = 3
 
 
 def new_set_start():
@@ -15,6 +16,11 @@ def new_set_start():
 def new_court_start():
     global is_court_end, play_ball
     is_court_end = False
+    tennis_game_score.new_court_game_start()
+
+    if tennis_game_score.main_player_set_score == END_SET_SCORE or\
+        tennis_game_score.opponent_player_set_score == END_SET_SCORE:
+        game_framework.quit()
 
     if play_ball:
         game_world.remove_object(play_ball)
@@ -94,15 +100,17 @@ def remove_ball(ball):
 
 def calc_new_court_start_time():
     global court_end_time, any_player_win
-    if court_end_time > NEW_COURT_START_TIME:
-        court_end_time = 0.0
-        if tennis_game_score.is_new_set_start():
-            new_set_start()
-            tennis_game_score.new_set_game_start()
-        else:
-            new_court_start()
+    if court_end_time < NEW_COURT_START_TIME:
+        court_end_time += game_framework.frame_time
+        return
 
-    court_end_time += game_framework.frame_time
+    court_end_time = 0.0
+    if tennis_game_score.is_new_set_start():
+        tennis_game_score.new_set_game_start()
+        new_set_start()
+    else:
+        new_court_start()
+
 
 
 def update():

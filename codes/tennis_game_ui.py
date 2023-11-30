@@ -6,6 +6,7 @@ supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?
 resource_dir = './../resources/'
 font_dir = resource_dir + 'font/'
 ui_image_dir = resource_dir + 'ui_image/'
+sound_dir = resource_dir + 'sounds/'
 
 def init():
     global ui_images
