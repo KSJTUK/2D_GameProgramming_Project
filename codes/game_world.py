@@ -69,8 +69,6 @@ def collide_aabb(object1, object2):
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
 
-    print(f'ballz: {z_bottom_a}, {z_top_a}, netz: {z_bottom_b}, {z_top_b}')
-
     return True
 
 

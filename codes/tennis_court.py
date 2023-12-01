@@ -10,7 +10,7 @@ ORIGIN_COURT_PIXEL_WIDTH, ORIGIN_COURT_PIXEL_HEIGHT = 212, 140
 
 COURT_WIDTH, COURT_HEIGHT = ORIGIN_COURT_PIXEL_WIDTH, ORIGIN_COURT_PIXEL_HEIGHT
 
-ORIGIN_COURT_TOP_HEIGHT, ORIGIN_COURT_BOTTOM_HEIGHT = 196 - ORIGIN_CENTER_Y, ORIGIN_CENTER_Y - 52
+ORIGIN_COURT_TOP_HEIGHT, ORIGIN_COURT_BOTTOM_HEIGHT = 196 - ORIGIN_CENTER_Y, ORIGIN_CENTER_Y - 30
 ORIGIN_COURT_B_LEFT, ORIGIN_COURT_B_RIGHT = 112, 128
 
 COURT_TOP_HEIGHT, COURT_BOTTOM_HEIGHT = ORIGIN_COURT_TOP_HEIGHT, ORIGIN_COURT_BOTTOM_HEIGHT
@@ -54,14 +54,6 @@ class TennisCourt:
         self.image.clip_composite_draw(self.image_left, self.image_bottom, self.image_width, self.image_height,
                                        0, ' ', game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2,
                                        game_framework.CANVAS_W, game_framework.CANVAS_H)
-
-        # # 코트 영역 확인용
-        # # 코트 영역 그리기
-        # bottom = COURT_CENTER_Y - COURT_BOTTOM_HEIGHT
-        # top = COURT_CENTER_Y + COURT_TOP_HEIGHT
-        # for y in range(0, int(COURT_HEIGHT)):
-        #     draw_rectangle(COURT_CENTER_X - ((COURT_WIDTH - y * DELTA_X_PER_Y_PIXEL) // 2), bottom + y - 1,
-        #                    COURT_CENTER_X + ((COURT_WIDTH - y * DELTA_X_PER_Y_PIXEL) // 2), bottom + y + 1)
 
 
 def get_court_width(object_y):

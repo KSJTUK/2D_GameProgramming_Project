@@ -123,10 +123,14 @@ class Ball:
     def is_in_court(self):
         court_width = get_court_width(self.y)
         court_top_height, court_bottom_height = get_court_heights()
-        if self.x > COURT_CENTER_X + (court_width // 2): return False
-        if self.x < COURT_CENTER_X - (court_width // 2): return False
-        if self.y > COURT_CENTER_Y + court_top_height: return False
-        if self.y < COURT_CENTER_Y - court_bottom_height: return False
+        if self.x > COURT_CENTER_X + (court_width // 2):
+            return False
+        if self.x < COURT_CENTER_X - (court_width // 2):
+            return False
+        if self.y > COURT_CENTER_Y + court_top_height:
+            return False
+        if self.y < COURT_CENTER_Y - court_bottom_height:
+            return False
 
         return True
 

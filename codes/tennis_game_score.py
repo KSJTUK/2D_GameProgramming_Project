@@ -16,9 +16,9 @@ def init():
     global main_player_deuce_score, opponent_player_deuce_score
     global is_main_player_win
 
-    main_player_score = 40
-    opponent_player_score = 30
-    main_player_set_score = 2
+    main_player_score = 0
+    opponent_player_score = 0
+    main_player_set_score = 0
     opponent_player_set_score = 0
     main_player_deuce_score = 0
     opponent_player_deuce_score = 0

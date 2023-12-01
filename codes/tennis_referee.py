@@ -174,6 +174,8 @@ def ball_in_over_court():
         else:
             opponent_player_win()
 
+    calculate_game_score()
+
     play_ball = None
     is_court_end = True
 

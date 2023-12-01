@@ -561,6 +561,8 @@ class TennisPlayer:
         self.dir_x, self.dir_y = 0, 0  # 캐릭터 이동 방향
         self.character_height = 1.4 * game_framework.RATIO_FROM_DEFAULT_H  # 캐릭터 크기
 
+        self.random_power_range = 100.0
+
         self.z = 0
 
         self.width, self.height = 0, 0
@@ -610,34 +612,49 @@ class TennisPlayer:
         tennis_referee.subscribe_ball(ball)
         tennis_referee.last_hit_player = self
 
-        if groub == 'tennis_player:ball':
-            game_world.add_collision_pair('ball:net', ball, None)
-
     def block_move_over_play_area(self):
         center_x, center_y = tennis_court.COURT_CENTER_X, tennis_court.COURT_CENTER_Y
         self.x = clamp(center_x - 10.0 * self.pixel_per_meter, self.x, center_x + 10.0 * self.pixel_per_meter)
         self.y = clamp(center_y - 6.0 * self.pixel_per_meter, self.y, center_y - 0.5 * self.pixel_per_meter)
 
+    def decide_random_hit_power_range(self):
+        court_bottom = tennis_court.COURT_CENTER_Y + tennis_court.COURT_BOTTOM_HEIGHT
+        court_width = tennis_court.get_court_width(court_bottom)
+        if self.x > tennis_court.COURT_CENTER_X + court_width // 2:
+            return (-self.random_power_range, -self.random_power_range / 10.0)
+        elif self.x < tennis_court.COURT_CENTER_X - court_width // 2:
+            return (self.random_power_range / 10.0, self.random_power_range)
+        else:
+            if self.x < tennis_court.COURT_CENTER_X:
+                return (-self.random_power_range / 10.0, self.random_power_range)
+            else:
+                return (-self.random_power_range, self.random_power_range / 10.0)
+
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
         dist_from_center_x, dist_from_center_y = tennis_court.COURT_CENTER_X - self.x, tennis_court.COURT_CENTER_Y - self.y
+        if abs(dist_from_center_x) < 1.0: dist_from_center_x = 1.0
         percentage_from_canvas_w = abs(dist_from_center_x / (canvas_width // 2))
         percentage_from_canvas_h = abs(dist_from_center_y / (canvas_height // 2))
 
-        hit_dir_x = dist_from_center_x / abs(dist_from_center_x)
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
-        minimum_hit_power, hit_power_limit, z_power_scale = 20.0, 40.0, 2.0
+        minimum_hit_power, hit_power_limit, z_power_scale = (10.0, 20.0, 10.0), (40.0, 40.0, 45.0), 5.0
+        random_speed = random.randint(*self.decide_random_hit_power_range())
+        hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
-        hit_power_x = hit_dir_x * clamp(minimum_hit_power, percentage_from_canvas_w * racket_speed, hit_power_limit)
-        hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
-        hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
+        hit_power_x = hit_dir_x * clamp(minimum_hit_power[0], abs(percentage_from_canvas_w * random_speed),
+                                        hit_power_limit[0])
+        hit_power_y = hit_dir_y * clamp(minimum_hit_power[1], percentage_from_canvas_h * racket_speed, hit_power_limit[1])
+        hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit[2])
         return hit_power_x, hit_power_y, hit_power_z
 
     def hit_ball(self, ball):
         if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
             return
+
+        game_world.add_collision_pair('ball:net', ball, None)
 
         TennisPlayer.hit_sound.play()
         tennis_referee.last_hit_player = self

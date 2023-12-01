@@ -540,8 +540,7 @@ class TennisAI:
         tennis_referee.subscribe_ball(ball)
         tennis_referee.last_hit_player = self
 
-        if groub == 'tennis_player:ball':
-            game_world.add_collision_pair('ball:net', ball, None)
+        game_world.add_collision_pair('ball:net', ball, None)
 
     def decide_random_hit_power_range(self):
         court_top = tennis_court.COURT_CENTER_Y + tennis_court.COURT_TOP_HEIGHT
@@ -551,7 +550,10 @@ class TennisAI:
         elif self.x < tennis_court.COURT_CENTER_X - court_width // 2:
             return (self.random_power_range / 10.0, self.random_power_range)
         else:
-            return (-self.random_power_range, self.random_power_range)
+            if self.x < tennis_court.COURT_CENTER_X:
+                return (-self.random_power_range / 10.0, self.random_power_range)
+            else:
+                return (-self.random_power_range, self.random_power_range / 10.0)
 
     def calc_hit_power(self):
         canvas_width, canvas_height = game_framework.CANVAS_W, game_framework.CANVAS_H
@@ -563,14 +565,15 @@ class TennisAI:
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
-        minimum_hit_power, hit_power_limit, z_power_scale = 30.0, 40.0, 2.0
+        minimum_hit_power, hit_power_limit, z_power_scale = (10.0, 20.0, 10.0), (40.0, 40.0, 45.0), 5.0
         random_speed = random.randint(*self.decide_random_hit_power_range())
         hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
-        hit_power_x = hit_dir_x * clamp(minimum_hit_power, abs(percentage_from_canvas_w * random_speed),
-                                        hit_power_limit)
-        hit_power_y = hit_dir_y * clamp(minimum_hit_power, percentage_from_canvas_h * racket_speed, hit_power_limit)
-        hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit)
+        hit_power_x = hit_dir_x * clamp(minimum_hit_power[0], abs(percentage_from_canvas_w * random_speed),
+                                        hit_power_limit[0])
+        hit_power_y = hit_dir_y * clamp(minimum_hit_power[1], percentage_from_canvas_h * racket_speed,
+                                        hit_power_limit[1])
+        hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit[2])
         return hit_power_x, hit_power_y, hit_power_z
 
     def block_move_over_play_area(self):
@@ -581,6 +584,8 @@ class TennisAI:
     def handle_collision_with_ball(self, ball):
         if ball.last_check_collision_groub == 'tennis_player:ball' and tennis_referee.last_hit_player == self:
             return
+
+        game_world.add_collision_pair('ball:net', ball, None)
 
         tennis_referee.last_hit_player = self
 
