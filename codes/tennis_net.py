@@ -49,7 +49,7 @@ class TennisNet:
         pass
 
     def render(self):
-        pico2d.draw_rectangle(*self.get_bounding_box())
+        pass
 
     def handle_collision(self, groub, other):
         if groub == 'ball:net' and other.last_check_collision_groub != 'ball:net':

@@ -12,10 +12,9 @@ import tennis_referee
 import tennis_court
 import tennis_game_ui
 
-RUN_SPEED_KMPH = 30.0
+RUN_SPEED_KMPH = 35.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
 RUN_SPEED_PPS = RUN_SPEED_MPS * game_framework.PIXEL_PER_METER
-
 
 class Win:
     @staticmethod
@@ -565,12 +564,15 @@ class TennisAI:
         hit_dir_y = dist_from_center_y / abs(dist_from_center_y)
         # 최소, 최대 파워 설정, z값 보정 상수 설정
         racket_speed = 60
-        minimum_hit_power, hit_power_limit, z_power_scale = (10.0, 20.0, 10.0), (40.0, 40.0, 45.0), 5.0
+        minimum_hit_power, hit_power_limit, z_power_scale = (10.0, 30.0, 10.0), (40.0, 40.0, 45.0), 5.0
         random_speed = random.randint(*self.decide_random_hit_power_range())
         hit_dir_x = random_speed / abs(random_speed) if random_speed != 0 else 1
 
         hit_power_x = hit_dir_x * clamp(minimum_hit_power[0], abs(percentage_from_canvas_w * random_speed),
                                         hit_power_limit[0])
+        if self.cur_animation == 'High_hit_back' or self.cur_animation == 'High_hit_front':
+            hit_power_x = 20.0
+
         hit_power_y = hit_dir_y * clamp(minimum_hit_power[1], percentage_from_canvas_h * racket_speed,
                                         hit_power_limit[1])
         hit_power_z = min(abs(percentage_from_canvas_h * racket_speed * z_power_scale), hit_power_limit[2])
@@ -628,7 +630,7 @@ class TennisAI:
         return self.x - half_width, self.y - half_height, self.x + half_width, self.y + half_height
 
     def get_z(self):
-        return self.z, self.z + self.height
+        return self.z, self.z + self.height * 1.3
 
     def handle_collision(self, groub, other):
         self.cur_state.handle_collision(self, groub, other)
@@ -872,6 +874,3 @@ def character_default_draw_animation(tennis_player):
     tennis_player.image.clip_composite_draw(tennis_player.frame_start_x, tennis_player.animation_information['start_y'],
                                             width, height, 0, ' ',
                                             tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
-
-    # 디버그용
-    draw_rectangle(*tennis_player.get_bounding_box())

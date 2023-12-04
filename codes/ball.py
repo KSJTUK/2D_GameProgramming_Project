@@ -101,8 +101,6 @@ class Ball:
         Ball.image.clip_composite_draw(0, 0, 128, 128,
                                        0, '', self.x, self.y,
                                        self.width * scale, self.height * scale)
-        # 디버그용
-        pico2d.draw_rectangle(*self.get_bounding_box())
 
     def get_bounding_box(self):
         half_w, half_h = self.width // 2, self.height // 2
