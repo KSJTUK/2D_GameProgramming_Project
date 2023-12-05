@@ -1,8 +1,8 @@
-import tennis_game_score
-import tennis_referee
-import game_framework
-import game_world
-import check_event_funtions
+import codes.tennis_game_score as tennis_game_score
+import codes.tennis_referee as tennis_referee
+import codes.game_framework as game_framework
+import codes.game_world as game_world
+import codes.check_event_funtions as check_event_funtions
 
 from pico2d import clear_canvas, update_canvas, get_events, SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE
 SCORE_FONT_SIZE = 30

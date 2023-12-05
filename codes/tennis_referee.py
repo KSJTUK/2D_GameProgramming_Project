@@ -1,8 +1,8 @@
-import game_world
-import game_framework
-import tennis_court
-import tennis_game_score
-import ending_mode
+import codes.game_world as game_world
+import codes.game_framework as game_framework
+import codes.tennis_court as tennis_court
+import codes.tennis_game_score as tennis_game_score
+import codes.ending_mode as ending_mode
 
 NEW_COURT_START_TIME = 3.0
 SCORE_FONT_SIZE = 30

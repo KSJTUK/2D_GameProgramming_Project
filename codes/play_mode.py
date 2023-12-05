@@ -1,17 +1,17 @@
 from pico2d import *
 from random import randint
 
-import game_framework
+import codes.game_framework as game_framework
 
-import game_world
-import tennis_court
-from tennis_character import TennisPlayer
-from tennis_net import TennisNet, Wall
+import codes.game_world as game_world
+import codes.tennis_court as tennis_court
+from codes.tennis_character import TennisPlayer
+from codes.tennis_net import TennisNet, Wall
 # test
-from ball import Ball
-import tennis_referee
-import tennis_game_score
-from ai_tennis_player import TennisAI
+from codes.ball import Ball
+import codes.tennis_referee as tennis_referee
+import codes.tennis_game_score as tennis_game_score
+from codes.ai_tennis_player import TennisAI
 
 
 def handle_events():

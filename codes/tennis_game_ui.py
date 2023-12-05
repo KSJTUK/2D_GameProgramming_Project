@@ -3,7 +3,7 @@ from pico2d import load_image
 ALPHABET_IMAGE_SIZE = 17
 
 supported_special_symbols = ['*', '=', '-', '.', ':', '\'', ',', 'None', '!', '?', 'rev!', ' ', '/']
-resource_dir = './../resources/'
+resource_dir = './resources/'
 font_dir = resource_dir + 'font/'
 ui_image_dir = resource_dir + 'ui_image/'
 sound_dir = resource_dir + 'sounds/'
@@ -16,6 +16,7 @@ def init():
     load_ui_image('match_point', ui_image_dir + 'match_point.png')
     load_ui_image('game_point', ui_image_dir+'game_point.png')
     load_ui_image('set_point', ui_image_dir+'set_point.png')
+    # load_ui_image('game_over', ui_image_dir+'game_over.png')
     load_fonts()
 
 

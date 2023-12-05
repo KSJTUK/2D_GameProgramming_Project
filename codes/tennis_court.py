@@ -1,6 +1,6 @@
 from pico2d import load_image, draw_rectangle
-import game_framework
-import tennis_game_ui
+import codes.game_framework as game_framework
+import codes.tennis_game_ui as tennis_game_ui
 
 # 아래는 코트 영역에 대한 정보임
 COURT_CENTER_X, COURT_CENTER_Y = game_framework.CANVAS_W // 2, game_framework.CANVAS_H // 2

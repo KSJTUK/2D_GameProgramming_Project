@@ -1,9 +1,7 @@
-from pico2d import load_image
-
-import game_framework
-import score_mode
-import tennis_game_ui
-import tennis_referee
+import codes.game_framework as game_framework
+import codes.score_mode as score_mode
+import codes.tennis_game_ui as tennis_game_ui
+import codes.tennis_referee as tennis_referee
 
 
 def init():

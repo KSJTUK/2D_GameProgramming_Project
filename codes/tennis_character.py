@@ -1,16 +1,16 @@
 import random
 
-import game_world
-from animation_info import *
-from check_event_funtions import *
-from ball import Ball
+import codes.game_world as game_world
+from codes.animation_info import *
+from codes.check_event_funtions import *
+from codes.ball import Ball
 from pico2d import load_image, clamp, draw_rectangle, load_wav
 from math import pi, radians, sin, cos
 
-import game_framework
-import tennis_game_ui
-import tennis_referee
-import tennis_court
+import codes.game_framework as game_framework
+import codes.tennis_game_ui as tennis_game_ui
+import codes.tennis_referee as tennis_referee
+import codes.tennis_court as tennis_court
 
 RUN_SPEED_KMPH = 30.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0

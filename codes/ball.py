@@ -1,12 +1,11 @@
-import pico2d
 from pico2d import load_image, load_wav
-import game_framework
-import game_world
+import codes.game_framework as game_framework
+import codes.game_world as game_world
 import sys
 
-from tennis_court import COURT_CENTER_X, COURT_CENTER_Y, get_court_width, get_court_heights
-import tennis_referee
-import tennis_game_ui
+from codes.tennis_court import COURT_CENTER_X, COURT_CENTER_Y, get_court_width, get_court_heights
+import codes.tennis_referee as tennis_referee
+import codes.tennis_game_ui as tennis_game_ui
 
 
 class Ball:

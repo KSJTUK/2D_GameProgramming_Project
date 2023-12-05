@@ -1,8 +1,8 @@
 from pico2d import update_canvas, clear_canvas, get_events, \
     SDL_KEYDOWN, SDL_QUIT, SDLK_SPACE, SDLK_ESCAPE
-import game_framework
-import tennis_game_ui
-import play_mode
+import codes.game_framework as game_framework
+import codes.tennis_game_ui as tennis_game_ui
+import codes.play_mode as play_mode
 
 def init():
     pass

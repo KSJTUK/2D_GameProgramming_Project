@@ -3,10 +3,6 @@ game_objects = [[] for _ in range(4)]
 # 물리 세계 (충돌세계) 생성
 collision_pairs = {}
 
-# test
-import ball
-import tennis_net
-
 def add_collision_pair(groub, object1=None, object2=None):
     if groub not in collision_pairs:
         collision_pairs[groub] = [[], []]

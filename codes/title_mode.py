@@ -1,8 +1,8 @@
 from pico2d import load_image, delay, clear_canvas, update_canvas, get_events, clamp,\
     SDL_KEYDOWN, SDLK_ESCAPE, SDL_QUIT, SDLK_SPACE
-import game_framework
-import tennis_game_ui
-import play_mode
+import codes.game_framework as game_framework
+import codes.tennis_game_ui as tennis_game_ui
+import codes.play_mode as play_mode
 
 def init():
     global font_size, min_font_size, max_font_size

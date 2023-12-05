@@ -1,16 +1,16 @@
 import random
 
-import game_world
-from animation_info import *
-from ball import Ball
+import codes.game_world as game_world
+from codes.animation_info import *
+from codes.ball import Ball
 from pico2d import load_image, clamp, draw_rectangle, load_wav
 from math import pi, radians, sin, cos, atan2
-from behavior_tree import *
+from codes.behavior_tree import *
 
-import game_framework
-import tennis_referee
-import tennis_court
-import tennis_game_ui
+import codes.game_framework as game_framework
+import codes.tennis_referee as tennis_referee
+import codes.tennis_court as tennis_court
+import codes.tennis_game_ui as tennis_game_ui
 
 RUN_SPEED_KMPH = 35.0
 RUN_SPEED_MPS = (RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0
@@ -709,6 +709,11 @@ class TennisAI:
         self.cur_state.enter(self, ('NONE', 0))
         return BehaviorTree.SUCCESS
 
+    def is_not_nearby_target_pos(self):
+        if self.pixel_distance_less_than(self.x, self.tx, self.y, self.ty, 0.5):
+            return BehaviorTree.FAIL
+        return BehaviorTree.SUCCESS
+
     def set_random_target_location(self):
         self.tx, self.ty = random.randint(100, game_framework.CANVAS_W - 100), random.randint(100,
                                                                                               game_framework.CANVAS_H - 100)
@@ -793,8 +798,9 @@ class TennisAI:
 
     def build_behavior_tree(self):
         # action node part
-        action_set_move_target = Action('set move target', self.set_move_target_location, 100, 100)
-        action_set_random_move_target = Action('set random move target', self.set_random_target_location)
+        action_set_move_target = Action('set move target', self.set_move_target_location,
+                                        tennis_court.COURT_CENTER_X,
+                                        tennis_court.COURT_CENTER_Y + tennis_court.COURT_TOP_HEIGHT)
         action_move_to = Action('move to', self.move_to)
         action_hit_ball = Action('hit ball', self.hit_ball)
         action_trace_ball = Action('trace ball', self.trace_ball)
@@ -834,7 +840,6 @@ class TennisAI:
         SEQ_hit_serve = Sequence('hit serve ball',
                                  condition_is_nearby_serve_ball, action_hit_serve_ball)
         SEQ_throw_ball = Sequence('throw if my serve turn', condition_my_serve_turn, action_throw_serve_ball)
-        # SEL_keep_preparing_serve_or_hit = Selector('keep prepare or hit', )
         SEL_throw_or_hit_serve = Selector('throw or serve', SEQ_hit_serve, SEQ_throw_ball)
 
         SEL_trace_ball_or_game_end = Selector('game end or move and hit or idle',
