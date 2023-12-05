@@ -425,6 +425,10 @@ class Run:
 
         # 프레임 업데이트
         character_default_frame_update(tennis_player)
+        if tennis_player.run_sound_play_time < tennis_player.time_count:
+            tennis_player.run_sound.play()
+            tennis_player.time_count = 0.0
+        tennis_player.time_count += game_framework.frame_time
 
     @staticmethod
     def exit(tennis_player, event):
@@ -474,8 +478,9 @@ class Idle:
 
 class TennisAI:
     image = None
-    hit_sound = None
     shadow = None
+    hit_sound = None
+    run_sound = None
 
     def __init__(self, init_x=400, init_y=100):
         if TennisAI.image == None:
@@ -485,6 +490,9 @@ class TennisAI:
         if TennisAI.hit_sound == None:
             TennisAI.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
             TennisAI.hit_sound.set_volume(10)
+        if TennisAI.run_sound == None:
+            TennisAI.run_sound = load_wav(tennis_game_ui.sound_dir+'character_foot_step.wav')
+            TennisAI.run_sound.set_volume(16)
 
         self.x, self.y = init_x, init_y
         self.face_x, self.face_y = '', '_front'
@@ -511,6 +519,9 @@ class TennisAI:
         self.face_x, self.face_y = '', '_front'  # 캐릭터가 바라보는 방향
         self.defualt_height = micky_animation['Idle_front']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
+
+        self.run_sound_play_time = 1.0
+        self.time_count = 0.0
 
         self.dir = 0.0
         self.tx, self.ty = 0, 0

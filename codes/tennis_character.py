@@ -442,6 +442,10 @@ class Run:
 
         # 프레임 업데이트
         character_default_frame_update(tennis_player)
+        if tennis_player.run_sound_play_time < tennis_player.time_count:
+            tennis_player.run_sound.play()
+            tennis_player.time_count = 0.0
+        tennis_player.time_count += game_framework.frame_time
 
     @staticmethod
     def exit(tennis_player, event):
@@ -560,6 +564,7 @@ class TennisPlayerStateMachine:
 class TennisPlayer:
     image = None
     hit_sound = None
+    run_sound = None
     shadow = None
 
     def __init__(self, init_x=100, init_y=100):
@@ -570,6 +575,9 @@ class TennisPlayer:
         if TennisPlayer.hit_sound == None:
             TennisPlayer.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
             TennisPlayer.hit_sound.set_volume(16)
+        if TennisPlayer.run_sound == None:
+            TennisPlayer.run_sound = load_wav(tennis_game_ui.sound_dir+'character_foot_step.wav')
+            TennisPlayer.run_sound.set_volume(24)
 
         self.x, self.y = init_x, init_y  # 캐릭터 위치
         self.cur_animation = "Idle_back"  # 캐릭터 기본 애니메이션
@@ -601,6 +609,9 @@ class TennisPlayer:
         # 즉 캐릭터의 키가 n미터 이면 IDLE상태의 height값이 n미터가 되도록 하게 함
         self.defualt_height = micky_animation['Idle_back']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
+
+        self.run_sound_play_time = 0.3
+        self.time_count = 0.0
 
         self.my_surve_turn = False
 
