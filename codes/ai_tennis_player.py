@@ -520,7 +520,7 @@ class TennisAI:
         self.defualt_height = micky_animation['Idle_front']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
 
-        self.run_sound_play_time = 1.0
+        self.run_sound_play_time = 0.2
         self.time_count = 0.0
 
         self.dir = 0.0

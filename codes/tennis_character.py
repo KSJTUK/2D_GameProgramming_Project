@@ -356,8 +356,15 @@ class Hit:
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
         # 지금은 Run 상태에서의 캐릭터의 방향을 따라가지만 나중에는 공의 위치에 따라 변경해야함
         # 공의 움직임 구현할 때 같이 구현 할것
+        if tennis_referee.play_ball:
+            if tennis_player.x < tennis_referee.play_ball.x:
+                tennis_player.face_x = '_right'
+            else:
+                tennis_player.face_x = '_left'
+
         tennis_player.cur_animation = 'Hit' + tennis_player.face_x if tennis_player.face_x != '' else 'Hit_right'
-        tennis_player.cur_animation = tennis_player.cur_animation + tennis_player.face_y if tennis_player.face_y != '' else tennis_player.cur_animation + '_back'
+        tennis_player.face_y = '_back'
+        tennis_player.cur_animation = tennis_player.cur_animation + tennis_player.face_y
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
@@ -610,7 +617,7 @@ class TennisPlayer:
         self.defualt_height = micky_animation['Idle_back']['frame_height']
         self.pixel_per_meter = game_framework.PIXEL_PER_METER
 
-        self.run_sound_play_time = 0.3
+        self.run_sound_play_time = 0.2
         self.time_count = 0.0
 
         self.my_surve_turn = False
