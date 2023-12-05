@@ -14,9 +14,6 @@ def init():
     load_ui_image('title', ui_image_dir + 'title.png')
     load_ui_image('deuce', ui_image_dir + 'deuce.png')
     load_ui_image('match_point', ui_image_dir + 'match_point.png')
-    load_ui_image('game_point', ui_image_dir+'game_point.png')
-    load_ui_image('set_point', ui_image_dir+'set_point.png')
-    # load_ui_image('game_over', ui_image_dir+'game_over.png')
     load_fonts()
 
 
