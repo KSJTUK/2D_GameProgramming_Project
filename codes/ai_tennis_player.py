@@ -460,10 +460,13 @@ class Idle:
 class TennisAI:
     image = None
     hit_sound = None
+    shadow = None
 
     def __init__(self, init_x=400, init_y=100):
         if TennisAI.image == None:
             TennisAI.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
+        if TennisAI.shadow == None:
+            TennisAI.shadow = load_image(tennis_game_ui.resource_dir+'game_image/ball_shadow.png')
         if TennisAI.hit_sound == None:
             TennisAI.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
             TennisAI.hit_sound.set_volume(10)
@@ -876,6 +879,8 @@ def character_default_draw_animation(tennis_player):
     tennis_player.height = tennis_player.character_height * tennis_player.pixel_per_meter * h * scale
     tennis_player.width = tennis_player.height * aspect * scale
 
+    tennis_player.shadow.composite_draw(0, '', tennis_player.x, tennis_player.y - tennis_player.height / 2.0,
+                                        tennis_player.width, tennis_player.width / 3.0)
     tennis_player.image.clip_composite_draw(tennis_player.frame_start_x, tennis_player.animation_information['start_y'],
                                             width, height, 0, ' ',
                                             tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)

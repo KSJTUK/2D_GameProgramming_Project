@@ -545,10 +545,13 @@ class TennisPlayerStateMachine:
 class TennisPlayer:
     image = None
     hit_sound = None
+    shadow = None
 
     def __init__(self, init_x=100, init_y=100):
         if TennisPlayer.image == None:
             TennisPlayer.image = load_image(tennis_game_ui.resource_dir+'game_image/tennis_character_micki.png')
+        if TennisPlayer.shadow == None:
+            TennisPlayer.shadow = load_image(tennis_game_ui.resource_dir+'game_image/ball_shadow.png')
         if TennisPlayer.hit_sound == None:
             TennisPlayer.hit_sound = load_wav(tennis_game_ui.sound_dir+'hit_sound.wav')
             TennisPlayer.hit_sound.set_volume(16)
@@ -707,6 +710,8 @@ def character_default_draw_animation(tennis_player):
     tennis_player.height = tennis_player.character_height * tennis_player.pixel_per_meter * h * scale
     tennis_player.width = tennis_player.height * aspect * scale
 
+    tennis_player.shadow.composite_draw(0, '', tennis_player.x, tennis_player.y - tennis_player.height / 2.0,
+                                        tennis_player.width, tennis_player.width / 3.0)
     tennis_player.image.clip_composite_draw(tennis_player.frame_start_x, tennis_player.animation_information['start_y'],
                                             width, height, 0, ' ',
                                             tennis_player.x, tennis_player.y, tennis_player.width, tennis_player.height)
