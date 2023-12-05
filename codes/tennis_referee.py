@@ -10,14 +10,18 @@ END_SET_SCORE = 3
 
 
 def new_set_start():
-    global turn
+    global turn, deuce_mode_turn
     turn = (turn + 1) % 2
+    deuce_mode_turn = turn
 
 
 def new_court_start():
-    global is_court_end, play_ball
+    global is_court_end, play_ball, deuce_mode_turn
     is_court_end = False
     tennis_game_score.new_court_game_start()
+
+    if tennis_game_score.is_in_deuce_mode():
+        deuce_mode_turn = (deuce_mode_turn + 1) % 2
 
     main_player_set_score, opponent_player_set_score = tennis_game_score.get_set_scores()
     if main_player_set_score == END_SET_SCORE or\
@@ -48,6 +52,15 @@ def tennis_players_position_reset():
 
 
 def set_serve_turn():
+    if tennis_game_score.is_in_deuce_mode():
+        if deuce_mode_turn == 1:
+            main_player.state_machine.handle_event(('SERVE_TURN', 0))
+            opponent_player.handle_event(('NOT_SERVE_TURN', 0))
+        else:
+            main_player.state_machine.handle_event(('NOT_SERVE_TURN', 0))
+            opponent_player.handle_event(('SERVE_TURN', 0))
+        return
+
     if turn == 1:
         main_player.state_machine.handle_event(('SERVE_TURN', 0))
         opponent_player.handle_event(('NOT_SERVE_TURN', 0))
@@ -64,7 +77,7 @@ def serve_turn_player_hit_serve():
 
 
 def set_referee():
-    global play_ball, main_player, opponent_player, last_hit_player, turn
+    global play_ball, main_player, opponent_player, last_hit_player, turn, deuce_mode_turn
     global is_court_end, court_end_time, any_player_win
     global win_player, lose_player
 
@@ -79,6 +92,7 @@ def set_referee():
     is_court_end = False
 
     turn = 0
+    deuce_mode_turn = 0
 
 
 def subscribe_player(player_tag, player):
