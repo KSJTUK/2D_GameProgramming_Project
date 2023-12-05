@@ -38,8 +38,11 @@ class Win:
         if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
             prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                                   % tennis_player.frame_per_action)
+            if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+                tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+            else:
+                tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                       % tennis_player.frame_per_action)
 
             delta_frame = int(tennis_player.frame) - prev_frame
 
@@ -81,8 +84,11 @@ class Lose:
         if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
             prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                                   % tennis_player.frame_per_action)
+            if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+                tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+            else:
+                tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                       % tennis_player.frame_per_action)
 
             delta_frame = int(tennis_player.frame) - prev_frame
 
@@ -188,8 +194,11 @@ class HighHit:
         # 프레임 업데이트
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-        tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                               % tennis_player.frame_per_action)
+        if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+            tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+        else:
+            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                   % tennis_player.frame_per_action)
 
         delta_frame = int(tennis_player.frame) - prev_frame
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -247,8 +256,11 @@ class PreparingServe:
         if int(tennis_player.frame) < tennis_player.frame_per_action - 1:
             prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                                   % tennis_player.frame_per_action)
+            if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+                tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+            else:
+                tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                       % tennis_player.frame_per_action)
 
             delta_frame = int(tennis_player.frame) - prev_frame
 
@@ -359,8 +371,11 @@ class Hit:
         # 프레임 업데이트
         prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-        tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
-                               % tennis_player.frame_per_action)
+        if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+            tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+        else:
+            tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+                                   % tennis_player.frame_per_action)
 
         delta_frame = int(tennis_player.frame) - prev_frame
         # prev_frame이 애니메이션 인덱스의 끝이고 frame이 업데이트 되어 0이 되었을때 초기화
@@ -684,7 +699,10 @@ def character_default_frame_update(tennis_player):
     # 프레임 업데이트
     prev_frame = int(tennis_player.frame % tennis_player.frame_per_action)
 
-    tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
+    if game_framework.frame_time * tennis_player.frame_per_time > 1.0:
+        tennis_player.frame = (prev_frame + 1) % tennis_player.frame_per_action
+    else:
+        tennis_player.frame = ((tennis_player.frame + tennis_player.frame_per_time * game_framework.frame_time)
                            % tennis_player.frame_per_action)
 
     delta_frame = int(tennis_player.frame) - prev_frame

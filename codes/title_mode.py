@@ -5,10 +5,11 @@ import codes.tennis_game_ui as tennis_game_ui
 import codes.play_mode as play_mode
 
 def init():
-    global font_size, min_font_size, max_font_size
+    global font_size, min_font_size, max_font_size, title_font_size
     global font_animation_dir
     min_font_size, max_font_size = 45, 55
-    font_size = 50
+    font_size = 30
+    title_font_size = font_size * 2
     font_animation_dir = 1
 
 def finish():
@@ -22,7 +23,8 @@ def render():
     cw, ch = game_framework.CANVAS_W, game_framework.CANVAS_H
     tennis_game_ui.ui_images['title'].composite_draw(0, ' ', cw // 2, ch // 2,
                                                      cw, ch)
-    tennis_game_ui.draw_string(cw // 2, ch // 2 - 100, 'PRESS SPACE START', font_size, 'center')
+    tennis_game_ui.draw_string(cw // 2, game_framework.CANVAS_H - ch // 4, 'POWER TENNIS', title_font_size, 'center')
+    tennis_game_ui.draw_string(cw // 2, ch // 4, 'PRESS SPACE START', font_size, 'center')
     update_canvas()
 
 def handle_events():

@@ -25,12 +25,6 @@ def handle_events():
             tennis_player.handle_event(event)
 
 
-def test_throw_ball(x, y, speed_x, speed_y, speed_z):
-    new_test_ball = Ball(x, y, 0, speed_x, speed_y, speed_z)
-    game_world.add_object(new_test_ball, 1)
-    game_world.add_collision_pair('tennis_player:ball', None, new_test_ball)
-
-
 def init():
     global court
     global tennis_player
@@ -47,16 +41,16 @@ def init():
     court_bottom = tennis_court.COURT_CENTER_Y - tennis_court.COURT_BOTTOM_HEIGHT
 
     tennis_player = TennisPlayer(tennis_court.COURT_CENTER_X - characters_default_diff_x, court_bottom - characters_default_diff_y)
-    game_world.add_object(tennis_player, 1)
+    game_world.add_object(tennis_player, 2)
     game_world.add_collision_pair('tennis_player:ball', tennis_player, None)
     test_opponent_player = TennisAI(tennis_court.COURT_CENTER_X + characters_default_diff_x, court_top + characters_default_diff_y)
-    game_world.add_object(test_opponent_player, 1)
+    game_world.add_object(test_opponent_player, 2)
 
     tennis_referee.subscribe_player('main_player', tennis_player)
     tennis_referee.subscribe_player('opponent_player', test_opponent_player)
 
     net = TennisNet()
-    game_world.add_object(net, 1)
+    game_world.add_object(net, 2)
     game_world.add_collision_pair('ball:net', None, net)
 
     tennis_referee.new_set_start()

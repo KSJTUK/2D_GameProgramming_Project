@@ -16,8 +16,10 @@ def update():
 def render():
     cw, ch = game_framework.CANVAS_W, game_framework.CANVAS_H
     clear_canvas()
+    font_size = 75
     tennis_game_ui.ui_images['title'].composite_draw(0, ' ', cw // 2, ch // 2, cw, ch)
-    tennis_game_ui.draw_string(cw // 2, ch // 2, 'TRY AGAIN?', 50, 'center')
+    tennis_game_ui.draw_string(cw // 2, ch // 2, 'TRY AGAIN?', font_size, 'center')
+    tennis_game_ui.draw_string(cw // 2, ch // 2 - font_size, 'press space try again', font_size // 2, 'center')
     update_canvas()
 
 def handle_events():
