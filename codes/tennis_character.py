@@ -112,7 +112,8 @@ class Lose:
 class ReadyInNotServeTurn:
     @staticmethod
     def enter(tennis_player, event):
-        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
+        tennis_player.face_y = '_back'
+        tennis_player.cur_animation = 'Idle' + tennis_player.face_y
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
 
@@ -143,7 +144,8 @@ class ReadyInNotServeTurn:
 class Ready:
     @staticmethod
     def enter(tennis_player, event):
-        tennis_player.cur_animation = 'Idle' + tennis_player.face_y if tennis_player.face_y != '' else 'Idle_back'
+        tennis_player.face_y = '_back'
+        tennis_player.cur_animation = 'Idle' + tennis_player.face_y
         tennis_player.face_x = ''
         tennis_player.dir_x, tennis_player.dir_y = 0, 0
 
@@ -238,7 +240,8 @@ class HighHit:
 class PreparingServe:
     @staticmethod
     def enter(tennis_player, event):
-        tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y if tennis_player.face_y != '' else 'Preparing_serve_back'
+        tennis_player.face_y = '_back'
+        tennis_player.cur_animation = 'Preparing_serve' + tennis_player.face_y
 
         tennis_player.animation_information = micky_animation[tennis_player.cur_animation]
 
